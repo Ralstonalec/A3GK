@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
-import { publicConfig } from '@/lib/config';
+import { publicConfig, SITE } from '@/lib/config';
 import { MEDIA } from '@/lib/media';
 import { usePrefersReducedMotion } from '@/lib/hooks';
 import ScrollLayer from '@/components/animation/ScrollLayer';
@@ -16,14 +16,14 @@ export const schema = {
 };
 
 export const heroDefaults = {
-  eyebrow: 'Advanced athletic gear for goalkeepers',
+  eyebrow: SITE.tagline,
   heading: 'Own the',
   accent_word: 'line.',
-  subheading: 'Pro-grade gloves, padded kit and fully custom jerseys — engineered with keepers, built for the moments that decide matches.',
+  subheading: 'Padded base layers, goalkeeper jerseys, pants and shorts, athletic tape and grip socks.',
   primary_label: 'Shop gear',
   primary_link: '/products',
-  secondary_label: 'Design your kit',
-  secondary_link: '/customizer',
+  secondary_label: 'Shop base layers',
+  secondary_link: '/products?category=base-layers',
   video_url: '',
   overlay_opacity: 55,
 };

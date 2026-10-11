@@ -1,46 +1,4 @@
 {
-  "_note": "SAMPLE testimonials: placeholder personas and copy for the design prototype. Replace with real customers who have consented to being featured, then set isSample to false. Add a `videoSrc` (https, CDN-hosted mp4/webm) and optional `poster` to enable playback.",
-  "isSample": true,
-  "items": [
-    {
-      "id": "t1",
-      "name": "Sample Athlete A",
-      "role": "Academy goalkeeper",
-      "quote": "The palm grips like nothing I have worn, and the cut keeps full feel on the ball. Placeholder testimonial.",
-      "product": "apex-pro-negative-cut-glove",
-      "accent": "#d4ff3a",
-      "videoSrc": null,
-      "poster": null
-    },
-    {
-      "id": "t2",
-      "name": "Sample Coach B",
-      "role": "Club goalkeeper coach",
-      "quote": "We kitted out the full squad with custom jerseys. The studio made it painless. Placeholder testimonial.",
-      "product": "custom-keeper-jersey",
-      "accent": "#ff5a36",
-      "videoSrc": null,
-      "poster": null
-    },
-    {
-      "id": "t3",
-      "name": "Sample Athlete C",
-      "role": "Sunday-league keeper",
-      "quote": "The padded pants let me dive on frozen pitches without thinking twice. Placeholder testimonial.",
-      "product": "bulwark-padded-pants",
-      "accent": "#7fd6ff",
-      "videoSrc": null,
-      "poster": null
-    },
-    {
-      "id": "t4",
-      "name": "Sample Athlete D",
-      "role": "Junior keeper",
-      "quote": "First pair of real keeper gloves and the strap is easy to do up myself. Placeholder testimonial.",
-      "product": "sentinel-junior-glove",
-      "accent": "#12b886",
-      "videoSrc": null,
-      "poster": null
-    }
-  ]
+  "_note": "Real, consented customer testimonials only. The section stays hidden while `items` is empty. Entry: { \"id\", \"name\", \"role\", \"quote\", \"accent\": \"#d4ff3a\", \"videoSrc\": null, \"poster\": null }. `videoSrc` is an https mp4/webm on your CDN.",
+  "items": []
 }

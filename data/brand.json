@@ -1,0 +1,13 @@
+{
+  "_note": "Brand identity. Do not edit by hand — run `npm run brand -- path/to/your-logo.svg` (see public/brand/README.md). While `logo.src` is null the site shows a neutral text wordmark, NOT a real logo.",
+  "name": "A3GK",
+  "logo": {
+    "src": null,
+    "width": null,
+    "height": null
+  },
+  "mark": {
+    "src": null
+  },
+  "iconSvg": false
+}

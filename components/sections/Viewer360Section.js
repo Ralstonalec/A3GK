@@ -25,7 +25,7 @@ export default function Viewer360Section() {
         <FadeInSection className={styles.viewerCopy} delay={0.12}>
           <p className="eyebrow">Inspect every angle</p>
           <h2 id="viewer-heading">{viewer.title}</h2>
-          <p className="lead">Drag to rotate, use the buttons, or the arrow keys. See exactly what you are buying before it ships.</p>
+          <p className="lead">Drag to rotate, use the buttons, or the arrow keys.</p>
           <Button href="/products" iconAfter={<IconArrow size={18} />}>
             Shop gear
           </Button>

@@ -1,240 +1,135 @@
 {
-  "_note": "Mock catalogue used when no Shopify store is configured. Expanded into Storefront-API-shaped objects by lib/mock-catalog.js. Prices are in dollars here for readability.",
+  "_note": "DEMO CATALOGUE — used only while no Shopify store is connected. The six products mirror the launch range (padded base layers, goalkeeper jerseys, pants, shorts, athletic tape, grip socks). Names, prices and sizes are PLACEHOLDERS: no materials, specs, stock levels, badges or claims are asserted. The site shows a 'demo catalogue' notice and asks search engines not to index it. Real data comes from Shopify.",
   "products": [
     {
       "id": 1001,
-      "handle": "apex-pro-negative-cut-glove",
-      "title": "Apex Pro Negative Cut Glove",
-      "category": "gloves",
-      "productType": "Gloves",
-      "tags": [
-        "pro",
-        "negative-cut",
-        "match",
-        "bestseller"
-      ],
-      "badges": [
-        "Bestseller"
-      ],
-      "price": 149.99,
-      "description": "Our flagship match glove. A 4 mm German-engineered contact latex palm, negative-cut fit and a wrap-around wrist lock for a second-skin feel on every catch.",
-      "descriptionHtml": "<p>Our flagship match glove. A <strong>4 mm contact latex</strong> palm, negative-cut fit and a wrap-around wrist lock for a second-skin feel on every catch.</p><p>Built for dry and damp conditions, with a finger-saver-free flexible back so nothing gets between you and the ball.</p>",
+      "handle": "padded-base-layer",
+      "title": "Padded Base Layer",
+      "category": "base-layers",
+      "productType": "Base Layers",
+      "tags": [],
+      "badges": [],
+      "price": 49.99,
+      "description": "Padded base layer for goalkeepers.",
+      "descriptionHtml": "<p>Padded base layer for goalkeepers.</p>",
       "images": [
         {
-          "file": "apex-pro-negative-cut-glove-1",
-          "alt": "Apex Pro goalkeeper glove, back of hand, volt and black"
-        },
-        {
-          "file": "apex-pro-negative-cut-glove-2",
-          "alt": "Apex Pro goalkeeper glove, palm side with contact latex"
+          "file": "padded-base-layer-1",
+          "alt": "Padded base layer, product photograph"
         }
       ],
       "options": [
         {
           "name": "Size",
           "values": [
-            "6",
-            "7",
-            "8",
-            "9",
-            "10",
-            "11"
+            "S",
+            "M",
+            "L",
+            "XL"
           ]
         }
       ],
       "stock": {
-        "default": 18,
-        "overrides": {
-          "Size:6": 2,
-          "Size:7": 7,
-          "Size:11": 0
-        }
+        "default": null,
+        "overrides": {}
       },
       "model": null,
       "customizable": false,
       "leadTimeDays": 0,
-      "features": [
-        "4 mm contact latex palm for elite grip in all conditions",
-        "Negative cut: tight fit, maximum ball feel",
-        "Segmented, pre-curved fingers for natural closure",
-        "Dual-layer wrist lock with elastic cuff"
-      ],
-      "specs": [
-        {
-          "label": "Palm",
-          "value": "4 mm contact latex"
-        },
-        {
-          "label": "Cut",
-          "value": "Negative"
-        },
-        {
-          "label": "Closure",
-          "value": "Wrap-around wrist lock"
-        },
-        {
-          "label": "Care",
-          "value": "Hand wash, air dry"
-        }
-      ]
+      "features": [],
+      "specs": []
     },
     {
       "id": 1002,
-      "handle": "vanguard-roll-finger-glove",
-      "title": "Vanguard Roll Finger Glove",
-      "category": "gloves",
-      "productType": "Gloves",
-      "tags": [
-        "pro",
-        "roll-finger",
-        "match"
-      ],
-      "badges": [
-        "New"
-      ],
-      "price": 119.99,
-      "description": "A roomier roll-finger design with a 3.5 mm latex palm. More surface area on the ball, with latex-wrapped finger tips that wear in beautifully.",
-      "descriptionHtml": "<p>A roomier <strong>roll-finger</strong> design with a 3.5 mm latex palm. More surface area on the ball, with latex-wrapped fingertips that wear in beautifully.</p>",
+      "handle": "goalkeeper-jersey",
+      "title": "Goalkeeper Jersey",
+      "category": "jerseys",
+      "productType": "Jerseys",
+      "tags": [],
+      "badges": [],
+      "price": 59.99,
+      "description": "Goalkeeper jersey.",
+      "descriptionHtml": "<p>Goalkeeper jersey.</p>",
       "images": [
         {
-          "file": "vanguard-roll-finger-glove-1",
-          "alt": "Vanguard roll finger glove, back of hand, signal orange and black"
-        },
-        {
-          "file": "vanguard-roll-finger-glove-2",
-          "alt": "Vanguard roll finger glove, palm side"
+          "file": "goalkeeper-jersey-1",
+          "alt": "Goalkeeper jersey, product photograph"
         }
       ],
       "options": [
         {
           "name": "Size",
           "values": [
-            "6",
-            "7",
-            "8",
-            "9",
-            "10",
-            "11"
+            "S",
+            "M",
+            "L",
+            "XL"
           ]
         }
       ],
       "stock": {
-        "default": 14,
-        "overrides": {
-          "Size:6": 5,
-          "Size:8": 3
-        }
+        "default": null,
+        "overrides": {}
       },
       "model": null,
       "customizable": false,
       "leadTimeDays": 0,
-      "features": [
-        "Roll-finger construction for maximum catching surface",
-        "3.5 mm latex palm",
-        "Breathable mesh gussets",
-        "Pre-curved thumb for secure fist punching"
-      ],
-      "specs": [
-        {
-          "label": "Palm",
-          "value": "3.5 mm latex"
-        },
-        {
-          "label": "Cut",
-          "value": "Roll finger"
-        },
-        {
-          "label": "Closure",
-          "value": "Full-wrap strap"
-        },
-        {
-          "label": "Care",
-          "value": "Hand wash, air dry"
-        }
-      ]
+      "features": [],
+      "specs": []
     },
     {
       "id": 1003,
-      "handle": "sentinel-junior-glove",
-      "title": "Sentinel Junior Glove",
-      "category": "gloves",
-      "productType": "Gloves",
-      "tags": [
-        "junior",
-        "training"
-      ],
+      "handle": "goalkeeper-pants",
+      "title": "Goalkeeper Pants",
+      "category": "bottoms",
+      "productType": "Pants",
+      "tags": [],
       "badges": [],
-      "price": 59.99,
-      "description": "A forgiving first pro glove for young keepers. Soft 3 mm latex, a flexible cut and a wide hook-and-loop strap that is easy to fasten on a cold morning.",
-      "descriptionHtml": "<p>A forgiving first pro glove for young keepers. Soft <strong>3 mm latex</strong>, a flexible cut and a wide hook-and-loop strap that is easy to fasten on a cold morning.</p>",
+      "price": 69.99,
+      "description": "Goalkeeper pants.",
+      "descriptionHtml": "<p>Goalkeeper pants.</p>",
       "images": [
         {
-          "file": "sentinel-junior-glove-1",
-          "alt": "Sentinel junior glove, back of hand, glacier blue"
+          "file": "goalkeeper-pants-1",
+          "alt": "Goalkeeper pants, product photograph"
         }
       ],
       "options": [
         {
           "name": "Size",
           "values": [
-            "4",
-            "5",
-            "6",
-            "7"
+            "S",
+            "M",
+            "L",
+            "XL"
           ]
         }
       ],
       "stock": {
-        "default": 25,
+        "default": null,
         "overrides": {}
       },
       "model": null,
       "customizable": false,
       "leadTimeDays": 0,
-      "features": [
-        "Soft 3 mm latex that breaks in fast",
-        "Flat-cut palm for easy catching",
-        "Wide, easy-fasten wrist strap",
-        "Machine-washable cuff"
-      ],
-      "specs": [
-        {
-          "label": "Palm",
-          "value": "3 mm latex"
-        },
-        {
-          "label": "Cut",
-          "value": "Flat"
-        },
-        {
-          "label": "Closure",
-          "value": "Hook-and-loop strap"
-        },
-        {
-          "label": "Ages",
-          "value": "6–12"
-        }
-      ]
+      "features": [],
+      "specs": []
     },
     {
       "id": 1004,
-      "handle": "sentry-pro-padded-jersey",
-      "title": "Sentry Pro Padded Jersey",
-      "category": "apparel",
-      "productType": "Jerseys",
-      "tags": [
-        "pro",
-        "padded",
-        "match"
-      ],
+      "handle": "goalkeeper-shorts",
+      "title": "Goalkeeper Shorts",
+      "category": "bottoms",
+      "productType": "Shorts",
+      "tags": [],
       "badges": [],
-      "price": 89.99,
-      "description": "Long-sleeve match jersey with removable-free elbow and shoulder padding, moisture-wicking mesh panels and a tonal graphic that does not wear off.",
-      "descriptionHtml": "<p>Long-sleeve match jersey with <strong>integrated elbow and shoulder padding</strong>, moisture-wicking mesh panels and a sublimated graphic that never cracks or peels.</p>",
+      "price": 39.99,
+      "description": "Goalkeeper shorts.",
+      "descriptionHtml": "<p>Goalkeeper shorts.</p>",
       "images": [
         {
-          "file": "sentry-pro-padded-jersey-1",
-          "alt": "Sentry Pro padded goalkeeper jersey, front, black with volt trim"
+          "file": "goalkeeper-shorts-1",
+          "alt": "Goalkeeper shorts, product photograph"
         }
       ],
       "options": [
@@ -244,129 +139,70 @@
             "S",
             "M",
             "L",
-            "XL",
-            "XXL"
+            "XL"
           ]
         }
       ],
       "stock": {
-        "default": 20,
-        "overrides": {
-          "Size:XXL": 0,
-          "Size:S": 4
-        }
+        "default": null,
+        "overrides": {}
       },
       "model": null,
       "customizable": false,
       "leadTimeDays": 0,
-      "features": [
-        "Integrated elbow and shoulder foam padding",
-        "Mesh back and underarm panels",
-        "Flat-lock seams to prevent chafing",
-        "Sublimated graphics — no cracking or peeling"
-      ],
-      "specs": [
-        {
-          "label": "Fabric",
-          "value": "100% recycled polyester"
-        },
-        {
-          "label": "Fit",
-          "value": "Athletic"
-        },
-        {
-          "label": "Padding",
-          "value": "Elbow + shoulder"
-        },
-        {
-          "label": "Care",
-          "value": "Machine wash cold"
-        }
-      ]
+      "features": [],
+      "specs": []
     },
     {
       "id": 1005,
-      "handle": "custom-keeper-jersey",
-      "title": "Custom Keeper Jersey",
-      "category": "apparel",
-      "productType": "Custom Kit",
-      "tags": [
-        "custom",
-        "team",
-        "padded"
-      ],
-      "badges": [
-        "Design your own"
-      ],
-      "price": 79.99,
-      "description": "Your colours, your name, your number. Design a one-of-a-kind padded keeper jersey in our studio and see every change live before you buy.",
-      "descriptionHtml": "<p>Your colours, your name, your number. Design a one-of-a-kind padded keeper jersey in our <a href=\"/customizer\">Design Studio</a> and see every change live before you buy.</p>",
+      "handle": "athletic-tape",
+      "title": "Athletic Tape",
+      "category": "accessories",
+      "productType": "Tape",
+      "tags": [],
+      "badges": [],
+      "price": 6.99,
+      "description": "Athletic tape.",
+      "descriptionHtml": "<p>Athletic tape.</p>",
       "images": [
         {
-          "file": "custom-keeper-jersey-1",
-          "alt": "Custom keeper jersey front view in the default volt stripe design"
-        },
-        {
-          "file": "custom-keeper-jersey-2",
-          "alt": "Custom keeper jersey back view with name and number"
+          "file": "athletic-tape-1",
+          "alt": "Roll of athletic tape, product photograph"
         }
       ],
       "options": [
         {
-          "name": "Size",
+          "name": "Title",
           "values": [
-            "YM",
-            "YL",
-            "S",
-            "M",
-            "L",
-            "XL",
-            "XXL"
+            "Default Title"
           ]
         }
       ],
       "stock": {
-        "default": 99,
+        "default": null,
         "overrides": {}
       },
       "model": null,
-      "customizable": true,
+      "customizable": false,
       "leadTimeDays": 0,
-      "features": [
-        "Live Design Studio with instant pricing",
-        "Choose colours, pattern, fabric, name, number and logo",
-        "Sublimated print — never cracks or peels"
-      ],
-      "specs": [
-        {
-          "label": "Fabric",
-          "value": "Dry Mesh, Pro Knit or Thermal"
-        },
-        {
-          "label": "Decoration",
-          "value": "Sublimated print"
-        }
-      ]
+      "features": [],
+      "specs": []
     },
     {
       "id": 1006,
-      "handle": "bulwark-padded-pants",
-      "title": "Bulwark Padded Goalkeeper Pants",
-      "category": "apparel",
-      "productType": "Pants",
-      "tags": [
-        "padded",
-        "match",
-        "training"
-      ],
+      "handle": "grip-socks",
+      "title": "Grip Socks",
+      "category": "accessories",
+      "productType": "Socks",
+      "tags": [],
       "badges": [],
-      "price": 94.99,
-      "description": "Hip, thigh and knee protection that disappears under movement. Impact-dispersing foam sits inside a four-way stretch shell for diving without drag.",
-      "descriptionHtml": "<p>Hip, thigh and knee protection that disappears under movement. Impact-dispersing foam sits inside a four-way stretch shell for <strong>diving without drag</strong>.</p>",
+      "price": 14.99,
+      "description": "Grip socks.",
+      "descriptionHtml": "<p>Grip socks.</p>",
       "images": [
         {
-          "file": "bulwark-padded-pants-1",
-          "alt": "Bulwark padded goalkeeper pants, front view, black with volt accents"
+          "file": "grip-socks-1",
+          "alt": "Grip socks, product photograph"
         }
       ],
       "options": [
@@ -375,165 +211,19 @@
           "values": [
             "S",
             "M",
-            "L",
-            "XL",
-            "XXL"
+            "L"
           ]
         }
       ],
       "stock": {
-        "default": 16,
-        "overrides": {
-          "Size:S": 1
-        }
-      },
-      "model": null,
-      "customizable": false,
-      "leadTimeDays": 0,
-      "features": [
-        "Hip, thigh and knee impact foam",
-        "Four-way stretch shell",
-        "Silicone gripper hem keeps padding in place",
-        "Drawcord waist"
-      ],
-      "specs": [
-        {
-          "label": "Padding",
-          "value": "Hip, thigh, knee"
-        },
-        {
-          "label": "Shell",
-          "value": "Four-way stretch polyester"
-        },
-        {
-          "label": "Fit",
-          "value": "Athletic"
-        },
-        {
-          "label": "Care",
-          "value": "Machine wash cold"
-        }
-      ]
-    },
-    {
-      "id": 1007,
-      "handle": "fortress-goalie-bag",
-      "title": "Fortress Goalie Bag",
-      "category": "accessories",
-      "productType": "Bags",
-      "tags": [
-        "bag",
-        "travel"
-      ],
-      "badges": [],
-      "price": 79.99,
-      "description": "A ventilated main compartment for gloves and kit, a separate boot tunnel and a damp pocket. Built to survive a season of boot rooms and car boots.",
-      "descriptionHtml": "<p>A ventilated main compartment for gloves and kit, a separate boot tunnel and a damp pocket. Built to survive a season of boot rooms and car boots.</p>",
-      "images": [
-        {
-          "file": "fortress-goalie-bag-1",
-          "alt": "Fortress goalie bag in black with volt zips"
-        }
-      ],
-      "options": [
-        {
-          "name": "Title",
-          "values": [
-            "Default Title"
-          ]
-        }
-      ],
-      "stock": {
-        "default": 35,
+        "default": null,
         "overrides": {}
       },
       "model": null,
       "customizable": false,
       "leadTimeDays": 0,
-      "features": [
-        "Ventilated glove compartment",
-        "Ventilated boot tunnel",
-        "Water-resistant base",
-        "Padded straps"
-      ],
-      "specs": [
-        {
-          "label": "Capacity",
-          "value": "45 L"
-        },
-        {
-          "label": "Material",
-          "value": "600D recycled polyester"
-        },
-        {
-          "label": "Dimensions",
-          "value": "60 × 28 × 28 cm"
-        },
-        {
-          "label": "Weight",
-          "value": "1.1 kg"
-        }
-      ]
-    },
-    {
-      "id": 1008,
-      "handle": "grip-restore-wash-kit",
-      "title": "Grip Restore Wash Kit",
-      "category": "accessories",
-      "productType": "Glove Care",
-      "tags": [
-        "care",
-        "grip"
-      ],
-      "badges": [],
-      "price": 24.99,
-      "description": "Deep-clean wash and grip-reviving spray. Strips dirt and oils from latex and restores tack between matches, doubling the useful life of a pair.",
-      "descriptionHtml": "<p>Deep-clean wash and grip-reviving spray. Strips dirt and oils from latex and restores tack between matches.</p>",
-      "images": [
-        {
-          "file": "grip-restore-wash-kit-1",
-          "alt": "Grip Restore wash and spray bottles"
-        }
-      ],
-      "options": [
-        {
-          "name": "Title",
-          "values": [
-            "Default Title"
-          ]
-        }
-      ],
-      "stock": {
-        "default": 60,
-        "overrides": {}
-      },
-      "model": null,
-      "customizable": false,
-      "leadTimeDays": 0,
-      "features": [
-        "pH-balanced latex wash (250 ml)",
-        "Grip-reviving spray (100 ml)",
-        "Safe on all latex palms",
-        "Free of silicone and parabens"
-      ],
-      "specs": [
-        {
-          "label": "Wash",
-          "value": "250 ml"
-        },
-        {
-          "label": "Spray",
-          "value": "100 ml"
-        },
-        {
-          "label": "Shelf life",
-          "value": "24 months"
-        },
-        {
-          "label": "Care",
-          "value": "Store below 30 °C"
-        }
-      ]
+      "features": [],
+      "specs": []
     }
   ]
 }

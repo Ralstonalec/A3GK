@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { pageTransition } from '@/lib/animations';
+import { isDemoCatalogue } from '@/lib/config';
 import { useHasMounted } from '@/lib/hooks';
 import Header from './Header';
 import Footer from './Footer';
@@ -29,6 +30,11 @@ export default function Layout({ children }) {
   return (
     <>
       <a href="#main" className="skip-link">Skip to main content</a>
+      {isDemoCatalogue() && (
+        <p className={styles.demoNotice} role="note">
+          Preview build — products, prices and photos are placeholders, not an offer for sale.
+        </p>
+      )}
       <Header />
       <motion.main
         id="main"

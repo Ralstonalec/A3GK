@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { publicConfig, SITE } from '@/lib/config';
+import { isDemoCatalogue, publicConfig, SITE } from '@/lib/config';
 
 /**
  * Per-page <head>: title, description, canonical, Open Graph / Twitter, JSON-LD.
@@ -17,7 +17,8 @@ export default function Seo({ title, description = SITE.description, path = '/',
       <title>{fullTitle}</title>
       <meta name="description" content={description} />
       <link rel="canonical" href={url || base} />
-      {noindex && <meta name="robots" content="noindex, nofollow" />}
+      {/* While the placeholder catalogue is live (no Shopify store connected) nothing should be indexed. */}
+      {(noindex || isDemoCatalogue()) && <meta name="robots" content="noindex, nofollow" />}
       <meta property="og:site_name" content={SITE.name} />
       <meta property="og:type" content={type} />
       <meta property="og:title" content={fullTitle} />

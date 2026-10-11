@@ -80,7 +80,7 @@ const browser = await chromium.launch({ executablePath: CHROME, args: ['--no-san
   const { page, context, errors } = await newPage(browser);
   const MEDIA = '[class*="heroMedia"]';
   const CONTENT = '[class*="heroContent"]';
-  const LAYER = '[class*="hotspotLayer"]';
+  const LAYER = '[class*="categoryLayer"]';
 
   const top = { media: await probe(page, MEDIA, 'heroMediaInner'), content: await probe(page, CONTENT) };
   check('hero is at rest at the top (no offset, fully visible)', close(top.media.y, 0, 0.5) && close(top.content.y, 0, 0.5) && close(top.content.opacity, 1), JSON.stringify({ mediaY: top.media.y, contentOpacity: top.content.opacity }));
@@ -94,8 +94,8 @@ const browser = await chromium.launch({ executablePath: CHROME, args: ['--no-san
   const back = { media: await probe(page, MEDIA, 'heroMediaInner'), content: await probe(page, CONTENT) };
   check('hero returns exactly to rest when scrolled back to the top', close(back.media.y, 0, 0.5) && close(back.content.opacity, 1, 0.01), `mediaY=${back.media.y.toFixed(2)} opacity=${back.content.opacity.toFixed(2)}`);
 
-  // Showcase image: record on the way DOWN, then UP, at identical positions.
-  // `base` = the scroll position where the image's CENTRE is at the viewport centre (progress 0.5).
+  // Category tile photo: record on the way DOWN, then UP, at identical positions.
+  // `base` = the scroll position where the tile's CENTRE is at the viewport centre (progress 0.5).
   const base = await page.evaluate((sel) => {
     const r = document.querySelector(sel).getBoundingClientRect();
     return r.top + window.scrollY + r.height / 2 - window.innerHeight / 2;
@@ -113,26 +113,10 @@ const browser = await chromium.launch({ executablePath: CHROME, args: ['--no-san
   }
   up.reverse();
   const symmetric = down.every((d, i) => close(d.scale, up[i].scale, 0.003) && close(d.rotate, up[i].rotate, 0.05));
-  check('showcase image transform is identical scrolling down and back up (reversible)', symmetric, `scale ${down.map((d) => d.scale.toFixed(3)).join(' → ')}`);
+  check('category photo transform is identical scrolling down and back up (reversible)', symmetric, `scale ${down.map((d) => d.scale.toFixed(3)).join(' → ')}`);
   const scales = down.map((d) => d.scale);
-  const rotations = down.map((d) => d.rotate);
-  check('showcase image scales gently (stays within 0.99–1.10)', Math.min(...scales) >= 0.99 && Math.max(...scales) <= 1.1 && Math.max(...scales) - Math.min(...scales) > 0.01, `range ${Math.min(...scales).toFixed(3)}–${Math.max(...scales).toFixed(3)}`);
-  check('showcase image rotates gently (|angle| ≤ 2°) and is level, at rest, mid-screen', Math.max(...rotations.map(Math.abs)) <= 2 && Math.abs(down[2].rotate) < 0.1 && close(down[2].scale, 1, 0.005), `angles ${rotations.map((r) => r.toFixed(2)).join(', ')}°`);
-
-  // Studio photo: same primitive on a different element — settles to rest mid-screen, zoomed on approach.
-  const STUDIO = '[class*="studioPhotoLayer"]';
-  const studioCentre = await page.evaluate((sel) => {
-    const r = document.querySelector(sel).getBoundingClientRect();
-    return r.top + window.scrollY + r.height / 2 - window.innerHeight / 2;
-  }, STUDIO);
-  await scrollTo(page, studioCentre - 600, 350);
-  const studioEarly = await probe(page, STUDIO);
-  await scrollTo(page, studioCentre, 350);
-  const studioMid = await probe(page, STUDIO);
-  await scrollTo(page, studioCentre - 600, 350);
-  const studioEarlyAgain = await probe(page, STUDIO);
-  check('studio photo zooms gently on approach and rests mid-screen, with no rotation', studioEarly.scale > 1.02 && studioEarly.scale <= 1.1 && close(studioMid.scale, 1, 0.005) && close(studioMid.rotate, 0, 0.01) && close(studioEarly.rotate, 0, 0.01), `scale ${studioEarly.scale.toFixed(3)} → ${studioMid.scale.toFixed(3)}`);
-  check('studio photo is reversible (same scale on the way back)', close(studioEarly.scale, studioEarlyAgain.scale, 0.003), `${studioEarly.scale.toFixed(3)} vs ${studioEarlyAgain.scale.toFixed(3)}`);
+  check('category photo scales gently (stays within 0.99–1.10)', Math.min(...scales) >= 0.99 && Math.max(...scales) <= 1.1 && Math.max(...scales) - Math.min(...scales) > 0.01, `range ${Math.min(...scales).toFixed(3)}–${Math.max(...scales).toFixed(3)}`);
+  check('category photo is level and at rest (scale 1) when mid-screen', Math.abs(down[2].rotate) < 0.1 && close(down[2].scale, 1, 0.005), `scale ${down[2].scale.toFixed(3)} rotate ${down[2].rotate.toFixed(2)}°`);
 
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   check('no horizontal overflow on desktop', overflow <= 0, `scrollWidth - innerWidth = ${overflow}`);
@@ -163,7 +147,9 @@ const browser = await chromium.launch({ executablePath: CHROME, args: ['--no-san
   const above = await probe(page, HEADER);
   check('after scrolling past, it resets (hidden above the viewport)', above.opacity < 0.1, `opacity=${above.opacity.toFixed(2)}`);
 
-  await jump(page, headerTop + headerHeight - 40); // its bottom edge re-enters from the top
+  // Its bottom edge re-enters from the top. The heading waits 28px ABOVE its slot, so aim well inside
+  // (a few px of overlap would sit on the observer's edge and prove nothing about direction).
+  await jump(page, headerTop + headerHeight - 100);
   await page.waitForTimeout(90);
   const enteringFromAbove = await probe(page, HEADER);
   await page.waitForTimeout(1400);
@@ -183,10 +169,10 @@ const browser = await chromium.launch({ executablePath: CHROME, args: ['--no-san
   check('reduced motion: hero copy is not faded or moved', close(content.opacity, 1) && close(content.y, 0, 0.5), `opacity=${content.opacity} y=${content.y}`);
   check('reduced motion: hero media does not parallax', close(media.y, 0, 0.5), `y=${media.y}`);
 
-  const gy = await sectionY(page, 'product-gallery', 0.3);
+  const gy = await sectionY(page, 'collection-list', 0.3);
   await scrollTo(page, gy - 200);
-  const layer = await probe(page, '[class*="hotspotLayer"]');
-  check('reduced motion: showcase image is not scaled or rotated', close(layer.scale, 1, 0.001) && close(layer.rotate, 0, 0.01), `scale=${layer.scale} rotate=${layer.rotate}`);
+  const layer = await probe(page, '[class*="categoryLayer"]');
+  check('reduced motion: category photo is not scaled or rotated', close(layer.scale, 1, 0.001) && close(layer.rotate, 0, 0.01), `scale=${layer.scale} rotate=${layer.rotate}`);
 
   await scrollTo(page, 0, 200);
   await scrollTo(page, 2600, 300);
@@ -205,18 +191,18 @@ const browser = await chromium.launch({ executablePath: CHROME, args: ['--no-san
   check('phone: hero parallax still active', media.y > 5, `media translateY=${media.y.toFixed(1)}px`);
 
   let worstOverflow = 0;
-  let maxRotate = 0;
-  for (const type of ['featured-products', 'product-gallery', 'customizer-teaser', 'stats-counter', 'social-feed']) {
+  let maxScale = 0;
+  for (const type of ['collection-list', 'featured-products']) {
     const y = await sectionY(page, type, 0.3);
     for (const dy of [-300, 0, 300]) {
       await scrollTo(page, Math.max(0, y + dy), 250);
       worstOverflow = Math.max(worstOverflow, await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth));
-      const l = await probe(page, '[class*="hotspotLayer"]');
-      if (l) maxRotate = Math.max(maxRotate, Math.abs(l.rotate));
+      const l = await probe(page, '[class*="categoryLayer"]');
+      if (l) maxScale = Math.max(maxScale, l.scale);
     }
   }
   check('phone: no horizontal overflow at any scroll position', worstOverflow <= 0, `worst scrollWidth - innerWidth = ${worstOverflow}`);
-  check('phone: rotation amplitude is halved (≤ 0.8°)', maxRotate <= 0.8, `max |rotate| = ${maxRotate.toFixed(2)}°`);
+  check('phone: zoom amplitude is halved (≤ 1.045)', maxScale <= 1.045, `max scale = ${maxScale.toFixed(3)}`);
   check('phone run: no console errors', errors.length === 0, errors.slice(0, 2).join(' | '));
   await context.close();
 }

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { AnimatePresence, motion } from 'framer-motion';
 import { apiUrl } from '@/lib/config';
+import { getSizeGuide, guideKindFor } from '@/lib/size-guides';
 import { track } from '@/lib/analytics';
 import Modal from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
@@ -41,6 +42,8 @@ function QuickViewBody({ product, onClose }) {
   const [activeImage, setActiveImage] = useState(0);
   const image = product.images[activeImage] || product.images[0];
   const priceCents = variant?.priceCents ?? product.priceRange.minCents;
+  const guideKind = guideKindFor(product);
+  const sizeGuide = getSizeGuide(guideKind);
 
   return (
     <motion.div className={styles.quickGrid} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
@@ -65,7 +68,7 @@ function QuickViewBody({ product, onClose }) {
         <h3 className={styles.quickTitle}>{product.title}</h3>
         <Price cents={priceCents} compareAtCents={variant?.compareAtPriceCents} size="lg" />
         <p className="muted">{product.description}</p>
-        <VariantSelector product={product} {...selection} onOpenSizeGuide={() => setGuide(true)} />
+        <VariantSelector product={product} {...selection} onOpenSizeGuide={sizeGuide ? () => setGuide(true) : undefined} />
         {product.customizable ? (
           <Button href="/customizer" size="lg" fullWidth iconAfter={<IconArrow size={18} />} onClick={onClose}>
             Design yours in the studio
@@ -77,7 +80,7 @@ function QuickViewBody({ product, onClose }) {
           View full details <IconArrow size={16} />
         </Link>
       </div>
-      <SizeGuideModal open={guide} onClose={() => setGuide(false)} kind={product.category === 'gloves' ? 'gloves' : 'apparel'} activeSize={selection.selected.Size} />
+      {sizeGuide && <SizeGuideModal open={guide} onClose={() => setGuide(false)} guide={sizeGuide} kind={guideKind} activeSize={selection.selected.Size} />}
     </motion.div>
   );
 }

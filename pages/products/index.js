@@ -6,7 +6,7 @@ import ProductCard from '@/components/commerce/ProductCard';
 import ProductFilters from '@/components/commerce/ProductFilters';
 import QuickViewModal from '@/components/commerce/QuickViewModal';
 import StaggeredList from '@/components/animation/StaggeredList';
-import { apiUrl, CATEGORIES, PRICE_RANGES } from '@/lib/config';
+import { apiUrl, CATEGORIES, PRICE_RANGES, SITE } from '@/lib/config';
 import { getProducts } from '@/lib/products';
 import { buildProductQuery } from '@/lib/search-syntax';
 import styles from '@/styles/pages.module.css';
@@ -83,7 +83,7 @@ export default function Catalog({ initial }) {
 
   return (
     <>
-      <Seo title={title} description="Goalkeeper gloves, padded apparel, bags and glove care from A3GK." path="/products" />
+      <Seo title={title} description={SITE.description} path="/products" />
       <div className={`page-width ${styles.catalog}`}>
         <header className={styles.pageHeader}>
           <p className="eyebrow">Shop</p>

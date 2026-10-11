@@ -27,7 +27,7 @@ function Preferences({ consent }) {
     <Modal open={consent.panelOpen} onClose={closeConsentPanel} title="Privacy preferences" description="Choose which optional cookies and storage we may use. Nothing optional is on until you switch it on." size="md">
       {consent.gpc && (
         <p className={styles.gpcNote} role="note">
-          Your browser is sending a <strong>Global Privacy Control</strong> signal. We honour it: marketing stays off.
+          Your browser is sending a <strong>Global Privacy Control</strong> signal. We honour it.
         </p>
       )}
       <ul role="list" className={styles.consentList}>

@@ -5,7 +5,7 @@ import styles from '@/styles/components.module.css';
 
 /**
  * Quantity stepper. `label` names the item for assistive tech
- * ("Decrease quantity of Apex Pro Glove").
+ * ("Decrease quantity of Padded Base Layer").
  */
 export default function QuantitySelector({ value, onChange, min = 1, max = 20, label = 'item', disabled = false, size = 'md', className }) {
   const id = useId();

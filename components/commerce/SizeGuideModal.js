@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react';
-import sizes from '@/data/sizes.json';
 import Modal from '@/components/ui/Modal';
 import Select from '@/components/ui/Select';
 import { cn } from '@/lib/utils';
@@ -7,6 +6,7 @@ import styles from '@/styles/components.module.css';
 
 /** Simple annotated figure so measurements are not just numbers in a table. */
 function Figure({ kind }) {
+  if (kind === 'socks') return null;
   if (kind === 'gloves') {
     return (
       <svg viewBox="0 0 200 220" className={styles.sizeFigure} role="img" aria-label="Hand with circumference and length measurement lines">
@@ -29,13 +29,17 @@ function Figure({ kind }) {
   );
 }
 
-/** Size guide: table with the active size highlighted + measurement figure. */
-export default function SizeGuideModal({ open, onClose, kind = 'apparel', activeSize }) {
-  const guide = sizes[kind] || sizes.apparel;
-  const rowSizes = guide.rows.map((r) => r[0]);
+/**
+ * Size guide: table with the active size highlighted + measurement figure.
+ * `guide` comes from getSizeGuide() (lib/size-guides.js) — the real chart you
+ * supplied in data/sizes.json. Without one there is nothing to show.
+ */
+export default function SizeGuideModal({ open, onClose, guide, kind = 'apparel', activeSize }) {
+  const rowSizes = guide ? guide.rows.map((r) => r[0]) : [];
   const [picked, setPicked] = useState(null);
   const highlight = picked || (rowSizes.includes(activeSize) ? activeSize : null);
-  const row = useMemo(() => guide.rows.find((r) => r[0] === highlight), [guide, highlight]);
+  const row = useMemo(() => guide?.rows.find((r) => r[0] === highlight), [guide, highlight]);
+  if (!guide) return null;
 
   return (
     <Modal open={open} onClose={onClose} title={guide.title} description={guide.howToMeasure} size="lg">

@@ -4,7 +4,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Section from '@/components/layout/Section';
 import FadeInSection from '@/components/animation/FadeInSection';
 import ScrollLayer from '@/components/animation/ScrollLayer';
-import SampleNote from '@/components/ui/SampleNote';
 import { cn } from '@/lib/utils';
 import { track } from '@/lib/analytics';
 import { MEDIA } from '@/lib/media';
@@ -19,20 +18,21 @@ export const schema = { name: 'Gear showcase', settings: ['eyebrow', 'heading', 
  */
 export const HOTSPOTS = MEDIA.showcase.hotspots;
 
+/** Renders only once data/media.json → showcase has hotspots describing the real product. */
 export default function TechnologyShowcase() {
   const baseId = useId();
-  const { image, alt, heading, intro, isSample } = MEDIA.showcase;
-  const [active, setActive] = useState(HOTSPOTS[0].id);
-  const current = HOTSPOTS.find((h) => h.id === active);
+  const { image, alt, heading, intro } = MEDIA.showcase;
+  const [active, setActive] = useState(HOTSPOTS[0]?.id);
+  if (!HOTSPOTS.length) return null;
+  const current = HOTSPOTS.find((h) => h.id === active) || HOTSPOTS[0];
 
   return (
-    <Section id="technology" type="product-gallery" settings={{ eyebrow: 'Technology', heading }} labelledBy="tech-heading" className={styles.tech}>
+    <Section id="technology" type="product-gallery" settings={{ eyebrow: 'Product detail', heading }} labelledBy="tech-heading" className={styles.tech}>
       <div className={`page-width ${styles.techGrid}`}>
         <FadeInSection className={styles.techCopy}>
-          <p className="eyebrow">Technology</p>
+          <p className="eyebrow">Product detail</p>
           <h2 id="tech-heading">{heading}</h2>
           <p className="lead">{intro}</p>
-          <SampleNote isSample={isSample}>Sample hotspot copy — replace with your product’s real specification</SampleNote>
 
           <div className={styles.hotspotPanel} aria-live="polite" id={`${baseId}-panel`}>
             <AnimatePresence mode="wait" initial={false}>

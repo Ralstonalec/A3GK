@@ -9,6 +9,18 @@
   outline: none;
 }
 
+/* Shown only while the placeholder catalogue is live (no Shopify store connected). */
+.demoNotice {
+  margin: 0;
+  padding: 0.5rem var(--page-gutter);
+  text-align: center;
+  font-size: var(--text-xs);
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-line);
+}
+
 .announce {
   background: var(--color-accent);
   color: var(--color-accent-ink);
@@ -55,13 +67,12 @@
   text-decoration: none;
 }
 
-.logoMark {
-  color: var(--color-accent);
-  transition: transform var(--dur) var(--ease-out);
-}
-
-.logo:hover .logoMark {
-  transform: translateY(-2px) rotate(-4deg);
+.logoImage {
+  display: block;
+  height: 34px;
+  width: auto;
+  max-width: 11rem;
+  object-fit: contain;
 }
 
 .logoWord {
@@ -72,16 +83,6 @@
   font-stretch: 115%;
   font-size: 1.5rem;
   letter-spacing: -0.02em;
-}
-
-.logoTag {
-  font-size: 0.6rem;
-  font-weight: 600;
-  font-stretch: 125%;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: var(--color-text-muted);
-  margin-top: 0.3rem;
 }
 
 .nav {
@@ -247,7 +248,7 @@
 
 @media (min-width: 990px) {
   .footerInner {
-    grid-template-columns: 1.6fr repeat(4, 1fr);
+    grid-template-columns: 1.6fr repeat(3, 1fr);
   }
   .footerBrand {
     grid-column: auto;
@@ -319,12 +320,6 @@
   border-top: 1px solid var(--color-line);
   font-size: var(--text-sm);
   color: var(--color-text-muted);
-}
-
-.footerSecure {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
 }
 
 .footerLegal {

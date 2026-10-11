@@ -1,7 +1,8 @@
 import { publicConfig } from '@/lib/config';
+import { FEATURES } from '@/lib/features';
 import { getProductHandles } from '@/lib/products';
 
-const STATIC = ['', '/products', '/customizer', '/privacy', '/terms', '/accessibility'];
+const STATIC = ['', '/products', ...(FEATURES.customKit ? ['/customizer'] : []), '/privacy', '/terms'];
 
 export async function getServerSideProps({ res }) {
   const base = publicConfig.siteUrl.replace(/\/$/, '');

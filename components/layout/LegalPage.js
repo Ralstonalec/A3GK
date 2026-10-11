@@ -1,9 +1,10 @@
 import Seo from './Seo';
 import SampleNote from '@/components/ui/SampleNote';
+import { isDemoCatalogue } from '@/lib/config';
 import styles from '@/styles/pages.module.css';
 
 /**
- * Shared shell for Terms / Privacy / Accessibility. `sections` is
+ * Shared shell for Terms / Privacy. `sections` is
  * [{ id, title, content: ReactNode }]. A table of contents is generated.
  */
 export default function LegalPage({ title, path, updated, intro, sections, description }) {
@@ -14,8 +15,9 @@ export default function LegalPage({ title, path, updated, intro, sections, descr
         <header className={styles.pageHeader}>
           <p className="eyebrow">Legal</p>
           <h1>{title}</h1>
-          <p className="muted">Last updated: {updated}</p>
-          <SampleNote isSample>Template text — have it reviewed by a qualified lawyer before launch</SampleNote>
+          {updated && <p className="muted">Last updated: {updated}</p>}
+          {/* Owner-facing reminder, shown only while the placeholder catalogue is live. */}
+          <SampleNote isSample={isDemoCatalogue()}>Draft — describes the site’s technical behaviour only. Add your legal entity details and have it reviewed by a qualified lawyer before launch.</SampleNote>
           {intro && <p className="lead">{intro}</p>}
         </header>
         <div className={styles.legalLayout}>

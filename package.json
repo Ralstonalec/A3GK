@@ -15,6 +15,7 @@
     "test": "jest",
     "test:ci": "jest --ci --coverage",
     "assets": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/generate-assets.mjs",
+    "brand": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/brand.mjs",
     "theme:sync": "node scripts/sync-theme-assets.mjs",
     "theme:check": "node scripts/theme-check.mjs",
     "verify:shopify": "node scripts/verify-shopify.mjs",

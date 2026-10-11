@@ -10,7 +10,7 @@ import styles from '@/styles/sections.module.css';
 
 export const schema = { name: 'Featured products', settings: ['eyebrow', 'heading', 'products_to_show'] };
 
-export default function FeaturedProducts({ products, eyebrow = 'The lineup', heading = 'Gear that works as hard as you do' }) {
+export default function FeaturedProducts({ products, eyebrow = 'The lineup', heading = 'Featured gear' }) {
   const [quick, setQuick] = useState(null);
   return (
     <Section id="featured" type="featured-products" settings={{ eyebrow, heading, products_to_show: products.length }} labelledBy="featured-heading">

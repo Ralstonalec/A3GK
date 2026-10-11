@@ -13,6 +13,7 @@ import Accordion from '@/components/ui/Accordion';
 import Button from '@/components/ui/Button';
 import { IconArrow } from '@/components/ui/Icons';
 import { publicConfig } from '@/lib/config';
+import { getSizeGuide, guideKindFor } from '@/lib/size-guides';
 import { CART_LIMITS, hasFreeShipping, hasReturnWindow, STORE_TERMS } from '@/lib/store-terms';
 import { toItem, track } from '@/lib/analytics';
 import { getProduct, getProductHandles, getProducts } from '@/lib/products';
@@ -63,8 +64,9 @@ export default function ProductPage({ product, related }) {
   const [requestedQty, setQuantity] = useState(1);
   const [guide, setGuide] = useState(false);
   const base = publicConfig.siteUrl.replace(/\/$/, '');
-  const guideKind = product.category === 'gloves' ? 'gloves' : 'apparel';
-  const hasSizes = product.options.some((o) => o.name.toLowerCase() === 'size');
+  const guideKind = guideKindFor(product);
+  const sizeGuide = getSizeGuide(guideKind);
+  const hasSizes = product.options.some((o) => o.name.toLowerCase() === 'size') && Boolean(sizeGuide);
 
   useEffect(() => {
     track('view_item', { currency: product.currencyCode, value: product.priceRange.minCents / 100, items: [toItem(product, variant)] });
@@ -196,7 +198,7 @@ export default function ProductPage({ product, related }) {
           </section>
         )}
       </div>
-      {hasSizes && <SizeGuideModal open={guide} onClose={() => setGuide(false)} kind={guideKind} activeSize={selection.selected.Size} />}
+      {hasSizes && <SizeGuideModal open={guide} onClose={() => setGuide(false)} guide={sizeGuide} kind={guideKind} activeSize={selection.selected.Size} />}
     </>
   );
 }

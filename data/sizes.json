@@ -1,36 +1,5 @@
 {
-  "_note": "Size guide data. Measurements are body measurements; confirm against your own size chart before launch.",
-  "gloves": {
-    "title": "Glove sizing",
-    "unit": "cm",
-    "howToMeasure": "Wrap a tape measure around your dominant hand just below the knuckles, excluding the thumb. Measure from the base of your palm to the tip of the middle finger for length.",
-    "columns": ["Size", "Hand circumference (cm)", "Hand length (cm)", "Typical age"],
-    "rows": [
-      ["4", "14.0 – 15.0", "14.5 – 15.5", "6–8"],
-      ["5", "15.0 – 16.0", "15.5 – 16.5", "8–10"],
-      ["6", "16.0 – 17.0", "16.5 – 17.5", "10–12"],
-      ["7", "17.0 – 18.0", "17.5 – 18.5", "12–14"],
-      ["8", "18.0 – 19.0", "18.5 – 19.5", "Adult S"],
-      ["9", "19.0 – 20.5", "19.5 – 20.5", "Adult M"],
-      ["10", "20.5 – 22.0", "20.5 – 21.5", "Adult L"],
-      ["11", "22.0 – 23.5", "21.5 – 22.5", "Adult XL"]
-    ],
-    "tip": "Between sizes? Size up for a roll-finger glove, size down for a negative cut."
-  },
-  "apparel": {
-    "title": "Apparel sizing",
-    "unit": "cm",
-    "howToMeasure": "Measure around the fullest part of your chest and the narrowest part of your waist. Height is measured without shoes.",
-    "columns": ["Size", "Chest (cm)", "Waist (cm)", "Height (cm)"],
-    "rows": [
-      ["YM", "72 – 78", "62 – 66", "135 – 146"],
-      ["YL", "78 – 84", "66 – 70", "146 – 158"],
-      ["S", "88 – 94", "74 – 80", "165 – 172"],
-      ["M", "94 – 102", "80 – 87", "172 – 178"],
-      ["L", "102 – 110", "87 – 95", "178 – 184"],
-      ["XL", "110 – 118", "95 – 103", "184 – 190"],
-      ["XXL", "118 – 126", "103 – 111", "190 – 196"]
-    ],
-    "tip": "Our athletic fit sits close to the body so padding stays in place. Prefer a looser fit? Size up."
-  }
+  "_note": "Size charts are factual claims about real garments, so none ship. Add a chart per kind below ('apparel', 'socks') and the size-guide link appears automatically; until then it is hidden. Format: { title, unit, howToMeasure, columns: [...], rows: [[...]], tip }.",
+  "apparel": null,
+  "socks": null
 }

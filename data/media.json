@@ -1,39 +1,39 @@
 {
-  "_note": "Every photo/video/3D slot on the home page, in one place. Replace the files in /public/images (same names) or change the paths here. The generated files that ship are NEUTRAL PLACEHOLDERS, not artwork — see README → 'Real photography'.",
-
+  "_note": "Every photo/video/3D slot on the site, in one place. Replace the files in /public/images (same names) or change the paths here. The generated files that ship are NEUTRAL PLACEHOLDERS, not artwork — see public/brand/README.md and the README → 'Real photography'. Sections that need real content (showcase, 360 viewer, studio) stay hidden until you provide it.",
   "hero": {
     "image": "/images/hero.webp",
     "imageAlt": "",
     "videoUrl": "",
     "videoPoster": ""
   },
-
   "showcase": {
-    "isSample": true,
+    "_note": "Product showcase with hotspots. Hidden while `hotspots` is empty. Hotspot x/y are percentages of the photo. Example: { \"id\": \"elbow\", \"x\": 18, \"y\": 48, \"title\": \"Elbow padding\", \"body\": \"<what it really is>\" } — only describe what is true of the real product.",
     "image": "/images/showcase.webp",
-    "alt": "Close-up product photograph of the goalkeeper glove",
-    "heading": "Engineered down to the fingertip",
-    "intro": "Tap a hotspot to see what goes into the glove. Hotspot positions are percentages of the photo — move them to match your own image.",
-    "hotspots": [
-      { "id": "tips", "x": 46, "y": 15, "title": "Contact latex fingertips", "body": "Describe the palm material and what it does for grip." },
-      { "id": "fingers", "x": 36, "y": 31, "title": "Finger construction", "body": "Describe the finger cut, seams and flexibility." },
-      { "id": "backhand", "x": 50, "y": 56, "title": "Backhand", "body": "Describe the backhand panel, ventilation and protection." },
-      { "id": "thumb", "x": 19, "y": 46, "title": "Thumb", "body": "Describe the thumb shaping." },
-      { "id": "wrist", "x": 51, "y": 79, "title": "Wrist closure", "body": "Describe the strap and cuff." }
-    ]
+    "alt": "",
+    "heading": "",
+    "intro": "",
+    "hotspots": []
   },
-
   "viewer": {
-    "title": "Spin it. Zoom it. Trust it.",
+    "title": "Every angle",
     "productTitle": "Product",
-    "_frames": "Turntable photography: a numbered sequence of stills, e.g. { \"pattern\": \"/images/360/glove-{n}.webp\", \"count\": 36, \"pad\": 2 }. Frame 1 is the front; frames go clockwise.",
+    "_frames": "Turntable photography: a numbered sequence of stills, e.g. { \"pattern\": \"/images/360/jersey-{n}.webp\", \"count\": 36, \"pad\": 2 }. Frame 1 is the front; frames go clockwise.",
     "frames": null,
-    "_modelUrl": "Or a real 3D model (.glb), e.g. \"/3d-models/glove.glb\" or a Shopify Model3d CDN URL. Frames win if both are set.",
+    "_modelUrl": "Or a real 3D model (.glb), e.g. \"/3d-models/jersey.glb\" or a Shopify Model3d CDN URL. Frames win if both are set.",
     "modelUrl": null
   },
-
   "studio": {
     "image": "/images/studio.webp",
-    "alt": "Goalkeeper jersey being designed in the studio"
+    "alt": ""
+  },
+  "categories": {
+    "_note": "Home-page category tiles. One photo per tile (4:5). Labels/links come from CATEGORIES in lib/config.js.",
+    "images": {
+      "base-layers": "/images/categories/base-layers.webp",
+      "jerseys": "/images/categories/jerseys.webp",
+      "bottoms": "/images/categories/bottoms.webp",
+      "accessories": "/images/categories/accessories.webp",
+      "gloves": "/images/categories/gloves.webp"
+    }
   }
 }

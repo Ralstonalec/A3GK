@@ -1,5 +1,6 @@
 import { ApiError, createHandler, parseBody, sendJson } from '@/lib/api';
 import { loadDesign, saveDesign } from '@/lib/design-store';
+import { FEATURES } from '@/lib/features';
 import { kvBackend } from '@/lib/kv';
 import { designIdSchema, designSaveSchema, validate } from '@/lib/validation';
 
@@ -27,4 +28,10 @@ async function get(req, res) {
   return sendJson(res, 200, { design }, { 'Cache-Control': 'private, max-age=60' });
 }
 
-export default createHandler({ GET: get, POST: post });
+/** Custom kit is a work in progress; the API is closed until the feature flag is on (lib/features.js). */
+const guard = (fn) => async (req, res) => {
+  if (!FEATURES.customKit) throw new ApiError(404, 'feature_disabled', 'Custom kit is not available yet.');
+  return fn(req, res);
+};
+
+export default createHandler({ GET: guard(get), POST: guard(post) });

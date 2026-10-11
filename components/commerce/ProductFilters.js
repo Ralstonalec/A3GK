@@ -1,16 +1,8 @@
 import { CATEGORIES, PRICE_RANGES, SORT_OPTIONS } from '@/lib/config';
 import { cn } from '@/lib/utils';
-import { Checkbox } from '@/components/ui/Input';
-import Input from '@/components/ui/Input';
+import Input, { Checkbox } from '@/components/ui/Input';
 import Select from '@/components/ui/Select';
 import styles from '@/styles/pages.module.css';
-
-const TAGS = [
-  { id: 'pro', label: 'Pro level' },
-  { id: 'padded', label: 'Padded' },
-  { id: 'junior', label: 'Junior' },
-  { id: 'custom', label: 'Customisable' },
-];
 
 /** Filter + sort controls. All state lives in the URL (see pages/products/index.js). */
 export default function ProductFilters({ filters, onChange, onReset, resultCount, queryString }) {
@@ -18,7 +10,7 @@ export default function ProductFilters({ filters, onChange, onReset, resultCount
 
   return (
     <form className={styles.filters} role="search" aria-label="Filter products" onSubmit={(e) => e.preventDefault()}>
-      <Input label="Search" type="search" value={filters.q} placeholder="Gloves, jersey, padded…" onChange={(e) => onChange({ q: e.target.value })} />
+      <Input label="Search" type="search" value={filters.q} placeholder="Jersey, base layer, tape…" onChange={(e) => onChange({ q: e.target.value })} />
 
       <fieldset className={styles.filterGroup}>
         <legend>Category</legend>
@@ -34,23 +26,9 @@ export default function ProductFilters({ filters, onChange, onReset, resultCount
 
       <Select label="Price" value={filters.price} options={PRICE_RANGES.map((p) => ({ value: p.id, label: p.label }))} onChange={(e) => onChange({ price: e.target.value })} />
 
-      <fieldset className={styles.filterGroup}>
-        <legend>Features</legend>
-        <div className="stack" style={{ '--stack-gap': 'var(--space-2)' }}>
-          {TAGS.map((t) => (
-            <Checkbox
-              key={t.id}
-              checked={filters.tags.includes(t.id)}
-              onChange={(e) => onChange({ tags: e.target.checked ? [...filters.tags, t.id] : filters.tags.filter((x) => x !== t.id) })}
-            >
-              {t.label}
-            </Checkbox>
-          ))}
-          <Checkbox checked={filters.available} onChange={(e) => onChange({ available: e.target.checked })}>
-            In stock only
-          </Checkbox>
-        </div>
-      </fieldset>
+      <Checkbox checked={filters.available} onChange={(e) => onChange({ available: e.target.checked })}>
+        In stock only
+      </Checkbox>
 
       <Select label="Sort by" value={filters.sort} options={SORT_OPTIONS} onChange={(e) => onChange({ sort: e.target.value })} />
 

@@ -395,6 +395,70 @@
   object-fit: cover;
 }
 
+/* ── Category tiles ────────────────────────────────────────────────────── */
+.categoryGrid {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+@media (min-width: 990px) {
+  .categoryGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-4);
+  }
+}
+
+.categoryTile {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 5;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--color-surface);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.categoryLayer {
+  position: absolute;
+  inset: 0;
+  will-change: transform; /* scroll-linked scale; the tile clips it */
+}
+
+.categoryTile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s var(--ease-out);
+}
+
+.categoryTile:hover img,
+.categoryTile:focus-visible img {
+  transform: scale(1.05);
+}
+
+.categoryTile:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+.categoryLabel {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: var(--space-6) var(--space-4) var(--space-4);
+  background: linear-gradient(0deg, rgb(7 8 10 / 0.85), transparent);
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 800;
+  font-stretch: 112%;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
 /* ── Stats ─────────────────────────────────────────────────────────────── */
 .stats {
   border-block: 1px solid var(--color-line);
@@ -435,106 +499,6 @@
 .counterLabel {
   color: var(--color-text-muted);
   font-size: var(--text-sm);
-}
-
-.certHeading {
-  margin-bottom: var(--space-5);
-  font-size: var(--text-lg);
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  font-stretch: 120%;
-}
-
-.rings {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-6) var(--space-4);
-}
-
-@media (min-width: 990px) {
-  .rings {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-
-.ring {
-  display: grid;
-  justify-items: center;
-  gap: var(--space-4);
-  margin: 0;
-  text-align: center;
-}
-
-.ring figcaption {
-  display: grid;
-  gap: 2px;
-}
-
-.ring figcaption span {
-  font-size: var(--text-sm);
-  color: var(--color-text-muted);
-}
-
-.ringSvgWrap {
-  position: relative;
-  width: 140px;
-  height: 140px;
-}
-
-.ringSvgWrap svg {
-  width: 100%;
-  height: 100%;
-}
-
-.ringTrack {
-  fill: none;
-  stroke: var(--color-surface-2);
-  stroke-width: 9;
-}
-
-.ringValue {
-  fill: none;
-  stroke: var(--color-accent);
-  stroke-width: 9;
-  stroke-linecap: round;
-  transition: stroke-dashoffset 1.8s var(--ease-out);
-}
-
-.ringNumber {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-content: center;
-  font-family: var(--font-display);
-  font-size: 2rem;
-  font-weight: 850;
-  letter-spacing: -0.03em;
-  line-height: 1;
-}
-
-.ringNumber small {
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: var(--color-accent);
-  margin-left: 2px;
-}
-
-.ringCheck {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  display: grid;
-  place-items: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: var(--color-success);
-  color: #04130a;
-  border: 3px solid var(--color-bg-raised);
 }
 
 /* ── Testimonials ──────────────────────────────────────────────────────── */
@@ -670,24 +634,6 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-}
-
-.liveDot {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: var(--color-success);
-  animation: pulse 2.2s ease-out infinite;
-}
-
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgb(94 224 138 / 0.55);
-  }
-  70%,
-  100% {
-    box-shadow: 0 0 0 9px rgb(94 224 138 / 0);
-  }
 }
 
 .socialGrid {

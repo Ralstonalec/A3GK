@@ -3,7 +3,6 @@ import data from '@/data/testimonials.json';
 import Section from '@/components/layout/Section';
 import FadeInSection from '@/components/animation/FadeInSection';
 import Modal from '@/components/ui/Modal';
-import SampleNote from '@/components/ui/SampleNote';
 import { IconArrow, IconPlay } from '@/components/ui/Icons';
 import styles from '@/styles/sections.module.css';
 
@@ -19,6 +18,7 @@ function initials(name) {
 }
 
 /**
+ * Renders only when data/testimonials.json holds real, consented quotes.
  * Scroll-snap carousel of testimonial cards. A card with a `videoSrc` shows a
  * play button that opens the video in an accessible modal; without footage it
  * is a quote card — no dead controls.
@@ -26,6 +26,7 @@ function initials(name) {
 export default function TestimonialCarousel() {
   const trackRef = useRef(null);
   const [video, setVideo] = useState(null);
+  if (!data.items.length) return null;
 
   const scrollByCard = (dir) => {
     const el = trackRef.current;
@@ -35,13 +36,12 @@ export default function TestimonialCarousel() {
   };
 
   return (
-    <Section id="testimonials" type="testimonial-videos" settings={{ eyebrow: 'From the box', heading: 'Keepers on the gear' }} labelledBy="testimonials-heading">
+    <Section id="testimonials" type="testimonial-videos" settings={{ eyebrow: 'Customers', heading: 'What keepers say' }} labelledBy="testimonials-heading">
       <div className="page-width">
         <FadeInSection className={styles.carouselHead}>
           <div className="stack">
-            <p className="eyebrow">From the box</p>
-            <h2 id="testimonials-heading">Keepers on the gear</h2>
-            <SampleNote isSample={data.isSample}>Sample testimonials — replace with real, consented customers</SampleNote>
+            <p className="eyebrow">Customers</p>
+            <h2 id="testimonials-heading">What keepers say</h2>
           </div>
           <div className={styles.carouselNav}>
             <button type="button" onClick={() => scrollByCard(-1)} aria-label="Previous testimonials"><IconArrow size={20} style={{ transform: 'scaleX(-1)' }} /></button>

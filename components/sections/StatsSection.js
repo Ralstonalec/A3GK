@@ -1,22 +1,28 @@
 import stats from '@/data/stats.json';
 import Section from '@/components/layout/Section';
 import AnimatedCounter from '@/components/animation/AnimatedCounter';
-import CircularProgress from '@/components/animation/CircularProgress';
 import FadeInSection from '@/components/animation/FadeInSection';
 import StaggeredList from '@/components/animation/StaggeredList';
-import SampleNote from '@/components/ui/SampleNote';
 import styles from '@/styles/sections.module.css';
+
+const HEADING = 'By the numbers';
 
 export const schema = { name: 'Statistics', settings: ['eyebrow', 'heading'] };
 
+/**
+ * Company figures. Renders ONLY when data/stats.json has real counters — nothing
+ * is invented or estimated, and a stat is never shown without being supplied.
+ * `asOf` (when set) is printed under the figures so the claim stays time-bound.
+ */
 export default function StatsSection() {
+  if (!stats.counters?.length) return null;
+
   return (
-    <Section id="stats" type="stats-counter" settings={{ eyebrow: 'Global protection', heading: 'Trusted by keepers everywhere' }} labelledBy="stats-heading" className={styles.stats}>
+    <Section id="stats" type="stats-counter" settings={{ eyebrow: 'A3GK', heading: HEADING }} labelledBy="stats-heading" className={styles.stats}>
       <div className="page-width">
         <FadeInSection className="section__header">
-          <p className="eyebrow">Global protection</p>
-          <h2 id="stats-heading">Trusted by keepers everywhere</h2>
-          <SampleNote isSample={stats.isSample}>Sample figures — replace with verified numbers before launch</SampleNote>
+          <p className="eyebrow">A3GK</p>
+          <h2 id="stats-heading">{HEADING}</h2>
         </FadeInSection>
 
         <StaggeredList as="ul" itemAs="li" className={styles.counters} role="list">
@@ -27,15 +33,7 @@ export default function StatsSection() {
             </div>
           ))}
         </StaggeredList>
-
-        <h3 className={styles.certHeading}>Tested &amp; certified</h3>
-        <ul role="list" className={styles.rings}>
-          {stats.certifications.map((c) => (
-            <li key={c.id}>
-              <CircularProgress value={c.value} label={c.label} detail={c.detail} />
-            </li>
-          ))}
-        </ul>
+        {stats.asOf && <p className="muted">As of {stats.asOf}.</p>}
       </div>
     </Section>
   );
