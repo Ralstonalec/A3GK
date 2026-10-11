@@ -1,0 +1,16 @@
+{
+  "_note": "SAMPLE figures for the design prototype. Replace with real, verifiable numbers (or remove the section) before launch — publishing unverified performance claims can breach advertising law.",
+  "isSample": true,
+  "counters": [
+    { "id": "keepers", "value": 48000, "suffix": "+", "label": "Keepers equipped" },
+    { "id": "countries", "value": 62, "suffix": "", "label": "Countries shipped to" },
+    { "id": "saves", "value": 2400000, "suffix": "+", "label": "Saves made in A3GK gloves", "compact": true },
+    { "id": "rating", "value": 4.8, "suffix": "/5", "label": "Average fit rating", "decimals": 1 }
+  ],
+  "certifications": [
+    { "id": "impact", "label": "Impact absorption", "value": 92, "detail": "Padding test vs. baseline" },
+    { "id": "grip", "label": "Grip retention", "value": 88, "detail": "After 50 wash cycles" },
+    { "id": "durability", "label": "Seam durability", "value": 96, "detail": "Abrasion cycles passed" },
+    { "id": "recycled", "label": "Recycled content", "value": 74, "detail": "Fabric by weight" }
+  ]
+}

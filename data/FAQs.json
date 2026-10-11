@@ -1,0 +1,18 @@
+{
+  "_note": "Placeholder help copy. Shipping, returns, payment and discount answers were deliberately left out until those terms are decided (see lib/store-terms.js).",
+  "isSample": true,
+  "items": [
+    {
+      "q": "How do I choose the right glove size?",
+      "a": "Measure the circumference of your dominant hand just below the knuckles in centimetres. That number, rounded to the nearest size in our size guide, is your glove size. Between sizes: go up for a roll-finger glove and down for a negative cut."
+    },
+    {
+      "q": "How do I make my gloves last longer?",
+      "a": "Rinse them in cool water after each session, never wring or tumble-dry, and let them air-dry flat away from direct heat. Our Grip Restore kit refreshes the latex between matches."
+    },
+    {
+      "q": "What file should I upload for my club crest?",
+      "a": "A PNG, JPEG or WebP image under 300 KB works best. A transparent PNG at least 512 px wide gives the sharpest print. Vector artwork can be emailed to our design team after you order."
+    }
+  ]
+}

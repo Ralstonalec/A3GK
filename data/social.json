@@ -1,0 +1,12 @@
+{
+  "_note": "SAMPLE feed shown when INSTAGRAM_ACCESS_TOKEN is not set. Real posts replace it automatically.",
+  "isSample": true,
+  "posts": [
+    { "id": "s1", "image": "/images/social/social-1.webp", "caption": "Match-day prep. Volt on volt.", "permalink": "https://www.instagram.com/" },
+    { "id": "s2", "image": "/images/social/social-2.webp", "caption": "Studio drop: new custom colourways.", "permalink": "https://www.instagram.com/" },
+    { "id": "s3", "image": "/images/social/social-3.webp", "caption": "Grip test, wet conditions.", "permalink": "https://www.instagram.com/" },
+    { "id": "s4", "image": "/images/social/social-4.webp", "caption": "Pad up. Dive in.", "permalink": "https://www.instagram.com/" },
+    { "id": "s5", "image": "/images/social/social-5.webp", "caption": "Team order, ready to ship.", "permalink": "https://www.instagram.com/" },
+    { "id": "s6", "image": "/images/social/social-6.webp", "caption": "Keeper session. Cold hands, warm gloves.", "permalink": "https://www.instagram.com/" }
+  ]
+}
