@@ -15,3 +15,6 @@ cypress/screenshots/
 reports/
 dist/
 *.zip
+
+# Claude Code scratch worktrees (created by multi-agent runs)
+.claude/worktrees/
