@@ -1,6 +1,6 @@
 /**
- * Renders every brand-derived raster from ONE logo file: favicon, PWA / Apple
- * icons and the 1200×630 social card. With no logo it renders a neutral
+ * Renders every brand-derived raster from the supplied logo files: favicon, PWA /
+ * Apple icons and the 1200×630 social card (the full lockup is used there when given). With no logo it renders a neutral
  * text-only fallback (the brand NAME in type — no invented symbol).
  *
  * Used by scripts/brand.mjs (`npm run brand`) and scripts/generate-assets.mjs.
@@ -47,6 +47,53 @@ export async function averageLuminance(pngBuffer) {
   return weight ? sum / weight : 0;
 }
 
+/**
+ * Dark artwork on a light background (typically a black logo on white, JPEG or not) →
+ * white-on-transparent PNG, trimmed to the artwork. The site is dark, so a black logo
+ * would otherwise vanish. The soft ramp removes JPEG haze but keeps anti-aliased edges.
+ * @param {string|Buffer} input
+ * @returns {Promise<Buffer>} PNG
+ */
+export async function knockout(input, { lo = 30, hi = 225, pad = 0.04 } = {}) {
+  const { data, info } = await sharp(input).flatten({ background: '#ffffff' }).greyscale().raw().toBuffer({ resolveWithObject: true });
+  const { width: w, height: h } = info;
+
+  // Sanity: the corners must be light, or this is not dark-on-light artwork.
+  const patch = Math.max(2, Math.round(Math.min(w, h) * 0.03));
+  let sum = 0;
+  let n = 0;
+  for (const [x0, y0] of [[0, 0], [w - patch, 0], [0, h - patch], [w - patch, h - patch]]) {
+    for (let y = y0; y < y0 + patch; y++) for (let x = x0; x < x0 + patch; x++) { sum += data[y * w + x]; n++; }
+  }
+  if (sum / n < 190) throw new Error('--knockout expects dark artwork on a light background, but the corners of this image are dark.');
+
+  const rgba = Buffer.alloc(w * h * 4);
+  let minX = w, minY = h, maxX = -1, maxY = -1;
+  for (let i = 0; i < w * h; i++) {
+    const alpha = Math.round(Math.min(1, Math.max(0, (hi - data[i]) / (hi - lo))) * 255);
+    rgba[i * 4] = 255;
+    rgba[i * 4 + 1] = 255;
+    rgba[i * 4 + 2] = 255;
+    rgba[i * 4 + 3] = alpha;
+    if (alpha > 40) {
+      const x = i % w;
+      const y = (i / w) | 0;
+      if (x < minX) minX = x;
+      if (x > maxX) maxX = x;
+      if (y < minY) minY = y;
+      if (y > maxY) maxY = y;
+    }
+  }
+  if (maxX < 0) throw new Error('--knockout found no artwork in this image.');
+  const px = Math.round((maxX - minX) * pad);
+  const py = Math.round((maxY - minY) * pad);
+  const left = Math.max(0, minX - px);
+  const top = Math.max(0, minY - py);
+  const width = Math.min(w - left, maxX - minX + 1 + px * 2);
+  const height = Math.min(h - top, maxY - minY + 1 + py * 2);
+  return sharp(rgba, { raw: { width: w, height: h, channels: 4 } }).extract({ left, top, width, height }).png({ compressionLevel: 9 }).toBuffer();
+}
+
 async function rasterise(file, maxEdge = 1024) {
   return sharp(file, { density: 300 }).resize({ width: maxEdge, height: maxEdge, fit: 'inside', withoutEnlargement: false }).png().toBuffer();
 }
@@ -74,10 +121,11 @@ async function iconTile({ size, padding, bg, markPng, name, root }) {
 }
 
 /**
- * @param {{ root: string, name?: string, logoFile?: string|null, markFile?: string|null, bg?: string }} o
+ * Files may be paths or Buffers.
+ * @param {{ root: string, name?: string, logoFile?: string|Buffer|null, markFile?: string|Buffer|null, lockupFile?: string|Buffer|null, bg?: string }} o
  * @returns {Promise<{ warnings: string[] }>}
  */
-export async function renderBrandAssets({ root, name = 'A3GK', logoFile = null, markFile = null, bg = '#07080a' }) {
+export async function renderBrandAssets({ root, name = 'A3GK', logoFile = null, markFile = null, lockupFile = null, bg = '#07080a' }) {
   const out = (...p) => path.join(root, 'public', ...p);
   const warnings = [];
   await fs.mkdir(out('icons'), { recursive: true });
@@ -85,6 +133,7 @@ export async function renderBrandAssets({ root, name = 'A3GK', logoFile = null, 
 
   const logoPng = logoFile ? await rasterise(logoFile) : null;
   const markPng = markFile ? await rasterise(markFile) : logoPng;
+  const lockupPng = lockupFile ? await rasterise(lockupFile) : null;
 
   if (markPng && /^#0[0-9a-f]/i.test(bg) && (await averageLuminance(markPng)) < 0.3) {
     warnings.push('Your logo looks dark; on the dark app-icon tile it may be hard to see. Supply a light/white version, or pass --bg "#ffffff" for a light tile.');
@@ -113,10 +162,13 @@ export async function renderBrandAssets({ root, name = 'A3GK', logoFile = null, 
   ctx.fillStyle = glow;
   ctx.fillRect(0, 0, w, h);
 
-  if (logoPng) {
-    const fitted = await sharp(logoPng).resize({ width: 640, height: 220, fit: 'inside' }).png().toBuffer();
+  const cardLogo = lockupPng || logoPng;
+  if (cardLogo) {
+    // The full lockup is the tall one: give it more room than a wide wordmark.
+    const box = lockupPng ? { width: 600, height: 300 } : { width: 640, height: 220 };
+    const fitted = await sharp(cardLogo).resize({ ...box, fit: 'inside' }).png().toBuffer();
     const img = await loadImage(fitted);
-    ctx.drawImage(img, 80, 150 + (220 - img.height) / 2, img.width, img.height);
+    ctx.drawImage(img, 80, 110 + (box.height - img.height) / 2, img.width, img.height);
   } else {
     ctx.fillStyle = '#f3f5f7';
     ctx.font = '400 190px "Bebas Neue"';
@@ -128,7 +180,7 @@ export async function renderBrandAssets({ root, name = 'A3GK', logoFile = null, 
   ctx.font = '400 62px "Bebas Neue"';
   ctx.textAlign = 'left';
   ctx.textBaseline = 'alphabetic';
-  ctx.fillText('ADVANCED ATHLETIC GEAR FOR GOALKEEPERS', 80, 450);
+  ctx.fillText('ADVANCED ATHLETIC GEAR FOR GOALKEEPERS', 80, lockupPng ? 500 : 450);
   await sharp(canvas.toBuffer('image/png')).png({ compressionLevel: 9 }).toFile(out('images', 'og.png'));
 
   return { warnings };

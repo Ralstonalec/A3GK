@@ -69,9 +69,18 @@
 
 .logoImage {
   display: block;
-  height: 34px;
+  height: 40px;
   width: auto;
   max-width: 11rem;
+  object-fit: contain;
+}
+
+/* Full lockup (symbol + name), used where it has room to stay legible. */
+.logoLockup {
+  display: block;
+  height: 96px;
+  width: auto;
+  max-width: 14rem;
   object-fit: contain;
 }
 

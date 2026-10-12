@@ -11,7 +11,6 @@ import SocialFeed from '@/components/sections/SocialFeed';
 import FaqSection, { faqJsonLd } from '@/components/sections/FaqSection';
 import Section from '@/components/layout/Section';
 import TrustBadges, { getTrustBadges } from '@/components/commerce/TrustBadges';
-import { BRAND } from '@/lib/brand';
 import { publicConfig, SITE } from '@/lib/config';
 import { getProducts } from '@/lib/products';
 import { getSocialPosts } from '@/lib/social';
@@ -34,8 +33,6 @@ export default function Home({ featured, posts }) {
             '@type': 'Organization',
             name: SITE.name,
             url: base,
-            // Only a real, supplied logo is published as the organisation logo.
-            ...(BRAND.hasLogo && !BRAND.logo.src.endsWith('.svg') ? { logo: `${base}${BRAND.logo.src}` } : {}),
             ...(sameAs.length ? { sameAs } : {}),
           },
           { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE.name, url: base },

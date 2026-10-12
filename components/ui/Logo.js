@@ -9,18 +9,24 @@ import styles from '@/styles/components.module.css';
  * Shows the company's own logo once one has been installed with `npm run brand`
  * (data/brand.json). Until then it renders a plain text wordmark — deliberately
  * not an invented mark, so nothing on the site passes for the real logo.
- * SVG logos are served as-is (`unoptimized`): the optimiser would rasterise them.
+ *
+ * `variant="lockup"` (footer) prefers the full logo (symbol + name) when one was
+ * supplied, at a size where its small text stays readable; otherwise it falls back
+ * to the header logo. SVG logos are served as-is (`unoptimized`): the optimiser
+ * would rasterise them.
  */
-export default function Logo({ priority = false }) {
-  const { logo, hasLogo, name } = BRAND;
-  const height = 34;
-  const width = hasLogo && logo.width && logo.height ? Math.round((logo.width / logo.height) * height) : height;
+export default function Logo({ variant = 'header', priority = false }) {
+  const { name, hasLogo } = BRAND;
+  const lockup = variant === 'lockup' && BRAND.lockup?.src ? BRAND.lockup : null;
+  const logo = lockup || BRAND.logo;
+  const displayHeight = lockup ? 96 : 40;
+  const width = hasLogo && logo.width && logo.height ? Math.round((logo.width / logo.height) * displayHeight) : displayHeight;
 
   return (
     <Link href="/" className={styles.logo}>
       {hasLogo ? (
         <>
-          <Image src={logo.src} alt="" width={width} height={height} priority={priority} unoptimized={logo.src.endsWith('.svg')} className={styles.logoImage} />
+          <Image src={logo.src} alt="" width={width} height={displayHeight} priority={priority} unoptimized={logo.src.endsWith('.svg')} className={lockup ? styles.logoLockup : styles.logoImage} />
           <span className="visually-hidden">{name} home</span>
         </>
       ) : (

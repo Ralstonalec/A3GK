@@ -35,7 +35,7 @@ export default function Footer() {
     <footer className={styles.footer}>
       <div className={`page-width ${styles.footerInner}`}>
         <div className={styles.footerBrand}>
-          <Logo />
+          <Logo variant="lockup" />
           <p className={styles.footerBlurb}>{SITE.tagline}.</p>
           {SOCIAL.length > 0 && (
             <ul role="list" className={styles.socialList}>

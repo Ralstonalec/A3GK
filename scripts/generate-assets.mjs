@@ -158,7 +158,7 @@ async function placeholders() {
 async function brand() {
   const cfg = await readJson('data/brand.json');
   const file = (src) => (src ? path.join(root, 'public', src.replace(/^\//, '')) : null);
-  const { warnings } = await renderBrandAssets({ root, name: cfg.name, logoFile: file(cfg.logo?.src), markFile: file(cfg.mark?.src) });
+  const { warnings } = await renderBrandAssets({ root, name: cfg.name, logoFile: file(cfg.logo?.src), markFile: file(cfg.mark?.src), lockupFile: file(cfg.lockup?.src) });
   warnings.forEach((w) => console.warn(`  ! ${w}`));
   console.log(cfg.logo?.src ? `  icons + social card built from ${cfg.logo.src}` : '  no logo installed yet: icons and social card use the plain name (run `npm run brand -- your-logo.svg`)');
 }

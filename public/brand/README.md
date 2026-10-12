@@ -1,21 +1,26 @@
 # Brand assets
 
-Your logo lives here once you install it:
+`logo.png` and `lockup.png` here are your logo, converted for the dark site. Your originals are kept in
+`/brand-source/` (black artwork on white). To install or replace the logo:
 
 ```bash
-npm run brand -- path/to/your-logo.svg
+npm run brand -- brand-source/a3-mark-black.jpg --lockup brand-source/a3-sports-solutions-black.webp --knockout
 ```
 
-This copies the logo into `public/brand/`, records its size in `data/brand.json`, and regenerates the favicon,
-app icons and social-share image from it. Then rebuild/redeploy.
+This writes the converted files to `public/brand/`, records their size in `data/brand.json`, and regenerates
+the favicon, app icons and social-share image. Then rebuild/redeploy.
 
-**What to supply**
+**What each file is used for**
 
-- A logo that reads on a **dark background** (the site is dark): a light or white version, ideally **SVG**
-  (PNG/WebP with transparency also work). Max 2 MB. SVGs must not contain scripts.
-- Optional `--mark path/to/square-symbol.svg` — a square symbol used for the app icons when the full logo is a wide wordmark.
-- Optional `--name "Company name"` and `--bg "#ffffff"` (icon tile colour for dark logos).
+| Option | Used for |
+| --- | --- |
+| logo (first argument) | the header (about 40px tall) and the favicon / app icons. A compact symbol works best. |
+| `--lockup full-logo.png` | optional full logo (symbol + name), shown larger in the footer and on the social-share image |
+| `--mark square.png` | optional square symbol for the favicon / app icons, if different from the logo |
+| `--knockout` | your artwork is dark on a light background (a black logo on white, JPEG is fine): convert it to white on transparent so it reads on the dark site |
 
-`npm run brand -- --reset` goes back to the neutral text wordmark.
+Without `--knockout`, supply files that already read on a **dark background**: PNG/WebP with transparency, or SVG
+(no scripts). JPEGs have no transparency and are refused unless `--knockout` is used. Max 2 MB per file.
+Optional `--name "Company name"` and `--bg "#ffffff"` (icon tile colour for dark logos).
 
-Until a logo is installed the header shows the plain text "A3GK" — a stand-in, not a logo.
+`npm run brand -- --reset` goes back to the neutral text wordmark (it does not touch `brand-source/`).

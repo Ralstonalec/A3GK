@@ -1,10 +1,15 @@
 {
-  "_note": "Brand identity. Do not edit by hand — run `npm run brand -- path/to/your-logo.svg` (see public/brand/README.md). While `logo.src` is null the site shows a neutral text wordmark, NOT a real logo.",
+  "_note": "Brand identity. Do not edit by hand — run `npm run brand -- path/to/your-logo.png [--lockup full.png] [--knockout]` (see public/brand/README.md). While `logo.src` is null the site shows a neutral text wordmark, NOT a real logo.",
   "name": "A3GK",
   "logo": {
-    "src": null,
-    "width": null,
-    "height": null
+    "src": "/brand/logo.png",
+    "width": 511,
+    "height": 537
+  },
+  "lockup": {
+    "src": "/brand/lockup.png",
+    "width": 753,
+    "height": 537
   },
   "mark": {
     "src": null
