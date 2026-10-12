@@ -1,0 +1,231 @@
+{
+  "_note": "DEMO CATALOGUE — used only while no Shopify store is connected. The six products mirror the launch range (padded base layers, goalkeeper jerseys, pants, shorts, athletic tape, grip socks). Names, prices and sizes are PLACEHOLDERS: no materials, specs, stock levels, badges or claims are asserted. The site shows a 'demo catalogue' notice and asks search engines not to index it. Real data comes from Shopify.",
+  "products": [
+    {
+      "id": 1001,
+      "handle": "padded-base-layer",
+      "title": "Padded Base Layer",
+      "category": "base-layers",
+      "productType": "Base Layers",
+      "tags": [],
+      "badges": [],
+      "price": 49.99,
+      "description": "Padded base layer for goalkeepers.",
+      "descriptionHtml": "<p>Padded base layer for goalkeepers.</p>",
+      "images": [
+        {
+          "file": "padded-base-layer-1",
+          "alt": "Black long-sleeve top and leggings with hexagon-patterned padded panels",
+          "width": 1125,
+          "height": 2000
+        }
+      ],
+      "options": [
+        {
+          "name": "Size",
+          "values": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ]
+        }
+      ],
+      "stock": {
+        "default": null,
+        "overrides": {}
+      },
+      "model": null,
+      "customizable": false,
+      "leadTimeDays": 0,
+      "features": [],
+      "specs": []
+    },
+    {
+      "id": 1002,
+      "handle": "goalkeeper-jersey",
+      "title": "Goalkeeper Jersey",
+      "category": "jerseys",
+      "productType": "Jerseys",
+      "tags": [],
+      "badges": [],
+      "price": 59.99,
+      "description": "Goalkeeper jersey.",
+      "descriptionHtml": "<p>Goalkeeper jersey.</p>",
+      "images": [
+        {
+          "file": "goalkeeper-jersey-1",
+          "alt": "Placeholder for the goalkeeper jersey photo"
+        }
+      ],
+      "options": [
+        {
+          "name": "Size",
+          "values": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ]
+        }
+      ],
+      "stock": {
+        "default": null,
+        "overrides": {}
+      },
+      "model": null,
+      "customizable": false,
+      "leadTimeDays": 0,
+      "features": [],
+      "specs": []
+    },
+    {
+      "id": 1003,
+      "handle": "goalkeeper-pants",
+      "title": "Goalkeeper Pants",
+      "category": "bottoms",
+      "productType": "Pants",
+      "tags": [],
+      "badges": [],
+      "price": 69.99,
+      "description": "Goalkeeper pants.",
+      "descriptionHtml": "<p>Goalkeeper pants.</p>",
+      "images": [
+        {
+          "file": "goalkeeper-pants-1",
+          "alt": "Placeholder for the goalkeeper pants photo"
+        }
+      ],
+      "options": [
+        {
+          "name": "Size",
+          "values": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ]
+        }
+      ],
+      "stock": {
+        "default": null,
+        "overrides": {}
+      },
+      "model": null,
+      "customizable": false,
+      "leadTimeDays": 0,
+      "features": [],
+      "specs": []
+    },
+    {
+      "id": 1004,
+      "handle": "goalkeeper-shorts",
+      "title": "Goalkeeper Shorts",
+      "category": "bottoms",
+      "productType": "Shorts",
+      "tags": [],
+      "badges": [],
+      "price": 39.99,
+      "description": "Goalkeeper shorts.",
+      "descriptionHtml": "<p>Goalkeeper shorts.</p>",
+      "images": [
+        {
+          "file": "goalkeeper-shorts-1",
+          "alt": "Placeholder for the goalkeeper shorts photo"
+        }
+      ],
+      "options": [
+        {
+          "name": "Size",
+          "values": [
+            "S",
+            "M",
+            "L",
+            "XL"
+          ]
+        }
+      ],
+      "stock": {
+        "default": null,
+        "overrides": {}
+      },
+      "model": null,
+      "customizable": false,
+      "leadTimeDays": 0,
+      "features": [],
+      "specs": []
+    },
+    {
+      "id": 1005,
+      "handle": "athletic-tape",
+      "title": "Athletic Tape",
+      "category": "accessories",
+      "productType": "Tape",
+      "tags": [],
+      "badges": [],
+      "price": 6.99,
+      "description": "Athletic tape.",
+      "descriptionHtml": "<p>Athletic tape.</p>",
+      "images": [
+        {
+          "file": "athletic-tape-1",
+          "alt": "Placeholder for the athletic tape photo"
+        }
+      ],
+      "options": [
+        {
+          "name": "Title",
+          "values": [
+            "Default Title"
+          ]
+        }
+      ],
+      "stock": {
+        "default": null,
+        "overrides": {}
+      },
+      "model": null,
+      "customizable": false,
+      "leadTimeDays": 0,
+      "features": [],
+      "specs": []
+    },
+    {
+      "id": 1006,
+      "handle": "grip-socks",
+      "title": "Grip Socks",
+      "category": "accessories",
+      "productType": "Socks",
+      "tags": [],
+      "badges": [],
+      "price": 14.99,
+      "description": "Grip socks.",
+      "descriptionHtml": "<p>Grip socks.</p>",
+      "images": [
+        {
+          "file": "grip-socks-1",
+          "alt": "Placeholder for the grip socks photo"
+        }
+      ],
+      "options": [
+        {
+          "name": "Size",
+          "values": [
+            "S",
+            "M",
+            "L"
+          ]
+        }
+      ],
+      "stock": {
+        "default": null,
+        "overrides": {}
+      },
+      "model": null,
+      "customizable": false,
+      "leadTimeDays": 0,
+      "features": [],
+      "specs": []
+    }
+  ]
+}

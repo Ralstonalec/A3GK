@@ -1,0 +1,6 @@
+{
+  "_note": "Size charts are factual claims about real products, so none ship. Add a chart per kind below ('apparel', 'socks', 'gloves') and the size-guide link appears automatically; until then it is hidden. Format: { title, unit, howToMeasure, columns: [...], rows: [[...]], tip }.",
+  "apparel": null,
+  "socks": null,
+  "gloves": null
+}

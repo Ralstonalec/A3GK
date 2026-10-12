@@ -1,0 +1,39 @@
+{
+  "_note": "Every photo/video/3D slot on the site, in one place. Replace the files in /public/images (same names) or change the paths here. The generated files that ship are NEUTRAL PLACEHOLDERS, not artwork. Sections that need real content (showcase, 360 viewer, studio) stay hidden until you provide it.",
+  "hero": {
+    "image": "/images/hero.webp",
+    "imageAlt": "",
+    "videoUrl": "",
+    "videoPoster": ""
+  },
+  "showcase": {
+    "_note": "Product showcase with hotspots. Hidden while `hotspots` is empty. Hotspot x/y are percentages of the photo. Example: { \"id\": \"elbow\", \"x\": 18, \"y\": 48, \"title\": \"Elbow padding\", \"body\": \"<what it really is>\" } — only describe what is true of the real product.",
+    "image": "/images/showcase.webp",
+    "alt": "",
+    "heading": "",
+    "intro": "",
+    "hotspots": []
+  },
+  "viewer": {
+    "title": "Every angle",
+    "productTitle": "Product",
+    "_frames": "Turntable photography: a numbered sequence of stills, e.g. { \"pattern\": \"/images/360/jersey-{n}.webp\", \"count\": 36, \"pad\": 2 }. Frame 1 is the front; frames go clockwise.",
+    "frames": null,
+    "_modelUrl": "Or a real 3D model (.glb), e.g. \"/3d-models/jersey.glb\" or a Shopify Model3d CDN URL. Frames win if both are set.",
+    "modelUrl": null
+  },
+  "studio": {
+    "image": "/images/studio.webp",
+    "alt": ""
+  },
+  "categories": {
+    "_note": "Home-page category tiles. One photo per tile (4:5). Labels/links come from CATEGORIES in lib/config.js.",
+    "images": {
+      "base-layers": "/images/categories/base-layers.webp",
+      "jerseys": "/images/categories/jerseys.webp",
+      "bottoms": "/images/categories/bottoms.webp",
+      "accessories": "/images/categories/accessories.webp",
+      "gloves": "/images/categories/gloves.webp"
+    }
+  }
+}

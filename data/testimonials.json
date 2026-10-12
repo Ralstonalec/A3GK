@@ -1,0 +1,4 @@
+{
+  "_note": "Real, consented customer testimonials only. The section stays hidden while `items` is empty. Entry: { \"id\", \"name\", \"role\", \"quote\", \"accent\": \"#d4ff3a\", \"videoSrc\": null, \"poster\": null }. `videoSrc` is an https mp4/webm on your CDN.",
+  "items": []
+}

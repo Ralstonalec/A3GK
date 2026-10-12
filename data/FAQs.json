@@ -1,0 +1,4 @@
+{
+  "_note": "Real answers only. The FAQ section (and its footer link) stays hidden while `items` is empty. Entry: { \"q\": \"…\", \"a\": \"…\" }. Shipping, returns and payment answers belong here only once those terms exist (lib/store-terms.js).",
+  "items": []
+}

@@ -1,0 +1,10 @@
+* text=auto eol=lf
+*.png binary
+*.webp binary
+*.avif binary
+*.ico binary
+*.wasm binary
+*.woff2 binary
+# Keep these out of the distributable ZIP produced by `npm run package`
+.claude export-ignore
+.gitattributes export-ignore
