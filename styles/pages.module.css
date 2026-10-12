@@ -226,7 +226,7 @@
 }
 
 .pdpTitle {
-  font-size: var(--text-3xl);
+  font-size: clamp(2.6rem, 1.4rem + 3.2vw, 4.2rem);
 }
 
 .qtyRow {

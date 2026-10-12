@@ -407,24 +407,9 @@
   color: var(--color-accent-ink);
 }
 
-/* diagonal sheen sweeps across on hover */
-.button_primary::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: linear-gradient(105deg, transparent 30%, rgb(255 255 255 / 0.55) 50%, transparent 70%);
-  transform: translateX(-120%);
-  transition: transform 0.7s var(--ease-out);
-}
-
 .button_primary:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: var(--glow-accent);
-}
-
-.button_primary:hover:not(:disabled)::before {
-  transform: translateX(120%);
+  background: var(--color-accent-strong);
+  transform: translateY(-1px);
 }
 
 .button_primary:active:not(:disabled) {
@@ -438,9 +423,9 @@
 }
 
 .button_secondary:hover:not(:disabled) {
-  border-color: var(--color-accent);
-  color: var(--color-accent);
-  transform: translateY(-2px);
+  border-color: rgb(255 255 255 / 0.6);
+  background: rgb(255 255 255 / 0.06);
+  transform: translateY(-1px);
 }
 
 .button_ghost {
@@ -1014,7 +999,7 @@
 
 .card:hover,
 .card:focus-within {
-  border-color: rgb(212 255 58 / 0.4);
+  border-color: rgb(255 255 255 / 0.3);
   box-shadow: var(--shadow-lift);
 }
 
@@ -1031,7 +1016,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.7s var(--ease-out), opacity var(--dur-slow) var(--ease-out);
+  transition: transform 1.1s var(--ease-expo), opacity var(--dur-slow) var(--ease-out);
 }
 
 .cardImageSecondary {
@@ -1040,7 +1025,7 @@
 
 .card:hover .cardImage,
 .card:focus-within .cardImage {
-  transform: scale(1.05);
+  transform: scale(1.035);
 }
 
 .card:hover .cardImagePrimary,

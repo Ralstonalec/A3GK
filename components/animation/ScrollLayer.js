@@ -19,16 +19,17 @@ import { CROSS_VIEWPORT, scaleAboutOne, scaleLength, useElementScroll, useMotion
  *
  * @param {{
  *   as?: string, target?: React.RefObject<HTMLElement>, offset?: string[], input?: number[],
- *   y?: (number|string)[], scale?: number[], rotate?: number[], opacity?: number[],
+ *   x?: (number|string)[], y?: (number|string)[], scale?: number[], rotate?: number[], opacity?: number[],
  *   className?: string, style?: object, children?: React.ReactNode
  * }} props
  */
-export default function ScrollLayer({ as = 'div', target, offset = CROSS_VIEWPORT, input = [0, 1], y, scale, rotate, opacity, className, style, children, ...rest }) {
+export default function ScrollLayer({ as = 'div', target, offset = CROSS_VIEWPORT, input = [0, 1], x, y, scale, rotate, opacity, className, style, children, ...rest }) {
   const ownRef = useRef(null);
   const amp = useMotionScale();
   const progress = useElementScroll(target || ownRef, offset);
 
   const neutral = (v) => input.map(() => v);
+  const xValue = useTransform(progress, input, (x || neutral(0)).map((v) => scaleLength(v, amp)));
   const yValue = useTransform(progress, input, (y || neutral(0)).map((v) => scaleLength(v, amp)));
   const scaleValue = useTransform(progress, input, (scale || neutral(1)).map((v) => scaleAboutOne(v, amp)));
   const rotateValue = useTransform(progress, input, (rotate || neutral(0)).map((v) => v * amp));
@@ -37,6 +38,7 @@ export default function ScrollLayer({ as = 'div', target, offset = CROSS_VIEWPOR
   const Component = motion[as] || motion.div;
   const motionStyle = { ...style };
   if (amp > 0) {
+    if (x) motionStyle.x = xValue;
     if (y) motionStyle.y = yValue;
     if (scale) motionStyle.scale = scaleValue;
     if (rotate) motionStyle.rotate = rotateValue;

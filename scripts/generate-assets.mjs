@@ -69,22 +69,34 @@ function placeholderPng({ width, height, label, caption, corner = false }) {
   }
   ctx.stroke();
 
-  // frame
+  // frame (full-bleed `corner` slots have no inner frame: it would read as a layout line behind the copy)
   const inset = Math.round(min * 0.035);
-  ctx.strokeStyle = 'rgba(255,255,255,0.12)';
-  ctx.lineWidth = 2;
-  ctx.strokeRect(inset, inset, width - inset * 2, height - inset * 2);
+  if (!corner) {
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(inset, inset, width - inset * 2, height - inset * 2);
+  }
 
   if (corner) {
-    // Full-bleed slot with copy over it: keep the label out of the way, bottom-right.
+    // Full-bleed slot with copy over it: a soft key-light spill (so the empty frame reads as a lit set, not a
+    // blank) and a small top-right label saying exactly which photograph belongs here.
+    const spot = ctx.createRadialGradient(width * 0.74, height * 0.36, 0, width * 0.74, height * 0.36, width * 0.5);
+    spot.addColorStop(0, 'rgba(255,255,255,0.13)');
+    spot.addColorStop(0.55, 'rgba(255,255,255,0.03)');
+    spot.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = spot;
+    ctx.fillRect(0, 0, width, height);
     ctx.textAlign = 'right';
-    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    const x = width - inset * 2;
+    let y = inset * 2 + min * 0.05;
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
     ctx.font = `400 ${Math.round(min * 0.034)}px "Bebas Neue"`;
-    ctx.fillText(label.toUpperCase(), width - inset * 2, height - inset * 2 - (caption ? min * 0.04 : 0));
-    if (caption) {
-      ctx.fillStyle = 'rgba(255,255,255,0.28)';
-      ctx.font = `400 ${Math.round(min * 0.026)}px "Bebas Neue"`;
-      ctx.fillText(caption.toUpperCase(), width - inset * 2, height - inset * 2);
+    ctx.fillText(label.toUpperCase(), x, y);
+    ctx.fillStyle = 'rgba(255,255,255,0.38)';
+    ctx.font = `400 ${Math.round(min * 0.026)}px "Bebas Neue"`;
+    for (const line of String(caption || '').split('\n')) {
+      y += min * 0.04;
+      ctx.fillText(line.toUpperCase(), x, y);
     }
     return canvas.toBuffer('image/png');
   }
@@ -147,7 +159,7 @@ async function placeholders() {
     if (id === 'gloves' && !flagOn(process.env.NEXT_PUBLIC_FEATURE_GLOVES)) continue;
     tally(await writeSlot(path.join(root, 'public', src), { width: 800, height: 1000, label: 'Category photo', caption: categoryLabels[id] || id }));
   }
-  tally(await writeSlot(out('images', 'hero.webp'), { width: 1920, height: 1080, label: 'Hero photograph', caption: '1920 × 1080 · goalkeeper in action', corner: true }, 72));
+  tally(await writeSlot(out('images', 'hero.webp'), { width: 1920, height: 1080, label: 'Hero photograph · replace public/images/hero.webp', caption: 'Supply 2400 × 1350 (16:9)\nGoalkeeper in a save, dark low-key lighting\nSubject right of centre, left 45% quiet for the headline', corner: true }, 72));
   tally(await writeSlot(out('images', 'showcase.webp'), { width: 1200, height: 1200, label: 'Showcase photograph', caption: 'Close-up of a product · hotspots overlay this' }));
   tally(await writeSlot(out('images', 'studio.webp'), { width: 1200, height: 900, label: 'Design Studio photograph', caption: 'Custom kit, studio lit' }));
   console.log(`  ${written} placeholder(s) written, ${kept} existing file(s) kept${force ? '' : ' (use --force to overwrite)'}`);

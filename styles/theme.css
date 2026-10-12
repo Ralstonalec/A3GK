@@ -30,8 +30,10 @@
   /* Type */
   --font-display: 'Archivo Variable', 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif;
   --font-body: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  --tracking-display: -0.025em;
-  --tracking-eyebrow: 0.18em;
+  --tracking-display: -0.012em;
+  --tracking-eyebrow: 0.2em;
+  /* Editorial display: Archivo at a narrow width (axis 62–125%), echoing the condensed lettering in the A³ lockup. */
+  --display-stretch: 74%;
 
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
@@ -39,8 +41,8 @@
   --text-lg: 1.125rem;
   --text-xl: 1.375rem;
   --text-2xl: clamp(1.6rem, 1.2rem + 1.6vw, 2.25rem);
-  --text-3xl: clamp(2rem, 1.4rem + 2.6vw, 3.25rem);
-  --text-hero: clamp(3.1rem, 1.4rem + 8.2vw, 8.5rem);
+  --text-3xl: clamp(2.5rem, 1.3rem + 4.8vw, 5rem);
+  --text-hero: clamp(4.1rem, 0.4rem + 15.2vw, 13rem);
 
   /* Space (4px base) */
   --space-1: 0.25rem;
@@ -55,14 +57,16 @@
   --section-pad: clamp(4rem, 3rem + 5vw, 8rem);
 
   /* Shape */
-  --radius-sm: 6px;
-  --radius: 12px;
-  --radius-lg: 22px;
+  --radius-sm: 4px;
+  --radius: 8px;
+  --radius-lg: 14px;
   --radius-pill: 999px;
 
   --shadow-card: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 18px 40px -24px rgb(0 0 0 / 0.8);
   --shadow-lift: 0 1px 0 rgb(255 255 255 / 0.06) inset, 0 28px 60px -22px rgb(0 0 0 / 0.9);
   --glow-accent: 0 0 0 1px rgb(212 255 58 / 0.4), 0 10px 40px -8px rgb(212 255 58 / 0.35);
+  --ease-expo: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-wipe: cubic-bezier(0.77, 0, 0.18, 1);
 
   /* Motion */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);

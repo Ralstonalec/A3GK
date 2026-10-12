@@ -65,12 +65,18 @@ function HeroBackground({ videoUrl, poster, reduced, rootRef }) {
   return (
     <>
       <ScrollLayer target={rootRef} offset={HERO_EXIT} y={['0%', '14%']} className={styles.heroMedia}>
-        <div className={styles.heroMediaInner} data-hero="media">
-          {videoUrl ? (
-            <video ref={videoRef} className={styles.heroVideo} src={videoUrl} poster={poster || undefined} muted loop playsInline preload="metadata" autoPlay={!reduced} aria-hidden="true" />
-          ) : (
-            <Image src={MEDIA.hero.image} alt={MEDIA.hero.imageAlt || ''} fill priority quality={75} sizes="100vw" className={styles.heroImage} />
-          )}
+        {/* Entrance: a clip-path curtain lifts while the frame settles from a slight zoom. Pure CSS so the
+            first paint never waits for JavaScript and reduced motion shows the final frame at once. */}
+        <div className={styles.heroReveal}>
+          <div className={styles.heroSettle}>
+            <div className={styles.heroMediaInner} data-hero="media">
+              {videoUrl ? (
+                <video ref={videoRef} className={styles.heroVideo} src={videoUrl} poster={poster || undefined} muted loop playsInline preload="metadata" autoPlay={!reduced} aria-hidden="true" />
+              ) : (
+                <Image src={MEDIA.hero.image} alt={MEDIA.hero.imageAlt || ''} fill priority quality={75} sizes="100vw" className={styles.heroImage} />
+              )}
+            </div>
+          </div>
         </div>
       </ScrollLayer>
       {/* Outside the moving layer so the control never drifts. */}
@@ -106,10 +112,10 @@ export default function HeroSection({ settings = {} }) {
       if (cancelled) return;
       ctx = gsap.context(() => {
         const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-        tl.fromTo('[data-hero="underline"]', { scaleX: 0 }, { scaleX: 1, duration: 1.1, transformOrigin: 'left center' }, 0.25).fromTo('[data-hero="gridline"]', { scaleY: 0 }, { scaleY: 1, duration: 1.4, stagger: 0.08, transformOrigin: 'top center' }, 0);
+        tl.fromTo('[data-hero="underline"]', { scaleX: 0 }, { scaleX: 1, duration: 0.9, transformOrigin: 'left center' }, 0.95).fromTo('[data-hero="gridline"]', { scaleY: 0 }, { scaleY: 1, duration: 1.6, stagger: 0.12, transformOrigin: 'top center' }, 0.2);
 
         // Ken-Burns drift, separate from the intro timeline so it can loop forever.
-        gsap.fromTo('[data-hero="media"]', { scale: 1.03 }, { scale: 1.1, duration: 22, ease: 'sine.inOut', yoyo: true, repeat: -1 });
+        gsap.fromTo('[data-hero="media"]', { scale: 1 }, { scale: 1.07, duration: 24, ease: 'sine.inOut', yoyo: true, repeat: -1 });
       }, root);
     });
     return () => {
@@ -122,7 +128,7 @@ export default function HeroSection({ settings = {} }) {
     <Section id="hero" type="hero-section" settings={s} className={styles.hero} labelledBy="hero-heading">
       <div ref={root} className={styles.heroInner}>
         <div className={styles.heroGrid} aria-hidden="true">
-          {[0, 1, 2, 3, 4].map((i) => (
+          {[0, 1, 2].map((i) => (
             <span key={i} data-hero="gridline" />
           ))}
         </div>
@@ -133,21 +139,28 @@ export default function HeroSection({ settings = {} }) {
         {/* Copy lifts and fades as the hero scrolls away — the counterpart to the slower media. */}
         <ScrollLayer target={root} offset={HERO_EXIT} input={[0, 0.75]} y={[0, -64]} opacity={[1, 0.1]} className={`page-width ${styles.heroContent}`}>
           <p className={`eyebrow ${styles.heroEyebrow}`}>{s.eyebrow}</p>
+          {/* Each line sits in its own mask and rises into it. The text stays plain, real heading text. */}
           <h1 id="hero-heading" className={`h-hero ${styles.heroTitle}`}>
-            {s.heading}{' '}
-            <span className={styles.heroAccent}>
-              {s.accent_word}
-              <i data-hero="underline" aria-hidden="true" />
+            <span className={styles.heroLine}>
+              <span className={styles.heroLineInner} style={{ '--line': 0 }}>{s.heading}</span>
+            </span>{' '}
+            <span className={styles.heroLine}>
+              <span className={`${styles.heroLineInner} ${styles.heroAccent}`} style={{ '--line': 1 }}>
+                {s.accent_word}
+                <i data-hero="underline" aria-hidden="true" />
+              </span>
             </span>
           </h1>
-          <p className={`lead ${styles.heroLead}`}>{s.subheading}</p>
-          <div className={`cluster ${styles.heroCtas}`}>
-            <Button href={s.primary_link} size="lg" iconAfter={<IconArrow size={20} />}>
-              {s.primary_label}
-            </Button>
-            <Button href={s.secondary_link} size="lg" variant="secondary">
-              {s.secondary_label}
-            </Button>
+          <div className={styles.heroFoot}>
+            <p className={`lead ${styles.heroLead}`}>{s.subheading}</p>
+            <div className={`cluster ${styles.heroCtas}`}>
+              <Button href={s.primary_link} size="lg" iconAfter={<IconArrow size={20} />}>
+                {s.primary_label}
+              </Button>
+              <Button href={s.secondary_link} size="lg" variant="secondary">
+                {s.secondary_label}
+              </Button>
+            </div>
           </div>
         </ScrollLayer>
       </div>

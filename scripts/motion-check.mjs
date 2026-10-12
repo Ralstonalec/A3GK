@@ -5,6 +5,7 @@
  *   BASE=http://localhost:3100 npm run audit:motion
  *
  * Verifies, against a running build:
+ *   0. hero entrance: image curtain + headline lines animate in, then rest (and are instant under reduced motion)
  *   1. hero parallax moves with scroll, and returns to rest at the top
  *   2. scroll-linked layers are REVERSIBLE: same scroll position → same transform
  *      on the way down and on the way back up
@@ -75,12 +76,41 @@ async function newPage(browser, options = {}) {
 
 const browser = await chromium.launch({ executablePath: CHROME, args: ['--no-sandbox'] });
 
+/* ── 0. Hero entrance (CSS-driven; runs on a fresh load) ──────────────── */
+{
+  const read = (page) =>
+    page.evaluate(() => {
+      const reveal = document.querySelector('[class*="heroReveal"]');
+      const line = document.querySelector('[class*="heroLineInner"]');
+      const m = new DOMMatrix(getComputedStyle(line).transform === 'none' ? undefined : getComputedStyle(line).transform);
+      return { clip: getComputedStyle(reveal).clipPath, lineY: m.m42 };
+    });
+  for (const reduced of [false, true]) {
+    const context = await browser.newContext({ viewport: { width: 1440, height: 900 }, ...(reduced ? { reducedMotion: 'reduce' } : {}) });
+    await context.addCookies([{ name: 'a3gk_consent', value: CONSENT, url: BASE }]);
+    const page = await context.newPage();
+    await page.goto(BASE, { waitUntil: 'commit' });
+    await page.waitForSelector('[class*="heroLineInner"]', { state: 'attached' });
+    const early = await read(page);
+    await page.waitForTimeout(3200);
+    const late = await read(page);
+    if (!reduced) {
+      check('hero entrance: the image curtain starts (mostly) closed and the headline starts below its mask', Number(early.clip.match(/inset\(([\d.]+)%/)?.[1]) > 50 && early.lineY > 10, `clip ${early.clip}, headline y=${early.lineY.toFixed(0)}px`);
+    } else {
+      check('reduced motion: hero is already in its final state (no curtain, no rising text)', !(Number(early.clip.match(/inset\(([\d.]+)%/)?.[1]) > 1) && Math.abs(early.lineY) < 1, `clip ${early.clip}, headline y=${early.lineY.toFixed(1)}px`);
+    }
+    const open = /^(none|inset\(0(px|%)?( 0(px|%)?){0,3}\))$/.test(late.clip.trim());
+    check(`${reduced ? 'reduced motion: ' : ''}hero entrance ends at rest (full frame, headline in place)`, open && Math.abs(late.lineY) < 0.5, `clip ${late.clip}, headline y=${late.lineY.toFixed(1)}px`);
+    await context.close();
+  }
+}
+
 /* ── 1 + 2. Desktop: parallax + reversibility ──────────────────────────── */
 {
   const { page, context, errors } = await newPage(browser);
   const MEDIA = '[class*="heroMedia"]';
   const CONTENT = '[class*="heroContent"]';
-  const LAYER = '[class*="categoryLayer"]';
+  const LAYER = '[class*="spotlightFrame"]';
 
   const top = { media: await probe(page, MEDIA, 'heroMediaInner'), content: await probe(page, CONTENT) };
   check('hero is at rest at the top (no offset, fully visible)', close(top.media.y, 0, 0.5) && close(top.content.y, 0, 0.5) && close(top.content.opacity, 1), JSON.stringify({ mediaY: top.media.y, contentOpacity: top.content.opacity }));
@@ -94,8 +124,8 @@ const browser = await chromium.launch({ executablePath: CHROME, args: ['--no-san
   const back = { media: await probe(page, MEDIA, 'heroMediaInner'), content: await probe(page, CONTENT) };
   check('hero returns exactly to rest when scrolled back to the top', close(back.media.y, 0, 0.5) && close(back.content.opacity, 1, 0.01), `mediaY=${back.media.y.toFixed(2)} opacity=${back.content.opacity.toFixed(2)}`);
 
-  // Category tile photo: record on the way DOWN, then UP, at identical positions.
-  // `base` = the scroll position where the tile's CENTRE is at the viewport centre (progress 0.5).
+  // Product spotlight frame: record on the way DOWN, then UP, at identical positions.
+  // `base` = the scroll position where the frame's CENTRE is at the viewport centre (progress 0.5).
   const base = await page.evaluate((sel) => {
     const r = document.querySelector(sel).getBoundingClientRect();
     return r.top + window.scrollY + r.height / 2 - window.innerHeight / 2;
@@ -113,10 +143,44 @@ const browser = await chromium.launch({ executablePath: CHROME, args: ['--no-san
   }
   up.reverse();
   const symmetric = down.every((d, i) => close(d.scale, up[i].scale, 0.003) && close(d.rotate, up[i].rotate, 0.05));
-  check('category photo transform is identical scrolling down and back up (reversible)', symmetric, `scale ${down.map((d) => d.scale.toFixed(3)).join(' → ')}`);
+  check('spotlight frame transform is identical scrolling down and back up (reversible)', symmetric, `scale ${down.map((d) => d.scale.toFixed(3)).join(' → ')}`);
   const scales = down.map((d) => d.scale);
-  check('category photo scales gently (stays within 0.99–1.10)', Math.min(...scales) >= 0.99 && Math.max(...scales) <= 1.1 && Math.max(...scales) - Math.min(...scales) > 0.01, `range ${Math.min(...scales).toFixed(3)}–${Math.max(...scales).toFixed(3)}`);
-  check('category photo is level and at rest (scale 1) when mid-screen', Math.abs(down[2].rotate) < 0.1 && close(down[2].scale, 1, 0.005), `scale ${down[2].scale.toFixed(3)} rotate ${down[2].rotate.toFixed(2)}°`);
+  check('spotlight frame grows gently into place (0.84–1.00, never above 1)', Math.min(...scales) >= 0.84 && Math.max(...scales) <= 1.0005 && Math.max(...scales) - Math.min(...scales) > 0.05, `range ${Math.min(...scales).toFixed(3)}–${Math.max(...scales).toFixed(3)}`);
+  check('spotlight frame is level and at full size when mid-screen', Math.abs(down[2].rotate) < 0.1 && close(down[2].scale, 1, 0.005), `scale ${down[2].scale.toFixed(3)} rotate ${down[2].rotate.toFixed(2)}°`);
+
+  // Staged range: pinned on desktop, steps through the categories, and steps back on the way up.
+  const stage = await page.evaluate(() => {
+    const el = document.querySelector('[class*="rangeStage"]');
+    if (!el || getComputedStyle(el).display === 'none') return null;
+    const r = el.getBoundingClientRect();
+    return { top: r.top + window.scrollY, h: r.height };
+  });
+  check('staged range is shown on desktop with motion allowed', Boolean(stage), stage ? `track ${Math.round(stage.h)}px` : 'display:none');
+  if (stage) {
+    const travel = stage.h - 900;
+    const activeIndex = () => page.evaluate(() => [...document.querySelectorAll('[class*="rangeItem"]')].filter((n) => n.tagName === 'A').findIndex((n) => String(n.className).includes('rangeItemActive')));
+    const stickyTop = () => page.evaluate(() => document.querySelector('[class*="rangeSticky"]').getBoundingClientRect().top);
+    const seq = [];
+    const pins = [];
+    for (const f of [0.04, 0.3, 0.55, 0.95]) {
+      await scrollTo(page, stage.top + travel * f, 500);
+      seq.push(await activeIndex());
+      pins.push(Math.round(await stickyTop()));
+    }
+    check('staged range advances one category at a time while scrolling down', JSON.stringify(seq) === JSON.stringify([0, 1, 2, 3]), `active rows ${seq.join(' → ')}`);
+    check('the stage stays pinned while it steps (no scroll hijacking: the page itself scrolls)', pins.every((t) => Math.abs(t - pins[0]) <= 2), `sticky top ${pins.join(', ')}px`);
+    const back = [];
+    for (const f of [0.55, 0.3, 0.04]) {
+      await scrollTo(page, stage.top + travel * f, 500);
+      back.push(await activeIndex());
+    }
+    check('scrolling back up steps the staged range back', JSON.stringify(back) === JSON.stringify([2, 1, 0]), `active rows ${back.join(' → ')}`);
+    // Keyboard: focusing a row shows that category (nothing is reachable only by scrolling).
+    await scrollTo(page, stage.top + travel * 0.04, 400);
+    await page.locator('[class*="rangeItem"]').filter({ hasText: 'Pants' }).first().focus();
+    await page.waitForTimeout(300);
+    check('keyboard focus on a row shows that category', (await activeIndex()) === 2, `active row ${await activeIndex()}`);
+  }
 
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   check('no horizontal overflow on desktop', overflow <= 0, `scrollWidth - innerWidth = ${overflow}`);
@@ -171,8 +235,12 @@ const browser = await chromium.launch({ executablePath: CHROME, args: ['--no-san
 
   const gy = await sectionY(page, 'collection-list', 0.3);
   await scrollTo(page, gy - 200);
+  const display = await page.evaluate(() => ({ stage: getComputedStyle(document.querySelector('[class*="rangeStage"]')).display, grid: getComputedStyle(document.querySelector('[class*="rangeGridWrap"]')).display }));
+  check('reduced motion: nothing is pinned (tile grid shown, staged range hidden)', display.stage === 'none' && display.grid !== 'none', JSON.stringify(display));
   const layer = await probe(page, '[class*="categoryLayer"]');
   check('reduced motion: category photo is not scaled or rotated', close(layer.scale, 1, 0.001) && close(layer.rotate, 0, 0.01), `scale=${layer.scale} rotate=${layer.rotate}`);
+  const frame = await probe(page, '[class*="spotlightFrame"]');
+  check('reduced motion: spotlight frame is not scaled', close(frame.scale, 1, 0.001), `scale=${frame.scale}`);
 
   await scrollTo(page, 0, 200);
   await scrollTo(page, 2600, 300);
@@ -192,17 +260,23 @@ const browser = await chromium.launch({ executablePath: CHROME, args: ['--no-san
 
   let worstOverflow = 0;
   let maxScale = 0;
-  for (const type of ['collection-list', 'featured-products']) {
+  let minFrame = 1;
+  const phone = await page.evaluate(() => ({ stage: getComputedStyle(document.querySelector('[class*="rangeStage"]')).display }));
+  check('phone: no pinned section (tile grid instead)', phone.stage === 'none', JSON.stringify(phone));
+  for (const type of ['collection-list', 'product-spotlight', 'featured-products']) {
     const y = await sectionY(page, type, 0.3);
     for (const dy of [-300, 0, 300]) {
       await scrollTo(page, Math.max(0, y + dy), 250);
       worstOverflow = Math.max(worstOverflow, await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth));
       const l = await probe(page, '[class*="categoryLayer"]');
       if (l) maxScale = Math.max(maxScale, l.scale);
+      const f = await probe(page, '[class*="spotlightFrame"]');
+      if (f) minFrame = Math.min(minFrame, f.scale);
     }
   }
   check('phone: no horizontal overflow at any scroll position', worstOverflow <= 0, `worst scrollWidth - innerWidth = ${worstOverflow}`);
   check('phone: zoom amplitude is halved (≤ 1.045)', maxScale <= 1.045, `max scale = ${maxScale.toFixed(3)}`);
+  check('phone: spotlight frame travel is halved (≥ 0.92)', minFrame >= 0.92, `min scale = ${minFrame.toFixed(3)}`);
   check('phone run: no console errors', errors.length === 0, errors.slice(0, 2).join(' | '));
   await context.close();
 }
