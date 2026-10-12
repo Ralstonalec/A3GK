@@ -1,13 +1,13 @@
 # Brand assets
 
-`logo.png` and `lockup.png` here are your logo, converted for the dark site. Your originals are kept in
-`/brand-source/` (black artwork on white). To install or replace the logo:
+`public/brand/logo.png` and `public/brand/lockup.png` are your logo, converted for the dark site. Your originals are kept
+here in `brand-source/` (black artwork on white). To install or replace the logo:
 
 ```bash
 npm run brand -- brand-source/a3-mark-black.jpg --lockup brand-source/a3-sports-solutions-black.webp --knockout
 ```
 
-This writes the converted files to `public/brand/`, records their size in `data/brand.json`, and regenerates
+This writes the converted files to `public/brand/` (this folder is not published), records their size in `data/brand.json`, and regenerates
 the favicon, app icons and social-share image. Then rebuild/redeploy.
 
 **What each file is used for**

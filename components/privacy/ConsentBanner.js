@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { clearAnalyticsIdentity } from '@/lib/analytics';
-import { acceptAll, CONSENT_CATEGORIES, closeConsentPanel, initConsent, openConsentPanel, rejectAll, saveConsent, useConsent } from '@/lib/consent';
+import { acceptAll, CONSENT_CATEGORIES, closeConsentPanel, HAS_OPTIONAL_CONSENT, initConsent, openConsentPanel, rejectAll, saveConsent, useConsent } from '@/lib/consent';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
 import { Switch } from '@/components/ui/Input';
@@ -25,11 +25,6 @@ function Preferences({ consent }) {
 
   return (
     <Modal open={consent.panelOpen} onClose={closeConsentPanel} title="Privacy preferences" description="Choose which optional cookies and storage we may use. Nothing optional is on until you switch it on." size="md">
-      {consent.gpc && (
-        <p className={styles.gpcNote} role="note">
-          Your browser is sending a <strong>Global Privacy Control</strong> signal. We honour it.
-        </p>
-      )}
       <ul role="list" className={styles.consentList}>
         {CONSENT_CATEGORIES.map((c) => (
           <li key={c.id}>
@@ -37,7 +32,7 @@ function Preferences({ consent }) {
               label={c.label}
               description={c.description}
               checked={c.required ? true : draft[c.id]}
-              disabled={c.required || (c.id === 'marketing' && consent.gpc)}
+              disabled={c.required}
               onChange={(v) => setDraft((d) => ({ ...d, [c.id]: v }))}
             />
           </li>
@@ -65,7 +60,8 @@ export default function ConsentBanner() {
   const consent = useConsent();
   useEffect(() => initConsent(), []);
 
-  const showBanner = consent.ready && !consent.decided;
+  // With nothing optional to choose (no analytics destination, no saved design preferences) there is nothing to ask.
+  const showBanner = HAS_OPTIONAL_CONSENT && consent.ready && !consent.decided;
 
   return (
     <>
@@ -82,7 +78,7 @@ export default function ConsentBanner() {
             <div className={styles.consentCopy}>
               <h2 className={styles.consentTitle}>Your privacy, your call</h2>
               <p>
-                We use essential storage to run the store, and — only if you agree — anonymous analytics to improve it. {consent.gpc && 'We detected a Global Privacy Control signal and will honour it. '}
+                We use essential storage to run the store{CONSENT_CATEGORIES.some((c) => c.id === 'analytics') ? ', and — only if you agree — analytics to improve it' : ', and — only if you agree — to remember your design preferences'}.{' '}
                 See our <Link href="/privacy">privacy &amp; cookie policy</Link>.
               </p>
             </div>

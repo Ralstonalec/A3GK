@@ -96,7 +96,6 @@ export default function Catalog({ initial }) {
             onChange={update}
             onReset={() => router.replace('/products', undefined, { shallow: true, scroll: false })}
             resultCount={products.length}
-            queryString={query}
           />
           <div aria-busy={isLoading} className={styles.catalogResults}>
             {error && (

@@ -1,22 +1,21 @@
 import { isPaymentsEnabled } from '@/lib/config';
 import { hasFreeShipping, hasReturnWindow, STORE_TERMS } from '@/lib/store-terms';
 import { cn, formatMoney } from '@/lib/utils';
-import { IconCard, IconCheck, IconLock, IconReturn, IconTruck } from '@/components/ui/Icons';
+import { IconCard, IconCheck, IconReturn, IconTruck } from '@/components/ui/Icons';
 import styles from '@/styles/components.module.css';
 
 /**
  * Assurance badges — each one appears ONLY when it is true of the running site:
- *   • payment/security badges: only when card payments are actually configured
+ *   • payment badge: only when Stripe is the checkout actually in use
  *   • free-shipping / returns badges: only once those terms are set in lib/store-terms.js
  * In demo mode (no payments, no terms) there are no badges, and the section renders nothing.
  */
 export function getTrustBadges() {
   const badges = [];
+  // Named only when Stripe is the checkout actually in use (checkoutProvider in lib/config.js). Card details are entered
+  // on Stripe's hosted page, so they never pass through this site.
   if (isPaymentsEnabled()) {
-    badges.push(
-      { id: 'ssl', Icon: IconLock, title: 'Secure checkout', text: 'Payments are handled by Stripe — we never see your card details.' },
-      { id: 'payments', Icon: IconCard, title: 'Card payments', text: 'Card payments processed securely by Stripe.' },
-    );
+    badges.push({ id: 'payments', Icon: IconCard, title: 'Payments by Stripe', text: 'Card details are entered on Stripe’s payment page and never pass through this site.' });
   }
   // Only terms that were explicitly configured are stated, and only in the words of the configuration.
   if (hasFreeShipping()) {

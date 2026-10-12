@@ -1,5 +1,5 @@
 {
-  "_note": "Every photo/video/3D slot on the site, in one place. Replace the files in /public/images (same names) or change the paths here. The generated files that ship are NEUTRAL PLACEHOLDERS, not artwork — see public/brand/README.md and the README → 'Real photography'. Sections that need real content (showcase, 360 viewer, studio) stay hidden until you provide it.",
+  "_note": "Every photo/video/3D slot on the site, in one place. Replace the files in /public/images (same names) or change the paths here. The generated files that ship are NEUTRAL PLACEHOLDERS, not artwork. Sections that need real content (showcase, 360 viewer, studio) stay hidden until you provide it.",
   "hero": {
     "image": "/images/hero.webp",
     "imageAlt": "",

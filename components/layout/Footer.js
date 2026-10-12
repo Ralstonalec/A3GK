@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { CATEGORIES, SITE } from '@/lib/config';
-import { openConsentPanel } from '@/lib/consent';
+import { HAS_OPTIONAL_CONSENT, openConsentPanel } from '@/lib/consent';
 import Logo from '@/components/ui/Logo';
 import { IconInstagram, IconTiktok, IconYoutube } from '@/components/ui/Icons';
 import styles from '@/styles/components.module.css';
@@ -11,10 +11,18 @@ const COLUMNS = [
     title: 'Shop',
     links: [{ href: '/products', label: 'All gear' }, ...CATEGORIES.filter((c) => c.id !== 'all').map((c) => ({ href: `/products?category=${c.id}`, label: c.label }))],
   },
-  {
-    title: 'Support',
-    links: [{ href: '/cart', label: 'Your cart' }, ...(SITE.email ? [{ href: `mailto:${SITE.email}`, label: 'Contact us' }] : [])],
-  },
+  // A support column only exists once there is a way to reach you (NEXT_PUBLIC_CONTACT_EMAIL).
+  ...(SITE.email
+    ? [
+        {
+          title: 'Support',
+          links: [
+            { href: '/cart', label: 'Your cart' },
+            { href: `mailto:${SITE.email}`, label: 'Contact us' },
+          ],
+        },
+      ]
+    : []),
   {
     title: 'Legal',
     links: [
@@ -33,7 +41,7 @@ const SOCIAL = [
 export default function Footer() {
   return (
     <footer className={styles.footer}>
-      <div className={`page-width ${styles.footerInner}`}>
+      <div className={`page-width ${styles.footerInner}`} style={{ '--footer-cols': COLUMNS.length }}>
         <div className={styles.footerBrand}>
           <Logo variant="lockup" />
           <p className={styles.footerBlurb}>{SITE.tagline}.</p>
@@ -67,9 +75,11 @@ export default function Footer() {
       <div className={`page-width ${styles.footerBottom}`}>
         <p className={styles.footerLegal}>
           © {new Date().getFullYear()} {SITE.name}.{' '}
-          <button type="button" className={styles.linkButton} onClick={openConsentPanel}>
-            Cookie settings
-          </button>
+          {HAS_OPTIONAL_CONSENT && (
+            <button type="button" className={styles.linkButton} onClick={openConsentPanel}>
+              Cookie settings
+            </button>
+          )}
         </p>
       </div>
     </footer>

@@ -52,10 +52,10 @@ export default function Success() {
 
   const copy = {
     checking: { title: 'Confirming your order…', body: 'One moment while we confirm your payment.' },
-    paid: { title: 'Thank you — payment confirmed', body: 'A receipt is on its way to your email. We will send tracking as soon as your gear ships.' },
-    pending: { title: 'We are still confirming your payment', body: 'This can take a minute. If you were charged, you will receive a receipt by email shortly.' },
+    paid: { title: 'Thank you — payment confirmed', body: 'Your payment has been received.' },
+    pending: { title: 'We are still confirming your payment', body: 'This can take a minute. Refresh this page to check again.' },
     demo: { title: 'Demo order placed', body: 'This was a demo checkout — no payment was taken and nothing will ship.' },
-    unknown: { title: 'We could not verify this order', body: 'If you completed a payment you will receive an email receipt. Otherwise your cart is still saved.' },
+    unknown: { title: 'We could not verify this order', body: 'We could not confirm a payment for this visit. Your cart is still saved.' },
   }[state.phase];
 
   return (

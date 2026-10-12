@@ -195,7 +195,7 @@ export default function DesignStudio({ product }) {
                   <input type="radio" name="fabric" value={f.id} checked={config.fabric === f.id} onChange={() => patch({ fabric: f.id })} className="visually-hidden" />
                   <span>
                     <strong>{f.label}</strong>
-                    <small>{f.blurb}</small>
+                    {f.blurb && <small>{f.blurb}</small>}
                   </span>
                   <span className="tabular">{f.priceCents ? `+$${(f.priceCents / 100).toFixed(0)}` : 'Included'}</span>
                 </label>

@@ -1,29 +1,21 @@
 {
-  "_note": "DORMANT — goalkeeper gloves are a long-term roadmap item. Not loaded unless NEXT_PUBLIC_FEATURE_GLOVES=true (see lib/features.js). Everything here is sample/placeholder data and must be replaced with real product facts before gloves launch.",
+  "_note": "DORMANT: loaded only when NEXT_PUBLIC_FEATURE_GLOVES=true (long-term roadmap). Names, prices and sizes are PLACEHOLDERS; no materials, specs, stock or claims are asserted. Add a real size chart under sizeGuide only once it is measured.",
   "products": [
     {
       "id": 2001,
-      "handle": "apex-pro-negative-cut-glove",
-      "title": "Apex Pro Negative Cut Glove",
+      "handle": "goalkeeper-gloves",
+      "title": "Goalkeeper Gloves",
       "category": "gloves",
       "productType": "Gloves",
-      "tags": [
-        "pro",
-        "negative-cut",
-        "match"
-      ],
+      "tags": [],
       "badges": [],
       "price": 149.99,
-      "description": "Our flagship match glove. A 4 mm German-engineered contact latex palm, negative-cut fit and a wrap-around wrist lock for a second-skin feel on every catch.",
-      "descriptionHtml": "<p>Our flagship match glove. A <strong>4 mm contact latex</strong> palm, negative-cut fit and a wrap-around wrist lock for a second-skin feel on every catch.</p><p>Built for dry and damp conditions, with a finger-saver-free flexible back so nothing gets between you and the ball.</p>",
+      "description": "Goalkeeper gloves.",
+      "descriptionHtml": "<p>Goalkeeper gloves.</p>",
       "images": [
         {
-          "file": "apex-pro-negative-cut-glove-1",
-          "alt": "Apex Pro goalkeeper glove, back of hand, volt and black"
-        },
-        {
-          "file": "apex-pro-negative-cut-glove-2",
-          "alt": "Apex Pro goalkeeper glove, palm side with contact latex"
+          "file": "goalkeeper-gloves-1",
+          "alt": "Placeholder for the goalkeeper gloves photo"
         }
       ],
       "options": [
@@ -40,132 +32,30 @@
         }
       ],
       "stock": {
-        "default": 18,
-        "overrides": {
-          "Size:6": 2,
-          "Size:7": 7,
-          "Size:11": 0
-        }
+        "default": null,
+        "overrides": {}
       },
       "model": null,
       "customizable": false,
       "leadTimeDays": 0,
-      "features": [
-        "4 mm contact latex palm for elite grip in all conditions",
-        "Negative cut: tight fit, maximum ball feel",
-        "Segmented, pre-curved fingers for natural closure",
-        "Dual-layer wrist lock with elastic cuff"
-      ],
-      "specs": [
-        {
-          "label": "Palm",
-          "value": "4 mm contact latex"
-        },
-        {
-          "label": "Cut",
-          "value": "Negative"
-        },
-        {
-          "label": "Closure",
-          "value": "Wrap-around wrist lock"
-        },
-        {
-          "label": "Care",
-          "value": "Hand wash, air dry"
-        }
-      ]
+      "features": [],
+      "specs": []
     },
     {
       "id": 2002,
-      "handle": "vanguard-roll-finger-glove",
-      "title": "Vanguard Roll Finger Glove",
+      "handle": "junior-goalkeeper-gloves",
+      "title": "Junior Goalkeeper Gloves",
       "category": "gloves",
       "productType": "Gloves",
-      "tags": [
-        "pro",
-        "roll-finger",
-        "match"
-      ],
-      "badges": [],
-      "price": 119.99,
-      "description": "A roomier roll-finger design with a 3.5 mm latex palm. More surface area on the ball, with latex-wrapped finger tips that wear in beautifully.",
-      "descriptionHtml": "<p>A roomier <strong>roll-finger</strong> design with a 3.5 mm latex palm. More surface area on the ball, with latex-wrapped fingertips that wear in beautifully.</p>",
-      "images": [
-        {
-          "file": "vanguard-roll-finger-glove-1",
-          "alt": "Vanguard roll finger glove, back of hand, signal orange and black"
-        },
-        {
-          "file": "vanguard-roll-finger-glove-2",
-          "alt": "Vanguard roll finger glove, palm side"
-        }
-      ],
-      "options": [
-        {
-          "name": "Size",
-          "values": [
-            "6",
-            "7",
-            "8",
-            "9",
-            "10",
-            "11"
-          ]
-        }
-      ],
-      "stock": {
-        "default": 14,
-        "overrides": {
-          "Size:6": 5,
-          "Size:8": 3
-        }
-      },
-      "model": null,
-      "customizable": false,
-      "leadTimeDays": 0,
-      "features": [
-        "Roll-finger construction for maximum catching surface",
-        "3.5 mm latex palm",
-        "Breathable mesh gussets",
-        "Pre-curved thumb for secure fist punching"
-      ],
-      "specs": [
-        {
-          "label": "Palm",
-          "value": "3.5 mm latex"
-        },
-        {
-          "label": "Cut",
-          "value": "Roll finger"
-        },
-        {
-          "label": "Closure",
-          "value": "Full-wrap strap"
-        },
-        {
-          "label": "Care",
-          "value": "Hand wash, air dry"
-        }
-      ]
-    },
-    {
-      "id": 2003,
-      "handle": "sentinel-junior-glove",
-      "title": "Sentinel Junior Glove",
-      "category": "gloves",
-      "productType": "Gloves",
-      "tags": [
-        "junior",
-        "training"
-      ],
+      "tags": [],
       "badges": [],
       "price": 59.99,
-      "description": "A forgiving first pro glove for young keepers. Soft 3 mm latex, a flexible cut and a wide hook-and-loop strap that is easy to fasten on a cold morning.",
-      "descriptionHtml": "<p>A forgiving first pro glove for young keepers. Soft <strong>3 mm latex</strong>, a flexible cut and a wide hook-and-loop strap that is easy to fasten on a cold morning.</p>",
+      "description": "Junior goalkeeper gloves.",
+      "descriptionHtml": "<p>Junior goalkeeper gloves.</p>",
       "images": [
         {
-          "file": "sentinel-junior-glove-1",
-          "alt": "Sentinel junior glove, back of hand, glacier blue"
+          "file": "junior-goalkeeper-gloves-1",
+          "alt": "Placeholder for the junior goalkeeper gloves photo"
         }
       ],
       "options": [
@@ -180,98 +70,15 @@
         }
       ],
       "stock": {
-        "default": 25,
+        "default": null,
         "overrides": {}
       },
       "model": null,
       "customizable": false,
       "leadTimeDays": 0,
-      "features": [
-        "Soft 3 mm latex that breaks in fast",
-        "Flat-cut palm for easy catching",
-        "Wide, easy-fasten wrist strap",
-        "Machine-washable cuff"
-      ],
-      "specs": [
-        {
-          "label": "Palm",
-          "value": "3 mm latex"
-        },
-        {
-          "label": "Cut",
-          "value": "Flat"
-        },
-        {
-          "label": "Closure",
-          "value": "Hook-and-loop strap"
-        },
-        {
-          "label": "Ages",
-          "value": "6–12"
-        }
-      ]
+      "features": [],
+      "specs": []
     }
   ],
-  "sizeGuide": {
-    "title": "Glove sizing",
-    "unit": "cm",
-    "howToMeasure": "Wrap a tape measure around your dominant hand just below the knuckles, excluding the thumb. Measure from the base of your palm to the tip of the middle finger for length.",
-    "columns": [
-      "Size",
-      "Hand circumference (cm)",
-      "Hand length (cm)",
-      "Typical age"
-    ],
-    "rows": [
-      [
-        "4",
-        "14.0 – 15.0",
-        "14.5 – 15.5",
-        "6–8"
-      ],
-      [
-        "5",
-        "15.0 – 16.0",
-        "15.5 – 16.5",
-        "8–10"
-      ],
-      [
-        "6",
-        "16.0 – 17.0",
-        "16.5 – 17.5",
-        "10–12"
-      ],
-      [
-        "7",
-        "17.0 – 18.0",
-        "17.5 – 18.5",
-        "12–14"
-      ],
-      [
-        "8",
-        "18.0 – 19.0",
-        "18.5 – 19.5",
-        "Adult S"
-      ],
-      [
-        "9",
-        "19.0 – 20.5",
-        "19.5 – 20.5",
-        "Adult M"
-      ],
-      [
-        "10",
-        "20.5 – 22.0",
-        "20.5 – 21.5",
-        "Adult L"
-      ],
-      [
-        "11",
-        "22.0 – 23.5",
-        "21.5 – 22.5",
-        "Adult XL"
-      ]
-    ],
-    "tip": "Between sizes? Size up for a roll-finger glove, size down for a negative cut."
-  }
+  "sizeGuide": null
 }

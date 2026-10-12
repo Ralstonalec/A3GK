@@ -8,9 +8,8 @@ import Button from '@/components/ui/Button';
 import Input, { Checkbox } from '@/components/ui/Input';
 import { useToast } from '@/components/ui/Toast';
 import TrustBadges from '@/components/commerce/TrustBadges';
-import { IconLock } from '@/components/ui/Icons';
 import { apiUrl, isShopifyConfigured, publicConfig } from '@/lib/config';
-import { hasShippingMethods, STORE_TERMS } from '@/lib/store-terms';
+import { hasPublishedTerms, hasShippingMethods, STORE_TERMS } from '@/lib/store-terms';
 import { track } from '@/lib/analytics';
 import { toSnapshot, useCart } from '@/lib/cart';
 import { deliveryEstimateFor, shippingCostCents } from '@/lib/shipping';
@@ -30,7 +29,6 @@ export default function CheckoutPage({ mode }) {
   const [email, setEmail] = useState('');
   const [method, setMethod] = useState(STORE_TERMS.shippingMethods[0]?.id);
   const [terms, setTerms] = useState(false);
-  const [marketing, setMarketing] = useState(false);
   const [company, setCompany] = useState(''); // honeypot
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
@@ -51,11 +49,13 @@ export default function CheckoutPage({ mode }) {
 
   async function onSubmit(event) {
     event.preventDefault();
-    const payload = { email: email.trim(), lines: toSnapshot(cart), ...(method ? { shippingMethod: method } : {}), acceptTerms: terms, marketingOptIn: marketing, company };
+    const payload = { email: email.trim(), lines: toSnapshot(cart), ...(method ? { shippingMethod: method } : {}), acceptTerms: terms, company };
     const result = validate(checkoutSchema, payload);
-    if (!result.ok) {
-      setErrors(result.errors);
-      const first = Object.keys(result.errors)[0];
+    // Agreement to terms is only asked for (and required) once real terms are published.
+    const termsError = hasPublishedTerms() && !terms ? { acceptTerms: 'You must accept the Terms & Conditions to continue' } : null;
+    if (!result.ok || termsError) {
+      setErrors({ ...(result.ok ? {} : result.errors), ...termsError });
+      const first = Object.keys({ ...(result.ok ? {} : result.errors), ...termsError })[0];
       document.getElementById(first === 'email' ? 'checkout-email' : first === 'acceptTerms' ? 'checkout-terms' : '')?.focus();
       return;
     }
@@ -97,13 +97,13 @@ export default function CheckoutPage({ mode }) {
       {mode === 'stripe' && publicConfig.stripePublishableKey && <Script src="https://js.stripe.com/v3" strategy="lazyOnload" />}
       <div className={`page-width ${styles.cartPage}`}>
         <header className={styles.pageHeader}>
-          <p className="eyebrow">Secure checkout</p>
+          <p className="eyebrow">{mode === 'demo' ? 'Demo checkout' : 'Checkout'}</p>
           <h1>Checkout</h1>
         </header>
 
         {mode === 'demo' && (
           <p className={styles.banner} role="note">
-            <strong>Demo mode.</strong>&nbsp;No payment is taken. Set STRIPE_SECRET_KEY (or connect Shopify) to enable real checkout.
+            <strong>Demo mode.</strong>&nbsp;No payment is taken.
           </p>
         )}
 
@@ -111,7 +111,7 @@ export default function CheckoutPage({ mode }) {
           <div className={styles.checkoutMain}>
             <fieldset className={styles.panel}>
               <legend className="h3">Contact</legend>
-              <Input id="checkout-email" label="Email for your receipt" type="email" autoComplete="email" inputMode="email" required value={email} error={errors.email} onChange={(e) => setEmail(e.target.value)} />
+              <Input id="checkout-email" label="Email" type="email" autoComplete="email" inputMode="email" required value={email} error={errors.email} onChange={(e) => setEmail(e.target.value)} />
               {/* Honeypot — hidden from people and assistive tech; bots fill it. */}
               <div aria-hidden="true" className={styles.honeypot}>
                 <label>
@@ -141,18 +141,21 @@ export default function CheckoutPage({ mode }) {
                 </div>
               </fieldset>
             ) : (
-              <p className="muted">{mode === 'demo' ? 'Demo checkout — no delivery address is collected.' : 'You will enter your delivery address on the secure payment page.'}</p>
+              <>
+                {mode === 'demo' && <p className="muted">Demo checkout — no delivery address is collected.</p>}
+                {mode === 'shopify' && <p className="muted">Delivery details are entered at checkout on the next page.</p>}
+              </>
             )}
 
-            <fieldset className={styles.panel}>
-              <legend className="h3">Agreements</legend>
-              <Checkbox id="checkout-terms" checked={terms} onChange={(e) => setTerms(e.target.checked)} error={errors.acceptTerms}>
-                I have read and agree to the <Link href="/terms" target="_blank">Terms &amp; Conditions</Link> and the <Link href="/privacy" target="_blank">Privacy &amp; cookie policy</Link>. <span className="visually-hidden">(required)</span>
-              </Checkbox>
-              <Checkbox checked={marketing} onChange={(e) => setMarketing(e.target.checked)}>
-                Email me news and offers (optional — unsubscribe any time).
-              </Checkbox>
-            </fieldset>
+            {/* Only once real terms exist (lib/store-terms.js → termsPublished): never ask for agreement to terms that are not written. */}
+            {hasPublishedTerms() && (
+              <fieldset className={styles.panel}>
+                <legend className="h3">Agreements</legend>
+                <Checkbox id="checkout-terms" checked={terms} onChange={(e) => setTerms(e.target.checked)} error={errors.acceptTerms}>
+                  I have read and agree to the <Link href="/terms" target="_blank">Terms &amp; Conditions</Link> and the <Link href="/privacy" target="_blank">Privacy &amp; cookie policy</Link>. <span className="visually-hidden">(required)</span>
+                </Checkbox>
+              </fieldset>
+            )}
           </div>
 
           <aside className={styles.summary} aria-label="Order summary">
@@ -178,9 +181,8 @@ export default function CheckoutPage({ mode }) {
               {shippingCents !== null && <div><dt>Shipping</dt><dd className="tabular">{shippingCents === 0 ? 'Free' : formatMoney(shippingCents)}</dd></div>}
               <div className={styles.summaryTotal}><dt>Total</dt><dd className="tabular">{formatMoney(totalCents)}</dd></div>
             </dl>
-            <p className="muted" style={{ fontSize: 'var(--text-sm)' }}>Taxes, where applicable, are shown on the payment page.</p>
-            <Button type="submit" size="lg" fullWidth loading={submitting || isPending} iconBefore={<IconLock size={18} />}>
-              {mode === 'demo' ? 'Place demo order' : 'Pay securely'}
+            <Button type="submit" size="lg" fullWidth loading={submitting || isPending}>
+              {mode === 'demo' ? 'Place demo order' : 'Continue to payment'}
             </Button>
             <TrustBadges compact />
           </aside>

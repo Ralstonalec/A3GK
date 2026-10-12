@@ -12,7 +12,8 @@ import VariantSelector, { useVariantSelection } from '@/components/commerce/Vari
 import Accordion from '@/components/ui/Accordion';
 import Button from '@/components/ui/Button';
 import { IconArrow } from '@/components/ui/Icons';
-import { publicConfig } from '@/lib/config';
+import { isDemoCatalogue, publicConfig } from '@/lib/config';
+import { FEATURES } from '@/lib/features';
 import { getSizeGuide, guideKindFor } from '@/lib/size-guides';
 import { CART_LIMITS, hasFreeShipping, hasReturnWindow, STORE_TERMS } from '@/lib/store-terms';
 import { toItem, track } from '@/lib/analytics';
@@ -45,7 +46,7 @@ function productJsonLd(product, base) {
     description: product.description,
     image: product.images.map((i) => (i.url.startsWith('http') ? i.url : `${base}${i.url}`)),
     brand: { '@type': 'Brand', name: product.vendor || 'A3GK' },
-    sku: product.variants[0]?.sku,
+    ...(product.variants[0]?.sku ? { sku: product.variants[0].sku } : {}),
     offers: {
       '@type': 'AggregateOffer',
       priceCurrency: product.currencyCode,
@@ -132,7 +133,8 @@ export default function ProductPage({ product, related }) {
         path={`/products/${product.handle}`}
         image={product.images[0]?.url}
         type="product"
-        jsonLd={productJsonLd(product, base)}
+        // Structured data (price, availability) is published only for a real catalogue, never for the placeholder one.
+        jsonLd={isDemoCatalogue() ? undefined : productJsonLd(product, base)}
       />
       <div className={`page-width ${styles.pdp}`}>
         <nav aria-label="Breadcrumb" className={styles.breadcrumb}>
@@ -161,7 +163,7 @@ export default function ProductPage({ product, related }) {
 
             <VariantSelector product={product} {...selection} onOpenSizeGuide={hasSizes ? () => setGuide(true) : undefined} />
 
-            {product.customizable ? (
+            {product.customizable && FEATURES.customKit ? (
               <div className="stack">
                 <Button href="/customizer" size="lg" fullWidth iconAfter={<IconArrow size={20} />}>
                   Design yours in the studio

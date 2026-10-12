@@ -1,29 +1,21 @@
 {
-  "_note": "DORMANT — custom kit / Design Studio is a work in progress. Not loaded unless NEXT_PUBLIC_FEATURE_CUSTOM_KIT=true (see lib/features.js). Sample data only.",
+  "_note": "DORMANT: loaded only when NEXT_PUBLIC_FEATURE_CUSTOM_KIT=true (work in progress). Name, price and sizes are PLACEHOLDERS; no materials, specs, stock or claims are asserted.",
   "products": [
     {
       "id": 3001,
       "handle": "custom-keeper-jersey",
-      "title": "Custom Keeper Jersey",
+      "title": "Custom Jersey",
       "category": "apparel",
       "productType": "Custom Kit",
-      "tags": [
-        "custom",
-        "team",
-        "padded"
-      ],
+      "tags": [],
       "badges": [],
       "price": 79.99,
-      "description": "Your colours, your name, your number. Design a one-of-a-kind padded keeper jersey in our studio and see every change live before you buy.",
-      "descriptionHtml": "<p>Your colours, your name, your number. Design a one-of-a-kind padded keeper jersey in our <a href=\"/customizer\">Design Studio</a> and see every change live before you buy.</p>",
+      "description": "Design your own goalkeeper jersey.",
+      "descriptionHtml": "<p>Design your own goalkeeper jersey.</p>",
       "images": [
         {
           "file": "custom-keeper-jersey-1",
-          "alt": "Custom keeper jersey front view in the default volt stripe design"
-        },
-        {
-          "file": "custom-keeper-jersey-2",
-          "alt": "Custom keeper jersey back view with name and number"
+          "alt": "Placeholder for the custom jersey photo"
         }
       ],
       "options": [
@@ -41,27 +33,14 @@
         }
       ],
       "stock": {
-        "default": 99,
+        "default": null,
         "overrides": {}
       },
       "model": null,
       "customizable": true,
       "leadTimeDays": 0,
-      "features": [
-        "Live Design Studio with instant pricing",
-        "Choose colours, pattern, fabric, name, number and logo",
-        "Sublimated print — never cracks or peels"
-      ],
-      "specs": [
-        {
-          "label": "Fabric",
-          "value": "Dry Mesh, Pro Knit or Thermal"
-        },
-        {
-          "label": "Decoration",
-          "value": "Sublimated print"
-        }
-      ]
+      "features": [],
+      "specs": []
     }
   ]
 }

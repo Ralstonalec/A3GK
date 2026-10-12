@@ -24,5 +24,5 @@ const sections = [
 ];
 
 export default function Terms() {
-  return <LegalPage title="Terms & Conditions" path="/terms" description={`Terms for buying from ${SITE.name}.`} sections={sections} />;
+  return <LegalPage title="Terms & Conditions" path="/terms" description={`${SITE.name} purchase terms.`} sections={sections} />;
 }

@@ -9,7 +9,7 @@ import Section from '@/components/layout/Section';
 import { IconArrow, IconPause, IconPlay } from '@/components/ui/Icons';
 import styles from '@/styles/sections.module.css';
 
-/** Shopify theme-editor schema mirror — kept in sync with ShopifyTheme/sections/hero-section.liquid (tested). */
+/** Settings a Shopify theme-editor section would expose (the Liquid theme is not built yet). */
 export const schema = {
   name: 'Hero',
   settings: ['eyebrow', 'heading', 'accent_word', 'subheading', 'primary_label', 'primary_link', 'secondary_label', 'secondary_link', 'video_url', 'overlay_opacity'],

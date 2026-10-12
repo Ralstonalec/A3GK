@@ -257,7 +257,7 @@
 
 @media (min-width: 990px) {
   .footerInner {
-    grid-template-columns: 1.6fr repeat(3, 1fr);
+    grid-template-columns: 1.6fr repeat(var(--footer-cols, 3), 1fr);
   }
   .footerBrand {
     grid-column: auto;

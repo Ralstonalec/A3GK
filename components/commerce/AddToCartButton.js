@@ -10,14 +10,15 @@ import styles from '@/styles/components.module.css';
 
 const LOW_STOCK_THRESHOLD = 5;
 
-/** "In stock" / "Only 3 left" / "Sold out" — null quantity means Shopify is not exposing inventory. */
+/** "In stock — 12 available" / "Only 3 left" / "Sold out" — no label when inventory is not tracked or exposed. */
 export function stockStatus(variant) {
   if (!variant) return { tone: 'neutral', label: 'Select options' };
   if (!variant.availableForSale) return { tone: 'out', label: 'Sold out' };
   const qty = variant.quantityAvailable;
   if (typeof qty === 'number' && qty <= LOW_STOCK_THRESHOLD) return { tone: 'low', label: `Only ${qty} left` };
   if (typeof qty === 'number') return { tone: 'in', label: `In stock — ${qty} available` };
-  return { tone: 'in', label: 'In stock' };
+  // No inventory data (untracked / placeholder): say nothing rather than assert stock.
+  return { tone: 'in', label: '' };
 }
 
 /**
@@ -60,10 +61,12 @@ export default function AddToCartButton({ product, variant, quantity = 1, custom
 
   return (
     <div className={styles.atc}>
-      <p className={cn(styles.stock, styles[`stock_${status.tone}`])} role="status">
-        <span className={styles.stockDot} aria-hidden="true" />
-        {status.label}
-      </p>
+      {status.label && (
+        <p className={cn(styles.stock, styles[`stock_${status.tone}`])} role="status">
+          <span className={styles.stockDot} aria-hidden="true" />
+          {status.label}
+        </p>
+      )}
 
       <Button size="lg" fullWidth={fullWidth} disabled={disabled} loading={state === 'adding'} onClick={handleClick} className={cn(state === 'added' && styles.atcAdded)}>
         <AnimatePresence mode="wait" initial={false}>

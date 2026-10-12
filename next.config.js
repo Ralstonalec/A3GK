@@ -11,6 +11,19 @@ const siteUrl =
 // Preview deployments must never be indexed.
 const isPreview = Boolean(process.env.VERCEL_ENV) && process.env.VERCEL_ENV !== 'production';
 
+// Public, derived BOOLEAN-ish facts about server configuration, so the browser bundle can say only what is true
+// (never a secret: just which checkout provider is wired up and whether analytics has a destination).
+const realValue = (v) => Boolean(v) && !/xxx|^\*+$|your-/i.test(v);
+const shopifyConnected = realValue(process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN) && realValue(process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN);
+const checkoutProvider = realValue(process.env.STRIPE_SECRET_KEY) ? 'stripe' : shopifyConnected ? 'shopify' : 'demo';
+const analyticsEnabled = (realValue(process.env.NEXT_PUBLIC_ANALYTICS_ID) && realValue(process.env.GA_API_SECRET)) || realValue(process.env.ANALYTICS_WEBHOOK_URL);
+// While the placeholder catalogue is live (no Shopify store) nothing should be indexed, on any route.
+const noindex = isPreview || !shopifyConnected;
+
+if (!process.env.NEXT_PUBLIC_SITE_URL && !process.env.VERCEL_PROJECT_PRODUCTION_URL && process.env.NODE_ENV === 'production') {
+  console.warn('[a3gk] NEXT_PUBLIC_SITE_URL is not set: canonical URLs, Open Graph URLs and the sitemap will point at http://localhost:3000.');
+}
+
 const ONE_DAY = 60 * 60 * 24;
 
 /** @type {import('next').NextConfig} */
@@ -18,7 +31,7 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
-  env: { NEXT_PUBLIC_SITE_URL: siteUrl },
+  env: { NEXT_PUBLIC_SITE_URL: siteUrl, NEXT_PUBLIC_CHECKOUT_PROVIDER: checkoutProvider, NEXT_PUBLIC_ANALYTICS_ENABLED: analyticsEnabled ? 'true' : '' },
 
   images: {
     formats: ['image/avif', 'image/webp'],
@@ -41,7 +54,7 @@ const nextConfig = {
     return [
       {
         source: '/:path*',
-        headers: [...securityHeaders({ isDev }), ...(isPreview ? [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }] : [])],
+        headers: [...securityHeaders({ isDev }), ...(noindex ? [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }] : [])],
       },
       {
         source: '/images/:path*',

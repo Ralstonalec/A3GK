@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { hasFreeShipping, STORE_TERMS } from '@/lib/store-terms';
+import { hasFreeShipping, hasShippingMethods, STORE_TERMS } from '@/lib/store-terms';
 import { useCart } from '@/lib/cart';
 import { amountToFreeShipping } from '@/lib/shipping';
 import { formatMoney } from '@/lib/utils';
@@ -71,7 +71,7 @@ export default function CartDrawer() {
               <span>Subtotal</span>
               <span className="tabular" aria-live="polite">{formatMoney(subtotalCents)}</span>
             </p>
-            <p className="muted" style={{ fontSize: 'var(--text-sm)' }}>Taxes and any shipping are shown at checkout.</p>
+            {hasShippingMethods() && <p className="muted" style={{ fontSize: 'var(--text-sm)' }}>Shipping is shown at checkout.</p>}
             <Button href="/cart/checkout" size="lg" fullWidth loading={isPending} onClick={closeDrawer}>
               Checkout
             </Button>

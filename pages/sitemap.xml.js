@@ -1,4 +1,4 @@
-import { publicConfig } from '@/lib/config';
+import { isDemoCatalogue, publicConfig } from '@/lib/config';
 import { FEATURES } from '@/lib/features';
 import { getProductHandles } from '@/lib/products';
 
@@ -6,8 +6,8 @@ const STATIC = ['', '/products', ...(FEATURES.customKit ? ['/customizer'] : []),
 
 export async function getServerSideProps({ res }) {
   const base = publicConfig.siteUrl.replace(/\/$/, '');
-  const handles = await getProductHandles();
-  const urls = [...STATIC, ...handles.map((h) => `/products/${h}`)];
+  // The placeholder catalogue must not be advertised to search engines.
+  const urls = isDemoCatalogue() ? [] : [...STATIC, ...(await getProductHandles()).map((h) => `/products/${h}`)];
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls.map((u) => `  <url><loc>${base}${u}</loc></url>`).join('\n')}

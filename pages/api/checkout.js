@@ -2,6 +2,7 @@ import { createHandler, parseBody, parseCookies, sendJson } from '@/lib/api';
 import { createCheckout, getRequestOrigin, retrieveCheckoutStatus } from '@/lib/checkout-service';
 import { isStripeConfigured } from '@/lib/server-config';
 import { isShopifyConfigured } from '@/lib/config';
+import { hasPublishedTerms } from '@/lib/store-terms';
 import { checkoutSchema } from '@/lib/validation';
 import { ApiError } from '@/lib/api';
 
@@ -14,6 +15,10 @@ import { ApiError } from '@/lib/api';
  */
 async function post(req, res) {
   const input = parseBody(checkoutSchema, req.body);
+
+  if (hasPublishedTerms() && !input.acceptTerms) {
+    throw new ApiError(400, 'validation_error', 'You must accept the Terms & Conditions to continue', { acceptTerms: 'You must accept the Terms & Conditions to continue' });
+  }
 
   // Honeypot tripped: pretend success so bots learn nothing.
   if (input.company) {

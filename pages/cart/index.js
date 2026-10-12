@@ -5,7 +5,7 @@ import CartLineItem from '@/components/commerce/CartLineItem';
 import TrustBadges from '@/components/commerce/TrustBadges';
 import Button from '@/components/ui/Button';
 import { IconArrow, IconInfo } from '@/components/ui/Icons';
-import { hasFreeShipping, STORE_TERMS } from '@/lib/store-terms';
+import { hasFreeShipping, hasShippingMethods, STORE_TERMS } from '@/lib/store-terms';
 import { useCart } from '@/lib/cart';
 import { amountToFreeShipping } from '@/lib/shipping';
 import { formatMoney } from '@/lib/utils';
@@ -63,10 +63,13 @@ export default function CartPage() {
                   <dt>Subtotal</dt>
                   <dd className="tabular" aria-live="polite">{formatMoney(subtotalCents)}</dd>
                 </div>
-                <div>
-                  <dt>Shipping</dt>
-                  <dd>{remaining === 0 ? 'Free' : 'Shown at checkout'}</dd>
-                </div>
+                {/* Only once shipping terms exist (lib/store-terms.js); nothing is promised before then. */}
+                {hasShippingMethods() && (
+                  <div>
+                    <dt>Shipping</dt>
+                    <dd>{remaining === 0 ? 'Free' : 'Shown at checkout'}</dd>
+                  </div>
+                )}
               </dl>
               {remaining !== null && (
                 <div className={styles.shipMeter}>

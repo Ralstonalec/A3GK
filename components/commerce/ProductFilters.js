@@ -5,7 +5,7 @@ import Select from '@/components/ui/Select';
 import styles from '@/styles/pages.module.css';
 
 /** Filter + sort controls. All state lives in the URL (see pages/products/index.js). */
-export default function ProductFilters({ filters, onChange, onReset, resultCount, queryString }) {
+export default function ProductFilters({ filters, onChange, onReset, resultCount }) {
   const activeCount = [filters.category !== 'all', filters.price !== 'any', filters.tags.length > 0, filters.available, Boolean(filters.q)].filter(Boolean).length;
 
   return (
@@ -43,12 +43,6 @@ export default function ProductFilters({ filters, onChange, onReset, resultCount
         )}
       </div>
 
-      {queryString && (
-        <details className={styles.queryDebug}>
-          <summary>Shopify search query</summary>
-          <code>{queryString}</code>
-        </details>
-      )}
     </form>
   );
 }

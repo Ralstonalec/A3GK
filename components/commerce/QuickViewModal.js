@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { AnimatePresence, motion } from 'framer-motion';
 import { apiUrl } from '@/lib/config';
+import { FEATURES } from '@/lib/features';
 import { getSizeGuide, guideKindFor } from '@/lib/size-guides';
 import { track } from '@/lib/analytics';
 import Modal from '@/components/ui/Modal';
@@ -69,7 +70,7 @@ function QuickViewBody({ product, onClose }) {
         <Price cents={priceCents} compareAtCents={variant?.compareAtPriceCents} size="lg" />
         <p className="muted">{product.description}</p>
         <VariantSelector product={product} {...selection} onOpenSizeGuide={sizeGuide ? () => setGuide(true) : undefined} />
-        {product.customizable ? (
+        {product.customizable && FEATURES.customKit ? (
           <Button href="/customizer" size="lg" fullWidth iconAfter={<IconArrow size={18} />} onClick={onClose}>
             Design yours in the studio
           </Button>
