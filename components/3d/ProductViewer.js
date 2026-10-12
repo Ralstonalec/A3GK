@@ -1,23 +1,9 @@
 import { Canvas } from '@react-three/fiber';
 import { ContactShadows, Environment, Lightformer } from '@react-three/drei';
-import { Component, Suspense } from 'react';
+import { Suspense } from 'react';
 import CameraController from './CameraController';
 import ProductModel from './ProductModel';
 import { usePrefersReducedMotion } from '@/lib/hooks';
-
-/** Falls back to `fallback` if WebGL or a model fails — the page must never white-screen. */
-export class ViewerBoundary extends Component {
-  state = { failed: false };
-  static getDerivedStateFromError() {
-    return { failed: true };
-  }
-  componentDidCatch(error) {
-    console.warn('[3d] viewer failed, showing fallback:', error?.message);
-  }
-  render() {
-    return this.state.failed ? this.props.fallback : this.props.children;
-  }
-}
 
 /** Studio lighting without any network fetch: key + rim lightformers inside a procedural environment. */
 function Lighting({ rim = '#ffffff' }) {

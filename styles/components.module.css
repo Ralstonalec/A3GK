@@ -10,6 +10,10 @@
 }
 
 /* Shown only while the placeholder catalogue is live (no Shopify store connected). */
+.demoNotice p {
+  margin: 0;
+}
+
 .demoNotice {
   margin: 0;
   padding: 0.5rem var(--page-gutter);
@@ -53,7 +57,7 @@
 
 .headerInner {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto 1fr;
   align-items: center;
   gap: var(--space-5);
   height: var(--header-height);
@@ -99,6 +103,10 @@
   justify-self: center;
 }
 
+.headerActions {
+  justify-self: end;
+}
+
 .navList {
   display: flex;
   gap: var(--space-5);
@@ -110,6 +118,7 @@
 .navLink {
   position: relative;
   display: inline-block;
+  white-space: nowrap;
   padding: 0.5rem 0.1rem;
   font-family: var(--font-display);
   font-size: var(--text-sm);
@@ -120,6 +129,15 @@
   text-decoration: none;
   color: var(--color-text-muted);
   transition: color var(--dur-fast);
+}
+
+@media (min-width: 990px) and (max-width: 1179px) {
+  .navList {
+    gap: var(--space-4);
+  }
+  .navLink {
+    letter-spacing: 0.04em;
+  }
 }
 
 .navLink::after {
@@ -196,6 +214,9 @@
 }
 
 @media (min-width: 990px) {
+  .headerInner {
+    grid-template-columns: auto 1fr auto;
+  }
   .nav {
     display: block;
   }
@@ -320,13 +341,18 @@
   border-color: var(--color-accent);
 }
 
+.footerBrand .logo {
+  justify-self: start;
+}
+
 .footerBottom {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   gap: var(--space-3) var(--space-6);
   padding-block: var(--space-5) var(--space-6);
-  border-top: 1px solid var(--color-line);
+  /* rule inset to the content column (a border on this box would run through the gutters) */
+  background: linear-gradient(var(--color-line), var(--color-line)) top center / calc(100% - 2 * var(--page-gutter)) 1px no-repeat;
   font-size: var(--text-sm);
   color: var(--color-text-muted);
 }
@@ -834,6 +860,10 @@
   height: 100%;
 }
 
+.dialogHeader > button:last-child {
+  margin-left: auto;
+}
+
 .dialogHeader {
   flex: none;
   display: flex;
@@ -1085,6 +1115,9 @@
   transform: translate(-50%, 14px);
   opacity: 0;
   transition: opacity var(--dur) var(--ease-out), transform var(--dur) var(--ease-out), background var(--dur-fast), color var(--dur-fast);
+  width: max-content;
+  max-width: calc(100% - var(--space-4));
+  white-space: nowrap;
 }
 
 .card:hover .quickViewButton,
@@ -1092,6 +1125,10 @@
 .quickViewButton:focus-visible {
   opacity: 1;
   transform: translate(-50%, 0);
+}
+
+.quickViewButton svg {
+  flex: none;
 }
 
 .quickViewButton:hover {
@@ -1122,6 +1159,7 @@
 }
 
 .cardTitle {
+  overflow-wrap: anywhere;
   font-size: var(--text-lg);
   line-height: 1.2;
   letter-spacing: -0.01em;

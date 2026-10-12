@@ -5,7 +5,7 @@ import { useInView, usePrefersReducedMotion } from '@/lib/hooks';
 import { frameUrls } from '@/lib/media';
 import { cn } from '@/lib/utils';
 import SequenceViewer from './SequenceViewer';
-import { ViewerBoundary } from './ProductViewer';
+import ViewerBoundary from './ViewerBoundary';
 import { IconMinus, IconPause, IconPlay, IconPlus, IconRotate } from '@/components/ui/Icons';
 import styles from '@/styles/viewer.module.css';
 

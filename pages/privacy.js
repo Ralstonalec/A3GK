@@ -41,7 +41,7 @@ const sections = [
     content: (
       <ul>
         {takesOrders && <li><strong>Order data</strong> (name, email, delivery address, items) — entered at checkout to take payment and fulfil your order.</li>}
-        {FEATURES.customKit && <li><strong>Design Studio files</strong> (colours, text, optional logo) — saved designs are kept for 180 days.</li>}
+        {FEATURES.customKit && <li><strong>Design Studio files</strong> (colours, text, optional logo) — saved designs are kept for up to 180 days.</li>}
         {isAnalyticsEnabled() && <li><strong>Analytics</strong> (pages viewed, performance metrics, a random identifier stored in your browser) — only if you opt in.</li>}
         <li><strong>Technical request data</strong> (such as your IP address and browser details) is processed by our hosting and infrastructure providers to serve the site and protect it from abuse.</li>
       </ul>
@@ -89,7 +89,7 @@ const sections = [
       <ul>
         {isPaymentsEnabled() && <li><strong>Stripe</strong> — payment processing; card details are entered on Stripe’s hosted page and never reach this site.</li>}
         {isShopifyConfigured() && <li><strong>Shopify</strong> — product, cart and order management.</li>}
-        <li><strong>Hosting and infrastructure providers</strong> — serve this site and, where configured, store short-lived data such as rate-limit counters (which include your IP address) and saved designs.</li>
+        <li><strong>Hosting and infrastructure providers</strong> — serve this site and, where configured, store short-lived data such as rate-limit counters (which include your IP address){FEATURES.customKit ? ' and saved designs' : ''}.</li>
         {isAnalyticsEnabled() && <li><strong>Analytics provider</strong> — only if you consent; events are sent from our server, not your browser.</li>}
       </ul>
     ),

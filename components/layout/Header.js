@@ -52,7 +52,7 @@ export default function Header() {
       )}
       <header className={cn(styles.header, scrolled && styles.headerScrolled)}>
         <div className={cn('page-width', styles.headerInner)}>
-          <Logo />
+          <Logo priority />
 
           <nav aria-label="Primary" className={styles.nav}>
             <ul role="list" className={styles.navList}>

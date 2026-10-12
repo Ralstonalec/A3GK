@@ -78,6 +78,47 @@
   background: var(--color-surface);
 }
 
+/* Below 990px the filters sit behind a button so products are the first thing on the screen. */
+.filterToggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: 48px;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  font-stretch: 110%;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.filterPanel {
+  display: none;
+  gap: var(--space-5);
+}
+
+.filterPanelOpen {
+  display: grid;
+  margin-top: var(--space-4);
+}
+
+@media (min-width: 990px) {
+  .filterToggle {
+    display: none;
+  }
+  .filterPanel {
+    display: grid;
+    margin-top: 0;
+  }
+}
+
 @media (min-width: 990px) {
   .filters {
     position: sticky;
@@ -381,6 +422,10 @@
   gap: var(--space-6);
 }
 
+.related h2 {
+  font-size: var(--text-2xl);
+}
+
 /* ── Cart + checkout ───────────────────────────────────────────────────── */
 .cartPage {
   padding-bottom: var(--space-8);
@@ -640,6 +685,7 @@
 
 .legalLayout {
   display: grid;
+  grid-template-columns: minmax(0, 1fr); /* a wide table must scroll inside its wrapper, not widen the page */
   gap: var(--space-6);
   align-items: start;
 }
@@ -681,6 +727,7 @@
 }
 
 .legalBody {
+  min-width: 0;
   display: grid;
   gap: var(--space-6);
   color: var(--color-text-muted);

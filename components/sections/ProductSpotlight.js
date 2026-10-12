@@ -21,11 +21,6 @@ export default function ProductSpotlight({ product }) {
   return (
     <Section id="spotlight" type="product-spotlight" settings={{ product: product.handle }} labelledBy="spotlight-heading" className={styles.spotlight}>
       <div className={`page-width ${styles.spotlightGrid}`}>
-        {/* Decorative: the category name as outlined type, drifting against the photo. */}
-        <ScrollLayer x={['-7%', '7%']} className={styles.spotlightGhost} aria-hidden="true">
-          {product.productType}
-        </ScrollLayer>
-
         <div className={styles.spotlightStage}>
           <ScrollLayer className={styles.spotlightFrame} input={[0, 0.4, 1]} scale={[0.85, 1, 1]}>
             <ScrollLayer className={styles.spotlightPhoto} y={['-6%', '6%']}>

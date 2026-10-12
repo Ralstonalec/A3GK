@@ -49,8 +49,12 @@ function RangeStage({ categories }) {
 
   useMotionValueEvent(scrollYProgress, 'change', (v) => {
     if (!Number.isFinite(v)) return;
-    const next = Math.min(categories.length - 1, Math.max(0, Math.floor(v * categories.length)));
+    const raw = v * categories.length;
+    const next = Math.min(categories.length - 1, Math.max(0, Math.floor(raw)));
     if (next === last.current) return;
+    // Hysteresis: a step changes only once the boundary is clearly crossed, so 1-2px of jitter cannot flip it back and forth.
+    if (next > last.current && raw < next + 0.03) return;
+    if (next < last.current && raw > last.current - 0.03) return;
     last.current = next;
     setActive(next);
     setForced(null);
@@ -61,11 +65,18 @@ function RangeStage({ categories }) {
   return (
     <div ref={ref} className={styles.rangeStage} style={{ '--range-count': categories.length }}>
       <div className={styles.rangeSticky}>
-        <ol role="list" className={styles.rangeList}>
+        <ol
+          role="list"
+          className={styles.rangeList}
+          onMouseLeave={() => setForced(null)}
+          onBlur={(e) => {
+            if (!e.currentTarget.contains(e.relatedTarget)) setForced(null);
+          }}
+        >
           {categories.map((c, i) => (
             <li key={c.id}>
               <Link href={`/products?category=${c.id}`} className={cn(styles.rangeItem, i === shown && styles.rangeItemActive)} onFocus={() => setForced(i)} onMouseEnter={() => setForced(i)}>
-                <span className={styles.rangeIndex}>{String(i + 1).padStart(2, '0')}</span>
+                <span className={styles.rangeIndex} aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
                 <span className={styles.rangeName}>{c.label}</span>
                 <IconArrow size={28} />
               </Link>

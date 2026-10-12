@@ -31,9 +31,9 @@ export default function Layout({ children }) {
     <>
       <a href="#main" className="skip-link">Skip to main content</a>
       {isDemoCatalogue() && (
-        <p className={styles.demoNotice} role="note">
-          Preview build — products, prices and photos are placeholders, not an offer for sale.
-        </p>
+        <div className={styles.demoNotice} role="region" aria-label="Preview notice">
+          <p>Preview build — products, prices and photos are placeholders, not an offer for sale.</p>
+        </div>
       )}
       <Header />
       <motion.main

@@ -19,7 +19,7 @@ export default function FeaturedProducts({ products, eyebrow = 'The lineup', hea
           <p className="eyebrow">{eyebrow}</p>
           <h2 id="featured-heading">{heading}</h2>
         </FadeInSection>
-        <StaggeredList as="ul" itemAs="li" className="grid grid--2-col-mobile grid--3-col-tablet grid--4-col-desktop" role="list">
+        <StaggeredList as="ul" itemAs="li" className="grid grid--2-col-mobile grid--2-col-tablet grid--4-col-desktop" role="list">
           {products.map((p, i) => (
             <ProductCard key={p.handle} product={p} onQuickView={setQuick} priority={i < 2} />
           ))}

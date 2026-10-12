@@ -44,7 +44,9 @@ const HERO_EXIT = ['start start', 'end start'];
  */
 function HeroBackground({ videoUrl, poster, reduced, rootRef }) {
   const videoRef = useRef(null);
-  const [playing, setPlaying] = useState(!reduced);
+  // Derived, never seeded from the hydration-time media query: a reduced-motion visitor's video never starts.
+  const [userChoice, setUserChoice] = useState(null);
+  const playing = userChoice ?? !reduced;
   const [onScreen, setOnScreen] = useState(true);
 
   useEffect(() => {
@@ -58,7 +60,7 @@ function HeroBackground({ videoUrl, poster, reduced, rootRef }) {
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
-    if (playing && onScreen) v.play().catch(() => setPlaying(false));
+    if (playing && onScreen) v.play().catch(() => setUserChoice(false));
     else v.pause();
   }, [playing, onScreen]);
 
@@ -71,7 +73,7 @@ function HeroBackground({ videoUrl, poster, reduced, rootRef }) {
           <div className={styles.heroSettle}>
             <div className={styles.heroMediaInner} data-hero="media">
               {videoUrl ? (
-                <video ref={videoRef} className={styles.heroVideo} src={videoUrl} poster={poster || undefined} muted loop playsInline preload="metadata" autoPlay={!reduced} aria-hidden="true" />
+                <video ref={videoRef} className={styles.heroVideo} src={videoUrl} poster={poster || undefined} muted loop playsInline preload="metadata" aria-hidden="true" />
               ) : (
                 <Image src={MEDIA.hero.image} alt={MEDIA.hero.imageAlt || ''} fill priority quality={75} sizes="100vw" className={styles.heroImage} />
               )}
@@ -81,7 +83,7 @@ function HeroBackground({ videoUrl, poster, reduced, rootRef }) {
       </ScrollLayer>
       {/* Outside the moving layer so the control never drifts. */}
       {videoUrl && (
-        <button type="button" className={styles.videoToggle} onClick={() => setPlaying((p) => !p)} aria-label={playing ? 'Pause background video' : 'Play background video'}>
+        <button type="button" className={styles.videoToggle} onClick={() => setUserChoice(!playing)} aria-label={playing ? 'Pause background video' : 'Play background video'}>
           {playing ? <IconPause size={18} /> : <IconPlay size={18} />}
         </button>
       )}
@@ -99,7 +101,7 @@ export default function HeroSection({ settings = {} }) {
   /*
    * GSAP master timeline — progressive enhancement only. The headline is plain
    * server-rendered text (it is the LCP element); GSAP choreographs the rest:
-   * accent underline sweep, grid draw-in and a slow Ken-Burns drift on the media.
+   * the decorative grid lines drawing in. The image curtain, headline lines and accent underline are CSS.
    * Scroll-linked motion (parallax, content drift/fade) is handled separately by
    * <ScrollLayer> so there is a single scroll system. Text blocks use CSS
    * keyframes (no JS needed, no hidden-until-hydrated content).
@@ -112,10 +114,8 @@ export default function HeroSection({ settings = {} }) {
       if (cancelled) return;
       ctx = gsap.context(() => {
         const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-        tl.fromTo('[data-hero="underline"]', { scaleX: 0 }, { scaleX: 1, duration: 0.9, transformOrigin: 'left center' }, 0.95).fromTo('[data-hero="gridline"]', { scaleY: 0 }, { scaleY: 1, duration: 1.6, stagger: 0.12, transformOrigin: 'top center' }, 0.2);
-
-        // Ken-Burns drift, separate from the intro timeline so it can loop forever.
-        gsap.fromTo('[data-hero="media"]', { scale: 1 }, { scale: 1.07, duration: 24, ease: 'sine.inOut', yoyo: true, repeat: -1 });
+        // Decorative grid lines draw in. (Headline, image and underline are CSS-driven; nothing here is needed to read the page.)
+        tl.fromTo('[data-hero="gridline"]', { scaleY: 0 }, { scaleY: 1, duration: 1.6, stagger: 0.12, transformOrigin: 'top center' }, 0.2);
       }, root);
     });
     return () => {

@@ -158,25 +158,32 @@ const browser = await chromium.launch({ executablePath: CHROME, args: ['--no-san
   check('staged range is shown on desktop with motion allowed', Boolean(stage), stage ? `track ${Math.round(stage.h)}px` : 'display:none');
   if (stage) {
     const travel = stage.h - 900;
+    const rows = await page.evaluate(() => [...document.querySelectorAll('[class*="rangeItem"]')].filter((n) => n.tagName === 'A').length);
     const activeIndex = () => page.evaluate(() => [...document.querySelectorAll('[class*="rangeItem"]')].filter((n) => n.tagName === 'A').findIndex((n) => String(n.className).includes('rangeItemActive')));
     const stickyTop = () => page.evaluate(() => document.querySelector('[class*="rangeSticky"]').getBoundingClientRect().top);
     const seq = [];
     const pins = [];
-    for (const f of [0.04, 0.3, 0.55, 0.95]) {
-      await scrollTo(page, stage.top + travel * f, 500);
+    for (let i = 0; i < rows; i += 1) {
+      await scrollTo(page, stage.top + (travel * (i + 0.5)) / rows, 500); // middle of step i
       seq.push(await activeIndex());
       pins.push(Math.round(await stickyTop()));
     }
-    check('staged range advances one category at a time while scrolling down', JSON.stringify(seq) === JSON.stringify([0, 1, 2, 3]), `active rows ${seq.join(' → ')}`);
+    check(`staged range advances one category at a time while scrolling down (${rows} steps)`, JSON.stringify(seq) === JSON.stringify([...Array(rows).keys()]), `active rows ${seq.join(' → ')}`);
     check('the stage stays pinned while it steps (no scroll hijacking: the page itself scrolls)', pins.every((t) => Math.abs(t - pins[0]) <= 2), `sticky top ${pins.join(', ')}px`);
     const back = [];
-    for (const f of [0.55, 0.3, 0.04]) {
-      await scrollTo(page, stage.top + travel * f, 500);
+    for (let i = rows - 2; i >= 0; i -= 1) {
+      await scrollTo(page, stage.top + (travel * (i + 0.5)) / rows, 500);
       back.push(await activeIndex());
     }
-    check('scrolling back up steps the staged range back', JSON.stringify(back) === JSON.stringify([2, 1, 0]), `active rows ${back.join(' → ')}`);
+    check('scrolling back up steps the staged range back', JSON.stringify(back) === JSON.stringify([...Array(rows - 1).keys()].reverse()), `active rows ${back.join(' → ')}`);
+    // Every row must sit inside the pinned box (nothing clipped at the fold).
+    const fits = await page.evaluate(() => {
+      const list = document.querySelector('[class*="rangeList"]').getBoundingClientRect();
+      return list.bottom <= window.innerHeight + 1;
+    });
+    check('the pinned list fits inside the viewport (no row clipped at the fold)', fits);
     // Keyboard: focusing a row shows that category (nothing is reachable only by scrolling).
-    await scrollTo(page, stage.top + travel * 0.04, 400);
+    await scrollTo(page, stage.top + (travel * 0.5) / rows, 400);
     await page.locator('[class*="rangeItem"]').filter({ hasText: 'Pants' }).first().focus();
     await page.waitForTimeout(300);
     check('keyboard focus on a row shows that category', (await activeIndex()) === 2, `active row ${await activeIndex()}`);

@@ -156,7 +156,7 @@ export default function DesignStudio({ product }) {
       const { id } = await saveDesign();
       return { designId: id };
     } catch {
-      toast.push({ tone: 'info', title: 'Logo file not stored', description: 'We could not store your logo online, so our design team will email you to collect it after checkout.' });
+      toast.push({ tone: 'info', title: 'Logo file not stored', description: 'We could not store your logo online. Your design is still in your cart.' });
       return { designId: undefined };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

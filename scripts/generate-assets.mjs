@@ -38,7 +38,6 @@ const only = process.argv.slice(2).find((a) => !a.startsWith('--'));
 GlobalFonts.registerFromPath(path.join(root, 'node_modules/@fontsource/bebas-neue/files/bebas-neue-latin-400-normal.woff'), 'Bebas Neue');
 
 const readJson = async (...p) => JSON.parse(await fs.readFile(path.join(root, ...p), 'utf8'));
-const flagOn = (v) => /^(1|true|on|yes)$/i.test(v || '');
 
 const exists = (file) => fs.access(file).then(() => true, () => false);
 
@@ -142,9 +141,8 @@ async function writeSlot(file, spec, quality = 80) {
 async function placeholders() {
   const media = await readJson('data/media.json');
   const sources = [(await readJson('data/products.json')).products];
-  // Dormant ranges only get slots once their feature flag is on (same env vars as lib/features.js).
-  if (flagOn(process.env.NEXT_PUBLIC_FEATURE_GLOVES)) sources.push((await readJson('data/future/gloves.json')).products);
-  if (flagOn(process.env.NEXT_PUBLIC_FEATURE_CUSTOM_KIT)) sources.push((await readJson('data/future/custom-kit.json')).products);
+  // The dormant ranges (gloves, custom kit) get their slots too, so flipping a feature flag later never shows broken images.
+  sources.push((await readJson('data/future/gloves.json')).products, (await readJson('data/future/custom-kit.json')).products);
   let written = 0;
   let kept = 0;
   const tally = (ok) => (ok ? (written += 1) : (kept += 1));
@@ -156,7 +154,6 @@ async function placeholders() {
   }
   const categoryLabels = { 'base-layers': 'Base layers', jerseys: 'Jerseys', bottoms: 'Pants & shorts', accessories: 'Tape & socks', gloves: 'Gloves' };
   for (const [id, src] of Object.entries(media.categories.images)) {
-    if (id === 'gloves' && !flagOn(process.env.NEXT_PUBLIC_FEATURE_GLOVES)) continue;
     tally(await writeSlot(path.join(root, 'public', src), { width: 800, height: 1000, label: 'Category photo', caption: categoryLabels[id] || id }));
   }
   tally(await writeSlot(out('images', 'hero.webp'), { width: 1920, height: 1080, label: 'Hero photograph · replace public/images/hero.webp', caption: 'Supply 2400 × 1350 (16:9)\nGoalkeeper in a save, dark low-key lighting\nSubject right of centre, left 45% quiet for the headline', corner: true }, 72));

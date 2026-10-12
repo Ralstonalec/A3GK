@@ -51,7 +51,7 @@ export default function Success() {
   }, [router.isReady, router.query]);
 
   const copy = {
-    checking: { title: 'Confirming your order…', body: 'One moment while we confirm your payment.' },
+    checking: { title: 'Checking your order…', body: 'One moment.' },
     paid: { title: 'Thank you — payment confirmed', body: 'Your payment has been received.' },
     pending: { title: 'We are still confirming your payment', body: 'This can take a minute. Refresh this page to check again.' },
     demo: { title: 'Demo order placed', body: 'This was a demo checkout — no payment was taken and nothing will ship.' },
