@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guardian Gloves | Grip It. Own the Box.</title>
+<meta name="description" content="Guardian Gloves makes goalkeeper gloves with a latex palm that stays tacky in the wet and a cut that moves with your hand.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@400;500;700&family=Galada&display=swap" rel="stylesheet">
+<style>
+:root {
+    --text-color: #ffffff;
+    --muted-color: rgba(255, 255, 255, 0.72);
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.12);
+    --font-main: 'Inter', sans-serif;
+    --font-heading: 'Galada', cursive;
+    --accent: #c6ff2e;
+    --accent-ink: #0a1200;
+    --bg-inner: #138a3c;
+    --bg-mid: #06501f;
+    --bg-outer: #011409;
+    --g1: #f4f7fb;
+    --g2: #c6ff2e;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    background: radial-gradient(circle at center, var(--bg-inner) 0%, var(--bg-mid) 50%, var(--bg-outer) 100%);
+    color: var(--text-color);
+    font-family: var(--font-main);
+    overflow: hidden;
+    height: 100vh;
+    transition: background 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+body.blue-theme {
+    --bg-inner: #0b4f8a; --bg-mid: #04294e; --bg-outer: #010c14;
+    --accent: #7dd3fc; --accent-ink: #021827;
+}
+/* pitch stripes */
+body::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background: repeating-linear-gradient(90deg, rgba(255,255,255,0.035) 0 90px, transparent 90px 180px);
+    mask-image: radial-gradient(circle at center, #000 10%, transparent 75%);
+    -webkit-mask-image: radial-gradient(circle at center, #000 10%, transparent 75%);
+}
+.pitch-circle {
+    position: fixed; left: 50%; top: 50%; width: min(70vw, 70vh); aspect-ratio: 1; transform: translate(-50%, -50%);
+    border: 2px solid rgba(255,255,255,0.1); border-radius: 50%; pointer-events: none; z-index: 0;
+}
+
+#bubbles-container { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.bubble { position: absolute; border-radius: 50%; pointer-events: none;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), rgba(255,255,255,0.15) 55%, rgba(255,255,255,0.05));
+    border: 1px solid rgba(255,255,255,0.35); }
+@keyframes floatUp {
+    0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.4; }
+    90% { opacity: 0.4; }
+    100% { transform: translateY(-110vh) translateX(30px) rotate(360deg); opacity: 0; }
+}
+
+.header { display: flex; justify-content: space-between; align-items: center; padding: 2rem 4%; position: fixed; top: 0; width: 100%; z-index: 100; }
+.logo { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; font-size: 1.4rem; font-family: var(--font-heading); }
+.nav { display: flex; gap: 0.5rem; padding: 0.4rem; border-radius: 100px;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1), inset 0 0 0 1px rgba(255,255,255,0.1);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+.nav-item { font-family: 'Manrope', sans-serif; color: var(--muted-color); text-decoration: none; font-size: 0.85rem; font-weight: 500; padding: 0.5rem 1.2rem; border-radius: 100px; transition: all 0.3s ease; }
+.nav-item:hover, .nav-item.active { background: var(--accent); color: var(--accent-ink); }
+.contact-btn { background: rgba(0,0,0,0.5); color: white; border: none; padding: 0.9rem 2rem; border-radius: 100px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 0.3s ease; }
+.contact-btn:hover { background: rgba(0,0,0,0.7); transform: translateY(-2px); }
+
+.hero { height: 100vh; display: flex; align-items: center; justify-content: center; padding: 0 4%; padding-top: 5rem; position: relative; z-index: 1; }
+.hero-content { display: flex; justify-content: space-between; align-items: stretch; width: 100%; height: 100%; position: relative; }
+.main-title, .side-title { font-family: var(--font-heading); font-size: clamp(4rem, 7.2vw, 9rem); line-height: 0.85; font-weight: 400; white-space: nowrap; color: white; text-shadow: 0 6px 30px rgba(0,0,0,.45); }
+.main-title span { color: var(--accent); transition: color 1s; }
+
+.hero-left { display: flex; flex-direction: column; height: 100%; padding: 6rem 0; gap: 2rem; z-index: 100; }
+.description { color: var(--muted-color); font-size: 1.1rem; line-height: 1.6; max-width: 400px; }
+.primary-btn { display: flex; align-items: center; gap: 1.5rem; background: rgba(0,0,0,0.5); color: white; border: none; padding: 0.4rem 0.4rem 0.4rem 1.5rem; border-radius: 100px; font-weight: 700; cursor: pointer; width: fit-content; transition: all 0.3s ease; font-size: 1rem; }
+.primary-btn:hover { background: rgba(0,0,0,0.7); transform: translateY(-3px); }
+.plus-icon { background: var(--accent); color: var(--accent-ink); width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 1.4rem; font-weight: 900; line-height: 1; padding-bottom: 2px; transition: background 1s; }
+.award-badge { display: flex; align-items: center; gap: 1rem; margin-top: auto; }
+.award-icon { width: 48px; height: 48px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+.award-text { display: flex; flex-direction: column; }
+.award-title { font-size: 0.7rem; letter-spacing: 0.1em; color: var(--muted-color); }
+.award-subtitle { font-size: 0.85rem; font-weight: 600; }
+
+/* center product */
+.hero-center { position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; z-index: 1; opacity: 0; pointer-events: none;
+    animation: fadeIn 1.5s ease-out 0.3s forwards, float 6s ease-in-out infinite;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.08) 0%, transparent 70%); }
+@keyframes fadeIn { to { opacity: 1; } }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+.stage { perspective: 1200px; width: min(62vh, 46vw); margin-left: 12vw; }
+#product { width: 100%; display: block; transform-style: preserve-3d; will-change: transform;
+    filter: drop-shadow(0 40px 60px rgba(0,0,0,0.45)); }
+
+/* floaters */
+.floaters-fg, .floaters-bg { position: absolute; inset: 0; pointer-events: none; transition: transform 0.1s ease-out; }
+.floaters-fg { z-index: 110; }
+.floaters-bg { z-index: 0; }
+.ball { position: absolute; width: 120px; height: 120px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3)); }
+.ball svg { width: 100%; height: 100%; display: block; }
+.b1 { top: 25%; left: 30%; width: 120px; height: 120px; }
+.b2 { top: 60%; left: 42%; width: 70px; height: 70px; }
+.b3 { top: 30%; left: 62%; width: 150px; height: 150px; }
+.b4 { top: 15%; left: 48%; width: 90px; height: 90px; }
+.b5 { top: 75%; left: 20%; width: 100px; height: 100px; }
+.b6 { top: 45%; left: 75%; width: 110px; height: 110px; }
+.b7 { top: 15%; left: 40%; width: 60px; height: 60px; opacity: 0.7; }
+.b8 { top: 50%; left: 55%; width: 50px; height: 50px; opacity: 0.6; }
+.b9 { top: 80%; left: 35%; width: 55px; height: 55px; opacity: 0.7; }
+.spark { position: absolute; color: rgba(255,255,255,0.5); pointer-events: none; z-index: -1; }
+
+.hero-right { display: flex; flex-direction: column; justify-content: space-between; align-items: flex-end; text-align: right; height: 100%; padding: 6rem 0; z-index: 100; width: 450px; pointer-events: none; }
+.product-carousel { display: flex; flex-direction: column; gap: 1.5rem; align-items: flex-end; pointer-events: auto; }
+.carousel-cards { display: flex; gap: 1rem; }
+.card { background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 1rem; padding-top: 5rem; border-radius: 28px; display: flex; flex-direction: column; align-items: center; gap: 1.5rem; cursor: pointer; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); width: 135px; position: relative; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); text-align: center; font: inherit; color: inherit; }
+.card:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.4); }
+.card.active { border-color: var(--accent); }
+.card svg { width: 100px; height: auto; margin-top: -8rem; filter: drop-shadow(0 20px 35px rgba(0,0,0,0.5)); transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); pointer-events: none; }
+.card:hover svg { transform: translateY(-30px) rotate(-12deg) scale(1.15); }
+.card-info { display: flex; flex-direction: column; font-size: 0.75rem; width: 100%; }
+.card-info span:first-child { font-weight: 600; }
+.card-info span:last-child { color: var(--muted-color); }
+.carousel-nav { display: flex; gap: 1rem; }
+.nav-arrow { background: var(--glass-bg); border: 1px solid var(--glass-border); color: white; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.3s; }
+.nav-arrow:hover { background: rgba(255,255,255,0.15); }
+.side-title { align-self: flex-end; text-align: right; }
+
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+@media (max-width: 1200px) {
+    body { overflow-y: auto; height: auto; min-height: 100vh; }
+    .hero { height: auto; min-height: 100vh; }
+    .hero-content { flex-direction: column; align-items: center; text-align: center; padding-top: 4rem; gap: 1rem; height: auto; }
+    .hero-left, .hero-right { height: auto; padding: 2rem 0; align-items: center; width: auto; }
+    .hero-left { padding-top: 5rem; }
+    .hero-center { position: relative; height: 70vw; max-height: 480px; order: 0; }
+    .stage { width: min(70vw, 360px); margin-left: 0; }
+    .main-title, .side-title { font-size: clamp(3rem, 12vw, 5rem); align-self: center; text-align: center; white-space: normal; }
+    html, body { overflow-x: hidden; }
+    .floaters-fg { z-index: 0; opacity: .6; }
+    .hero-left { z-index: 100; }
+    .award-badge { margin-top: 1rem; }
+    .nav { display: none; }
+    .product-carousel { align-items: center; padding-top: 5rem; }
+    .hero-right { flex-direction: column-reverse; }
+}
+@media (prefers-reduced-motion: reduce) { .hero-center { animation: fadeIn 0.01s forwards; } .bubble { display: none; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="glove" viewBox="0 0 200 240">
+      <g stroke="#0a1200" stroke-width="3" stroke-linejoin="round">
+        <rect x="56" y="196" width="88" height="34" rx="8" fill="#1a2332"/>
+        <rect x="56" y="196" width="88" height="10" fill="var(--g2,#c6ff2e)" stroke="none"/>
+        <path d="M52 196 L46 130 C42 112 54 108 62 118 L70 140 L66 52 C66 36 86 36 86 52 L90 108 L92 30 C92 12 114 12 114 30 L116 108 L122 42 C124 26 144 28 142 44 L138 112 L152 70 C158 56 176 64 170 80 L156 148 C152 168 146 182 144 196 Z" fill="var(--g1,#eef2f7)"/>
+        <path d="M70 140 L66 52 M90 108 L92 30 M116 108 L122 42 M138 112 L152 70" fill="none" stroke="rgba(10,18,0,.28)" stroke-width="2"/>
+        <path d="M62 150 L142 150 M60 168 L144 168" stroke="var(--g2,#c6ff2e)" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <circle cx="100" cy="213" r="8" fill="#0a1200" stroke="none"/>
+      </g>
+    </symbol>
+    <symbol id="ball" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="46" fill="var(--bf,#f4f7fb)" stroke="#0a1200" stroke-width="3"/>
+      <polygon points="50,30 68,43 61,64 39,64 32,43" fill="#0a1200"/>
+      <path d="M50 30V6M68 43L90 36M61 64L74 84M39 64L26 84M32 43L10 36" stroke="#0a1200" stroke-width="3" fill="none"/>
+      <ellipse cx="34" cy="26" rx="14" ry="8" fill="rgba(255,255,255,.55)" transform="rotate(-30 34 26)"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div id="bubbles-container"></div>
+<div class="pitch-circle"></div>
+
+<header class="header">
+    <div class="logo">
+        <svg width="32" height="32" viewBox="0 0 28 28" aria-hidden="true"><path d="M14 2 3 6v8c0 6 4.5 10 11 12 6.5-2 11-6 11-12V6z" fill="currentColor"/><path d="M9 14l4 4 7-8" stroke="#0a1200" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Guardian</span>
+    </div>
+    <nav class="nav" aria-label="Main">
+        <a href="#" class="nav-item active">Home</a>
+        <a href="#" class="nav-item">Range</a>
+        <a href="#" class="nav-item">Technology</a>
+        <a href="#" class="nav-item">Sizing</a>
+        <a href="#" class="nav-item">Reviews</a>
+    </nav>
+    <button class="contact-btn">Contact Us</button>
+</header>
+
+<main class="hero">
+<div class="hero-content">
+
+    <div class="hero-left">
+        <h1 class="main-title"><span>Grip it.</span><br>Own the<br>box.</h1>
+        <p class="description">
+            Match-ready goalkeeper gloves with a latex palm that stays tacky in the wet, <br>
+            a cut that moves with your hand, <br>
+            and protection to commit to every dive.
+        </p>
+        <div class="cta-group">
+            <button class="primary-btn">Shop Now <span class="plus-icon">+</span></button>
+        </div>
+        <div class="award-badge">
+            <div class="award-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 15L15 18L19 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="award-text">
+                <span class="award-title">MATCH TESTED</span>
+                <span class="award-subtitle">30-DAY GRIP GUARANTEE</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="floaters-bg" id="bg">
+        <div class="ball b7"><svg><use href="#ball"/></svg></div>
+        <div class="ball b8"><svg><use href="#ball"/></svg></div>
+        <div class="ball b9"><svg><use href="#ball"/></svg></div>
+    </div>
+
+    <div class="hero-center">
+        <div class="stage"><svg id="product" viewBox="0 0 200 240" role="img" aria-label="Guardian Bastion Pro goalkeeper glove"><use href="#glove"/></svg></div>
+    </div>
+
+    <div class="floaters-fg" id="fg">
+        <div class="ball b1"><svg><use href="#ball"/></svg></div>
+        <div class="ball b2"><svg><use href="#ball"/></svg></div>
+        <div class="ball b3"><svg><use href="#ball"/></svg></div>
+        <div class="ball b4"><svg><use href="#ball"/></svg></div>
+        <div class="ball b5"><svg><use href="#ball"/></svg></div>
+        <div class="ball b6"><svg><use href="#ball"/></svg></div>
+    </div>
+
+    <div class="hero-right">
+        <div class="product-carousel">
+            <div class="carousel-cards">
+                <button class="card active" data-flavor="classic" aria-pressed="true">
+                    <svg viewBox="0 0 200 240" style="--g1:#f4f7fb;--g2:#c6ff2e" aria-hidden="true"><use href="#glove"/></svg>
+                    <div class="card-info"><span>Bastion Pro</span><span>$79</span></div>
+                </button>
+                <button class="card" data-flavor="blue" aria-pressed="false">
+                    <svg viewBox="0 0 200 240" style="--g1:#9fc4ff;--g2:#3b82f6" aria-hidden="true"><use href="#glove"/></svg>
+                    <div class="card-info"><span>Sentinel</span><span>$34</span></div>
+                </button>
+            </div>
+            <div class="carousel-nav">
+                <button class="nav-arrow" aria-label="Previous glove" data-dir="0">←</button>
+                <button class="nav-arrow" aria-label="Next glove" data-dir="1">→</button>
+            </div>
+        </div>
+        <h2 class="side-title">Built to<br>catch</h2>
+    </div>
+</div>
+</main>
+
+<script>
+const product = document.getElementById('product');
+const fg = document.getElementById('fg'), bg = document.getElementById('bg');
+const balls = [...document.querySelectorAll('.ball')];
+const cards = [...document.querySelectorAll('.card')];
+let isSwitching = false, switchSpin = 0, switchBlur = 0;
+
+const ease = {
+    inQuad: t => t * t,
+    inOut: t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2,
+    backOut: (t, s = 1.5) => 1 + (s + 1) * Math.pow(t - 1, 3) + s * Math.pow(t - 1, 2),
+    backOutSoft: (t, s = 0.7) => 1 + (s + 1) * Math.pow(t - 1, 3) + s * Math.pow(t - 1, 2)
+};
+function tween(ms, fn, easing = t => t) {
+    return new Promise(res => {
+        const t0 = performance.now();
+        (function step(now) {
+            const t = Math.min(1, (now - t0) / ms);
+            fn(easing(t), t);
+            t < 1 ? requestAnimationFrame(step) : res();
+        })(t0);
+    });
+}
+
+// per-ball state
+const st = balls.map((b, i) => ({
+    el: b, rx: 0, ry: 0, angle: Math.random() * 360, bx: 0, by: 0,
+    pull: 0, scale: 1, alpha: null, cx: 0, cy: 0
+}));
+
+function setTheme(flavor) {
+    const blue = flavor === 'blue';
+    document.body.classList.toggle('blue-theme', blue);
+    product.style.setProperty('--g1', blue ? '#9fc4ff' : '#f4f7fb');
+    product.style.setProperty('--g2', blue ? '#3b82f6' : '#c6ff2e');
+    document.documentElement.style.setProperty('--bf', blue ? '#9fd0ff' : '#f4f7fb');
+}
+
+cards.forEach((card, idx) => card.addEventListener('click', () => select(idx)));
+document.querySelectorAll('.nav-arrow').forEach(a => a.addEventListener('click', () => {
+    const cur = cards.findIndex(c => c.classList.contains('active'));
+    select(a.dataset.dir === '1' ? (cur + 1) % cards.length : (cur - 1 + cards.length) % cards.length);
+}));
+
+function select(idx) {
+    if (isSwitching || cards[idx].classList.contains('active')) return;
+    cards.forEach(c => { c.classList.remove('active'); c.setAttribute('aria-pressed', 'false'); });
+    cards[idx].classList.add('active'); cards[idx].setAttribute('aria-pressed', 'true');
+    switchFlavor(cards[idx].dataset.flavor);
+}
+
+async function switchFlavor(flavor) {
+    isSwitching = true;
+    // can-equivalent: spin 720deg with blur, swap colours at the peak
+    const spin = (async () => {
+        await tween(600, p => { switchSpin = 360 * p; switchBlur = 15 * p; }, ease.inQuad);
+        setTheme(flavor);
+        await tween(1500, p => { switchSpin = 360 + 360 * p; switchBlur = 15 * (1 - p); }, t => ease.backOutSoft(t));
+        switchSpin = 0; switchBlur = 0;
+    })();
+
+    // floaters: implode to centre, swap, explode to new random spots
+    const W = window.innerWidth, H = window.innerHeight;
+    st.forEach(s => {
+        const el = s.el;
+        s.cx = W / 2 - el.offsetLeft - el.offsetWidth / 2;
+        s.cy = H / 2 - el.offsetTop - el.offsetHeight / 2;
+        s.fromX = s.bx; s.fromY = s.by;
+        s.toX = (Math.random() - 0.5) * 200; s.toY = (Math.random() - 0.5) * 200;
+    });
+    await tween(500, p => st.forEach(s => { s.pull = p; s.scale = 1 - 0.9 * p; s.alpha = 1 - p; }), ease.inQuad);
+    document.documentElement.style.setProperty('--bf', flavor === 'blue' ? '#9fd0ff' : '#f4f7fb');
+    await tween(300, () => {});
+    await tween(900, p => st.forEach(s => {
+        s.pull = 1 - p; s.scale = 0.1 + 0.9 * p; s.alpha = p;
+        s.bx = s.fromX + (s.toX - s.fromX) * p; s.by = s.fromY + (s.toY - s.fromY) * p;
+    }), t => ease.backOut(t));
+    st.forEach(s => { s.bx = s.toX; s.by = s.toY; s.rx = s.ry = 0; s.pull = 0; s.scale = 1; s.alpha = null; });
+    await spin;
+    isSwitching = false;
+}
+
+let mouse = { x: 0, y: 0, px: -9999, py: -9999 }, cur = { x: 0, y: 0 };
+window.addEventListener('mousemove', e => {
+    mouse.x = e.clientX / innerWidth - 0.5; mouse.y = e.clientY / innerHeight - 0.5;
+    mouse.px = e.clientX; mouse.py = e.clientY;
+});
+const dur = [5, 7, 6, 8, 5.5, 6.5, 9, 11, 10];
+
+function animate() {
+    const time = Date.now() * 0.001;
+    cur.x += (mouse.x - cur.x) * 0.05; cur.y += (mouse.y - cur.y) * 0.05;
+
+    // 3D tilt toward the cursor (+ spin on flavor change)
+    product.style.transform = `rotateY(${cur.x * 40 + switchSpin}deg) rotateX(${-cur.y * 20}deg) rotateZ(${cur.x * -6}deg)`;
+    product.style.filter = `drop-shadow(0 40px 60px rgba(0,0,0,0.45)) blur(${switchBlur}px)`;
+
+    fg.style.transform = `translate(${cur.x * 60}px, ${cur.y * 60}px)`;
+    bg.style.transform = `translate(${cur.x * -30}px, ${cur.y * -30}px)`;
+
+    st.forEach((s, i) => {
+        const el = s.el;
+        if (!isSwitching) {
+            const r = el.getBoundingClientRect();
+            const dx = mouse.px - (r.left + r.width / 2), dy = mouse.py - (r.top + r.height / 2);
+            const d = Math.hypot(dx, dy) || 1;
+            let tx = 0, ty = 0, mult = 1;
+            if (d < 400) { const f = (400 - d) / 400; tx = dx / d * f * -80; ty = dy / d * f * -80; mult = 1 + f * 5; }
+            s.rx += (tx - s.rx) * 0.1; s.ry += (ty - s.ry) * 0.1; s.angle += 0.2 * mult;
+        }
+        const phase = (time + i * 0.7) * (Math.PI * 2 / dur[i % 9]);
+        const fy = isSwitching ? 0 : Math.sin(phase) * 15, fa = isSwitching ? 0 : Math.cos(phase) * 6;
+        const x = (s.rx + s.bx) * (1 - s.pull) + s.cx * s.pull;
+        const y = (s.ry + s.by + fy) * (1 - s.pull) + s.cy * s.pull;
+        el.style.transform = `translate(${x}px, ${y}px) rotate(${s.angle + fa}deg) scale(${s.scale})`;
+        el.style.opacity = s.alpha === null ? '' : s.alpha * (parseFloat(getComputedStyle(el).getPropertyValue('--o')) || 1);
+    });
+    requestAnimationFrame(animate);
+}
+// remember each ball's resting opacity for the implode fade
+balls.forEach(b => b.style.setProperty('--o', getComputedStyle(b).opacity));
+animate();
+
+// rising bubbles
+const bc = document.getElementById('bubbles-container');
+if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    setInterval(() => {
+        const b = document.createElement('div');
+        const size = Math.random() * 20 + 10;
+        b.className = 'bubble';
+        b.style.cssText = `width:${size}px;height:${size}px;left:${Math.random() * 100}%;bottom:-50px;opacity:${Math.random() * 0.4 + 0.2}`;
+        const d = Math.random() * 6 + 4;
+        b.style.animation = `floatUp ${d}s linear forwards`;
+        bc.appendChild(b);
+        setTimeout(() => b.remove(), d * 1000);
+    }, 400);
+}
+</script>
+</body>
+</html>
