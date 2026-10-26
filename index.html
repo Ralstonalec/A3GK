@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guardian Gloves | Goalkeeper Gloves Built to Be Trusted</title>
+<meta name="description" content="Guardian Gloves makes goalkeeper gloves for keepers who want a grip they can trust, from academy training to match day.">
+<style>
+:root{
+  --bg:#07090d; --bg2:#0d1118; --card:#121823; --line:#1f2836;
+  --text:#eef2f7; --muted:#9aa7b8; --accent:#c6ff2e; --accent-ink:#0a1200; --blue:#3b82f6;
+  --radius:18px; --max:1160px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img,svg{max-width:100%;display:block}
+.wrap{width:min(var(--max),100% - 40px);margin-inline:auto}
+h1,h2,h3{line-height:1.05;letter-spacing:-.02em;font-weight:800}
+h1{font-size:clamp(2.8rem,8vw,6rem);text-transform:uppercase}
+h2{font-size:clamp(2rem,4.5vw,3.2rem)}
+.eyebrow{color:var(--accent);font-weight:700;letter-spacing:.18em;text-transform:uppercase;font-size:.78rem;margin-bottom:14px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 26px;border-radius:999px;font-weight:700;border:1px solid transparent;cursor:pointer;font-size:1rem;transition:transform .2s,background .2s}
+.btn:hover{transform:translateY(-2px)}
+.btn.primary{background:var(--accent);color:var(--accent-ink)}
+.btn.ghost{border-color:var(--line);color:var(--text);background:transparent}
+.btn.ghost:hover{border-color:var(--accent)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+
+/* nav */
+header{position:fixed;inset:0 0 auto 0;z-index:20;backdrop-filter:blur(14px);background:rgba(7,9,13,.7);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:68px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+.logo svg{width:28px;height:28px}
+.links{display:flex;gap:28px;color:var(--muted);font-weight:600;font-size:.95rem}
+.links a:hover{color:var(--text)}
+@media(max-width:760px){.links{display:none}}
+
+/* hero */
+.hero{position:relative;min-height:100svh;display:grid;align-items:center;padding:120px 0 80px;overflow:hidden;
+  background:radial-gradient(900px 600px at 78% 40%,rgba(198,255,46,.14),transparent 60%),radial-gradient(700px 500px at 10% 100%,rgba(59,130,246,.15),transparent 60%),var(--bg)}
+.hero::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.025) 0 2px,transparent 2px 120px);mask-image:linear-gradient(#000,transparent 85%)}
+.hero-grid{position:relative;display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center}
+.hero p.lead{color:var(--muted);font-size:1.2rem;max-width:30em;margin:24px 0 34px}
+.hero h1 span{color:var(--accent)}
+.cta{display:flex;flex-wrap:wrap;gap:14px}
+.stats{display:flex;gap:36px;margin-top:48px;flex-wrap:wrap}
+.stats b{display:block;font-size:2rem;font-weight:800}
+.stats span{color:var(--muted);font-size:.85rem}
+.glove-stage{position:relative;aspect-ratio:1;display:grid;place-items:center}
+.glove-stage::before{content:"";position:absolute;width:82%;aspect-ratio:1;border-radius:50%;border:1px dashed rgba(198,255,46,.35);animation:spin 40s linear infinite}
+.glove-stage svg{width:86%;filter:drop-shadow(0 30px 50px rgba(198,255,46,.2));animation:float 6s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-16px) rotate(-2deg)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:860px){.hero-grid{grid-template-columns:1fr}.glove-stage{max-width:420px;margin:0 auto}}
+
+/* marquee */
+.marquee{border-block:1px solid var(--line);background:var(--bg2);overflow:hidden;padding:18px 0}
+.marquee div{display:flex;gap:56px;width:max-content;animation:slide 28s linear infinite;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.15em;font-size:.9rem}
+.marquee i{color:var(--accent);font-style:normal}
+@keyframes slide{to{transform:translateX(-50%)}}
+
+section{padding:110px 0}
+.head{max-width:640px;margin-bottom:56px}
+.head p{color:var(--muted);margin-top:16px}
+
+/* products */
+.products{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:28px;display:flex;flex-direction:column;transition:transform .25s,border-color .25s}
+.card:hover{transform:translateY(-6px);border-color:rgba(198,255,46,.5)}
+.card .art{height:190px;border-radius:12px;display:grid;place-items:center;margin-bottom:22px}
+.card .art svg{height:150px;width:auto}
+.tag{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.card h3{font-size:1.6rem;margin:6px 0 10px}
+.card p{color:var(--muted);font-size:.95rem;flex:1}
+.card ul{list-style:none;margin:16px 0;color:var(--muted);font-size:.9rem}
+.card li::before{content:"✓ ";color:var(--accent);font-weight:800}
+.price{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.price b{font-size:1.5rem}
+.featured{border-color:var(--accent);position:relative}
+.featured::after{content:"Keeper's pick";position:absolute;top:16px;right:16px;background:var(--accent);color:var(--accent-ink);font-size:.7rem;font-weight:800;padding:4px 10px;border-radius:999px}
+@media(max-width:900px){.products{grid-template-columns:1fr}}
+
+/* tech */
+.tech{background:var(--bg2);border-block:1px solid var(--line)}
+.tech-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.layers{display:grid;gap:12px}
+.layer{display:flex;gap:16px;align-items:center;padding:18px 20px;border-radius:14px;background:var(--card);border:1px solid var(--line)}
+.layer em{font-style:normal;width:38px;height:38px;border-radius:10px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-weight:800;flex:none}
+.layer b{display:block}
+.layer span{color:var(--muted);font-size:.9rem}
+.features{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:34px}
+.features h4{font-size:1.05rem;margin-bottom:4px}
+.features p{color:var(--muted);font-size:.92rem}
+@media(max-width:900px){.tech-grid{grid-template-columns:1fr}}
+
+/* sizing */
+.size-box{display:grid;grid-template-columns:1fr 1fr;gap:40px;background:var(--card);border:1px solid var(--line);border-radius:28px;padding:44px}
+.size-box label{display:block;color:var(--muted);margin-bottom:10px}
+input[type=range]{width:100%;accent-color:var(--accent);height:28px}
+.size-out{font-size:4.5rem;font-weight:800;color:var(--accent);line-height:1}
+.size-out small{display:block;font-size:.95rem;color:var(--muted);font-weight:500;margin-top:10px}
+@media(max-width:800px){.size-box{grid-template-columns:1fr;padding:28px}}
+
+/* testimonials */
+.quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.quote{padding:28px;border-radius:var(--radius);background:var(--card);border:1px solid var(--line)}
+.quote p{font-size:1.05rem;margin-bottom:20px}
+.quote small{color:var(--muted)}
+.stars{color:var(--accent);letter-spacing:3px;margin-bottom:12px}
+@media(max-width:900px){.quotes{grid-template-columns:1fr}}
+
+/* contact */
+.contact{background:linear-gradient(135deg,rgba(198,255,46,.14),rgba(59,130,246,.12)),var(--bg2);border-block:1px solid var(--line)}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px}
+form{display:grid;gap:14px}
+input,select,textarea{width:100%;padding:14px 16px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--text);font:inherit}
+textarea{min-height:110px;resize:vertical}
+.ok{display:none;color:var(--accent);font-weight:700}
+@media(max-width:860px){.contact-grid{grid-template-columns:1fr}}
+
+footer{padding:40px 0;color:var(--muted);font-size:.9rem}
+footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s,transform .7s}
+.reveal.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="glove" viewBox="0 0 200 240">
+      <g stroke="#0a1200" stroke-width="3" stroke-linejoin="round">
+        <rect x="56" y="196" width="88" height="34" rx="8" fill="#1a2332"/>
+        <rect x="56" y="196" width="88" height="10" fill="var(--g2,#c6ff2e)" stroke="none"/>
+        <path d="M52 196 L46 130 C42 112 54 108 62 118 L70 140 L66 52 C66 36 86 36 86 52 L90 108 L92 30 C92 12 114 12 114 30 L116 108 L122 42 C124 26 144 28 142 44 L138 112 L152 70 C158 56 176 64 170 80 L156 148 C152 168 146 182 144 196 Z" fill="var(--g1,#eef2f7)"/>
+        <path d="M70 140 L66 52 M90 108 L92 30 M116 108 L122 42 M138 112 L152 70" fill="none" stroke="rgba(10,18,0,.28)" stroke-width="2"/>
+        <path d="M62 150 L142 150 M60 168 L144 168" stroke="var(--g2,#c6ff2e)" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <circle cx="100" cy="213" r="8" fill="#0a1200" stroke="none"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="#top" aria-label="Guardian Gloves home">
+      <svg viewBox="0 0 28 28" aria-hidden="true"><path d="M14 2 3 6v8c0 6 4.5 10 11 12 6.5-2 11-6 11-12V6z" fill="#c6ff2e"/><path d="M9 14l4 4 7-8" stroke="#0a1200" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Guardian Gloves
+    </a>
+    <nav class="links" aria-label="Main"><a href="#range">Range</a><a href="#tech">Technology</a><a href="#fit">Find your size</a><a href="#reviews">Reviews</a><a href="#contact">Contact</a></nav>
+    <a class="btn primary" href="#range" style="padding:10px 20px">Shop gloves</a>
+  </div>
+</header>
+
+<main id="top">
+<section class="hero" style="padding-block:120px 80px">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow">Goalkeeper gloves · Made for the last line</p>
+      <h1>Grip it.<br><span>Own</span> the box.</h1>
+      <p class="lead">Match-ready goalkeeper gloves with a latex palm that stays tacky in the wet, a cut that moves with your hand, and protection that lets you commit to every dive.</p>
+      <div class="cta"><a class="btn primary" href="#range">Shop the range →</a><a class="btn ghost" href="#fit">Find my size</a></div>
+      <div class="stats">
+        <div><b>3.5mm</b><span>Contact latex palm</span></div>
+        <div><b>5 sizes</b><span>Youth to pro</span></div>
+        <div><b>30 days</b><span>Match-test guarantee</span></div>
+      </div>
+    </div>
+    <div class="glove-stage" aria-hidden="true"><svg viewBox="0 0 200 240"><use href="#glove"/></svg></div>
+  </div>
+</section>
+
+<div class="marquee" aria-hidden="true"><div>
+  <span>Wet-weather grip <i>●</i></span><span>Finger protection <i>●</i></span><span>Negative cut <i>●</i></span><span>Match tested <i>●</i></span><span>Youth to pro <i>●</i></span>
+  <span>Wet-weather grip <i>●</i></span><span>Finger protection <i>●</i></span><span>Negative cut <i>●</i></span><span>Match tested <i>●</i></span><span>Youth to pro <i>●</i></span>
+</div></div>
+
+<section id="range">
+  <div class="wrap">
+    <div class="head reveal"><p class="eyebrow">The range</p><h2>One glove for every kind of keeper.</h2><p>From training sessions to cup finals, pick the build that matches how you play.</p></div>
+    <div class="products">
+      <article class="card reveal">
+        <div class="art" style="background:linear-gradient(135deg,#1a2332,#0d1118);--g1:#9fb3cc;--g2:#3b82f6"><svg viewBox="0 0 200 240"><use href="#glove"/></svg></div>
+        <span class="tag">Training</span><h3>Sentinel</h3>
+        <p>A durable, easy-on-the-wallet glove for the many hours you put in before match day.</p>
+        <ul><li>Hard-wearing 3mm latex</li><li>Wrap-around wrist strap</li><li>Breathable mesh back</li></ul>
+        <div class="price"><b>$34</b><a class="btn ghost" href="#contact" style="padding:10px 20px">Enquire</a></div>
+      </article>
+      <article class="card featured reveal">
+        <div class="art" style="background:linear-gradient(135deg,#243013,#0d1118);--g1:#eef2f7;--g2:#c6ff2e"><svg viewBox="0 0 200 240"><use href="#glove"/></svg></div>
+        <span class="tag">Match day</span><h3>Bastion Pro</h3>
+        <p>Our flagship. Maximum tack, a snug negative cut and removable finger spines for confident saves.</p>
+        <ul><li>3.5mm contact latex</li><li>Removable finger protection</li><li>Negative cut for a close fit</li></ul>
+        <div class="price"><b>$79</b><a class="btn primary" href="#contact" style="padding:10px 20px">Enquire</a></div>
+      </article>
+      <article class="card reveal">
+        <div class="art" style="background:linear-gradient(135deg,#2a1a1a,#0d1118);--g1:#ffd9c2;--g2:#ff6b3d"><svg viewBox="0 0 200 240"><use href="#glove"/></svg></div>
+        <span class="tag">Junior</span><h3>Cadet</h3>
+        <p>Flexible, forgiving gloves sized for young hands, so the next generation learns to dive with confidence.</p>
+        <ul><li>Sizes 4 to 7</li><li>Soft, supple latex</li><li>Easy-pull strap</li></ul>
+        <div class="price"><b>$29</b><a class="btn ghost" href="#contact" style="padding:10px 20px">Enquire</a></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="tech" class="tech">
+  <div class="wrap tech-grid">
+    <div class="reveal">
+      <p class="eyebrow">Technology</p><h2>Built layer by layer.</h2>
+      <p style="color:var(--muted);margin-top:16px">Every pair is made from the inside out for grip, comfort and protection that holds up game after game.</p>
+      <div class="features">
+        <div><h4>Wet or dry</h4><p>Latex that keeps its tack in rain and sweat.</p></div>
+        <div><h4>Shock zones</h4><p>Foam padding across the palm and knuckles.</p></div>
+        <div><h4>True fit</h4><p>Cut and sewn around a real keeper’s hand.</p></div>
+        <div><h4>Easy care</h4><p>Rinse, air-dry, ready for the next match.</p></div>
+      </div>
+    </div>
+    <div class="layers reveal">
+      <div class="layer"><em>1</em><div><b>Contact latex palm</b><span>The grip surface that grabs the ball.</span></div></div>
+      <div class="layer"><em>2</em><div><b>Impact foam</b><span>Absorbs shots so you can keep your hands in front.</span></div></div>
+      <div class="layer"><em>3</em><div><b>Finger spines</b><span>Flexible supports that guard against hyperextension.</span></div></div>
+      <div class="layer"><em>4</em><div><b>Breathable backhand</b><span>Keeps your hands cool through ninety minutes.</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="fit">
+  <div class="wrap">
+    <div class="head reveal"><p class="eyebrow">Sizing</p><h2>Find your size in ten seconds.</h2><p>Measure around your palm, just below the knuckles, then drag to match.</p></div>
+    <div class="size-box reveal">
+      <div>
+        <label for="palm">Palm width: <b id="cm">19.0</b> cm</label>
+        <input id="palm" type="range" min="14" max="24" step="0.5" value="19">
+        <p style="color:var(--muted);margin-top:14px;font-size:.9rem">Between sizes? Go up one for a roomier fit, or down for a snug negative cut.</p>
+      </div>
+      <div class="size-out" aria-live="polite"><span id="size">8</span><small id="sizeNote">Adult · standard fit</small></div>
+    </div>
+  </div>
+</section>
+
+<section id="reviews" style="padding-top:0">
+  <div class="wrap">
+    <div class="head reveal"><p class="eyebrow">Keepers say</p><h2>Trusted between the posts.</h2></div>
+    <div class="quotes">
+      <div class="quote reveal"><div class="stars">★★★★★</div><p>“Stuck to the ball in a downpour. First pair I’ve worn that didn’t go slick by half time.”</p><small>Sample review · club keeper</small></div>
+      <div class="quote reveal"><div class="stars">★★★★★</div><p>“My son finally has gloves that fit. He’s diving all over the garden now.”</p><small>Sample review · parent</small></div>
+      <div class="quote reveal"><div class="stars">★★★★★</div><p>“The finger spines saved me from a sprain on a flying save. Worth it.”</p><small>Sample review · academy keeper</small></div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="contact">
+  <div class="wrap contact-grid">
+    <div class="reveal"><p class="eyebrow">Get in touch</p><h2>Outfitting a team?</h2><p style="color:var(--muted);margin-top:16px">Ask about club orders, keeper coaching bundles and custom colours. Tell us what you need and we’ll come back with a quote.</p></div>
+    <form class="reveal" id="form" novalidate>
+      <input name="name" placeholder="Your name" aria-label="Your name" required>
+      <input name="email" type="email" placeholder="Email" aria-label="Email" required>
+      <select name="topic" aria-label="Topic"><option>Single pair</option><option>Club or team order</option><option>Coaching bundle</option><option>Something else</option></select>
+      <textarea name="msg" placeholder="Tell us about your keepers" aria-label="Message"></textarea>
+      <button class="btn primary" type="submit">Send enquiry</button>
+      <p class="ok" id="ok" role="status">Thanks! (Demo form: nothing was sent.)</p>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap"><span>© 2026 Guardian Gloves</span><span>Placeholder copy, prices and reviews for preview only.</span></div></footer>
+
+<script>
+(function(){
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)});
+
+  var r=document.getElementById('palm'),cm=document.getElementById('cm'),s=document.getElementById('size'),n=document.getElementById('sizeNote');
+  function upd(){
+    var v=parseFloat(r.value);cm.textContent=v.toFixed(1);
+    var size=Math.min(11,Math.max(4,Math.round(v/2.4)));
+    s.textContent=size;
+    n.textContent=size<=7?'Junior · youth fit':size<=9?'Adult · standard fit':'Adult · large fit';
+  }
+  r.addEventListener('input',upd);upd();
+
+  document.getElementById('form').addEventListener('submit',function(e){
+    e.preventDefault();document.getElementById('ok').style.display='block';
+  });
+})();
+</script>
+</body>
+</html>
