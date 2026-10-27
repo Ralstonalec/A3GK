@@ -1,0 +1,89 @@
+/**
+ * Single source of truth for launch copy and the list of facts still to be confirmed.
+ *
+ * Anything the business has not yet confirmed is `null` here and renders as a visible
+ * "To confirm" marker via <Tbc/>. Do NOT replace these with invented specifications.
+ * See docs/PRE-LAUNCH-CHECKLIST.md — every `null` must be filled or removed before launch.
+ */
+
+export const SITE = {
+  name: 'A3GK',
+  legalName: 'A3 Goalkeeping',
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
+};
+
+export const HANDLES = {
+  base: 'padded-base-layer',
+  socks: 'grip-socks',
+  bandages: 'sports-bandages',
+} as const;
+
+export const NAV = [
+  { label: 'Padded Base Layer', href: `/products/${HANDLES.base}` },
+  { label: 'Size Guide', href: '/size-guide' },
+  { label: 'Other Essentials', href: '/#complete-your-kit' },
+  { label: 'About A3GK', href: '/about' },
+  { label: 'Help', href: '/help' },
+];
+
+/** Facts about the base layer. `null` = not yet confirmed. */
+export const BASE_LAYER = {
+  garmentType: null as string | null, // e.g. "top", "bottom", "set"
+  productName: 'A3GK Padded Base Layer', // working name from brief; confirm exact name
+  included: null as string | null, // what is in each purchase
+  piecesSoldTogether: null as boolean | null,
+  fabricComposition: null as string | null,
+  paddingSpec: null as string | null, // only manufacturer-verified information
+  intendedFit: null as string | null,
+  care: null as string | null,
+  origin: null as string | null,
+  fulfilment: null as string | null,
+  /** Only padded areas that really exist. Empty until confirmed — hotspots/labels render nothing. */
+  paddedAreas: [] as { id: string; label: string; description: string }[],
+};
+
+export const SIZE_GUIDE = {
+  /** 'body' | 'garment' — must be stated before launch. */
+  measurementType: null as 'body' | 'garment' | null,
+  unit: 'cm',
+  columns: [] as string[], // e.g. ['Size','Chest','Waist','Height']
+  rows: [] as string[][],
+  howToMeasure: null as string | null,
+};
+
+export const POLICIES = {
+  contactEmail: null as string | null,
+  processingTime: null as string | null,
+  productionTime: null as string | null,
+  transitTime: null as string | null,
+  deliveryEstimate: null as string | null,
+  separateShipments: null as string | null,
+  returnsWindow: null as string | null,
+  sizeExchanges: null as string | null,
+  returnProcess: null as string | null,
+  returnCosts: null as string | null,
+  privacyUrl: null as string | null,
+  termsUrl: null as string | null,
+  social: [] as { label: string; href: string }[],
+};
+
+export const BRAND_INTRO =
+  'A3 Goalkeeping is building a focused collection of goalkeeper apparel and essentials, with our padded base layer at the centre of the range. Our aim is straightforward: clear product information, purposeful choices, and a shopping experience built around keepers.';
+
+export const FAQ = [
+  { q: 'What am I buying?', a: BASE_LAYER.included, tbc: 'What is included in each purchase' },
+  { q: 'Where is it padded?', a: BASE_LAYER.paddedAreas.length ? BASE_LAYER.paddedAreas.map((p) => p.label).join(', ') : null, tbc: 'Actual padding locations' },
+  { q: 'How is it meant to be worn?', a: BASE_LAYER.intendedFit, tbc: 'Intended fit and how it sits under kit' },
+  { q: 'What is it made from?', a: BASE_LAYER.fabricComposition, tbc: 'Fabric composition' },
+  { q: 'Which size should I choose?', a: SIZE_GUIDE.rows.length ? 'See the size guide for measurements and how to measure.' : null, tbc: 'Sizes and measurement chart' },
+  { q: 'When will it arrive?', a: POLICIES.deliveryEstimate, tbc: 'Delivery estimates by destination' },
+  { q: 'What if the fit is wrong?', a: POLICIES.sizeExchanges, tbc: 'Returns and exchange terms' },
+  { q: 'How do I look after it?', a: BASE_LAYER.care, tbc: 'Care instructions' },
+];
+
+/** Unconnected fallback so the site renders before Shopify is wired. Price is deliberately absent. */
+export const PLACEHOLDER_PRODUCTS: Record<string, { title: string; blurb: string }> = {
+  [HANDLES.base]: { title: BASE_LAYER.productName, blurb: 'Padded base layer for goalkeepers.' },
+  [HANDLES.socks]: { title: 'Grip Socks', blurb: 'Regular grip socks.' },
+  [HANDLES.bandages]: { title: 'Self-Adhesive Sports Bandages', blurb: 'Self-adhesive sports bandages.' },
+};
