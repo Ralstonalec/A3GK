@@ -1,0 +1,765 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guardian Gloves — Goalkeeper Training &amp; Equipment</title>
+<meta name="description" content="Elite goalkeeper training, video analysis and premium gloves. Sovereign of the Six Yards.">
+<meta name="theme-color" content="#0a0e0a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.185.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.185.0/examples/jsm/",
+    "lenis": "https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.mjs"
+  }
+}
+</script>
+<!-- GSAP ships as a UMD build, so it is loaded as a classic script (it cannot be imported through the importmap). -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+
+<style>
+:root{
+  --color-background:#0a0e0a;
+  --color-surface:#141a14;
+  --color-surface-alt:#1f2a1f;
+  --color-accent:#e8a33d;
+  --color-accent-glow:#ffb347;
+  --color-clay:#d4883a;
+  --color-turf:#1a3a2a;
+  --color-turf-pitch:#14281c;
+  --color-white:#ffffff;
+  --color-white-a85:rgba(255,255,255,0.85);
+  --color-mantle:#2a1f14;
+  --font-display:'Space Grotesk',system-ui,sans-serif;
+  --font-body:'Inter',system-ui,sans-serif;
+  --glass-bg:rgba(20,26,20,0.55);
+  --glass-border:rgba(255,255,255,0.10);
+  --vu:calc(100vw/1440);            /* viewport unit for fixed UI that lives outside the container */
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--color-background)}
+html.lenis,html.lenis body{height:auto}
+body{background:var(--color-background);color:var(--color-white-a85);font-family:var(--font-body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body.is-loading{overflow:hidden}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--color-accent-glow);outline-offset:3px;border-radius:6px}
+::selection{background:var(--color-accent);color:#000}
+
+/* ---------- fixed layers (outside #app so cqw containment does not trap them) ---------- */
+#scene{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+#dither{position:fixed;inset:0;width:100%;height:100%;z-index:40;pointer-events:none;image-rendering:pixelated;mix-blend-mode:screen}
+#glow{position:fixed;left:0;top:0;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;z-index:60;pointer-events:none;
+  background:radial-gradient(circle,var(--color-accent-glow),rgba(232,163,61,0) 70%);mix-blend-mode:screen;opacity:0}
+@media (hover:none){#glow{display:none}}
+
+/* ---------- loader ---------- */
+#loader{position:fixed;inset:0;z-index:100;background:var(--color-background);display:flex;flex-direction:column;justify-content:flex-end;
+  padding:max(24px,calc(48*var(--vu)));pointer-events:all}
+#loader .brand{position:absolute;left:max(24px,calc(48*var(--vu)));top:max(24px,calc(40*var(--vu)));font-family:var(--font-display);font-weight:600;letter-spacing:.14em;font-size:13px;text-transform:uppercase;color:var(--color-white-a85)}
+#count{font-family:var(--font-display);font-weight:700;font-size:max(88px,calc(240*var(--vu)));line-height:.9;letter-spacing:-.04em;color:var(--color-accent);font-variant-numeric:tabular-nums}
+#bar{margin-top:20px;height:2px;background:rgba(255,255,255,.12);overflow:hidden}
+#bar i{display:block;height:100%;width:100%;background:var(--color-accent);transform-origin:left center;transform:scaleX(0)}
+
+/* ---------- nav ---------- */
+#nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;
+  padding:max(14px,calc(22*var(--vu))) max(20px,calc(48*var(--vu)))}
+.logo{font-family:var(--font-display);font-weight:700;font-size:18px;letter-spacing:.02em;display:flex;align-items:center;gap:10px}
+.logo b{display:inline-block;width:22px;height:22px;border-radius:7px;background:linear-gradient(135deg,var(--color-accent-glow),var(--color-clay))}
+.links{display:flex;gap:6px;padding:6px;border-radius:999px;background:var(--glass-bg);border:1px solid var(--glass-border);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.links a{padding:8px 16px;border-radius:999px;font-size:14px;font-weight:500;display:inline-block}
+.links a:hover{background:rgba(255,255,255,.08)}
+#burger{display:none;width:44px;height:44px;border-radius:50%;background:var(--glass-bg);border:1px solid var(--glass-border);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);position:relative}
+#burger span{position:absolute;left:13px;right:13px;height:2px;background:#fff;border-radius:2px}
+#burger span:nth-child(1){top:16px}#burger span:nth-child(2){top:26px}
+#sheet{position:fixed;top:0;right:0;bottom:0;width:min(86vw,360px);z-index:70;padding:96px 28px 28px;display:flex;flex-direction:column;gap:6px;
+  background:rgba(14,20,14,.92);border-left:1px solid var(--glass-border);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+  transform:translateX(105%);visibility:hidden}
+#sheet a{font-family:var(--font-display);font-size:30px;font-weight:600;padding:10px 0;border-bottom:1px solid var(--glass-border)}
+#sheetClose{position:absolute;top:18px;right:18px;width:44px;height:44px;border-radius:50%;border:1px solid var(--glass-border);font-size:22px}
+#scrim{position:fixed;inset:0;z-index:65;background:rgba(0,0,0,.5);opacity:0;pointer-events:none}
+
+/* ---------- layout ---------- */
+#app{container-type:inline-size;position:relative;z-index:10;overflow-x:clip;--u:calc(100cqw/1440)}
+section{position:relative;padding:calc(120*var(--u)) calc(80*var(--u))}
+.wrap{max-width:calc(1280*var(--u));margin:0 auto}
+[data-reveal]{opacity:0}
+.eyebrow{font-family:var(--font-display);font-size:max(12px,calc(13*var(--u)));letter-spacing:.2em;text-transform:uppercase;color:var(--color-accent);font-weight:600;margin-bottom:calc(18*var(--u))}
+h1,h2,h3{font-family:var(--font-display);color:var(--color-white);line-height:1.02;letter-spacing:-.03em}
+h2{font-size:max(34px,calc(72*var(--u)));margin-bottom:calc(24*var(--u))}
+h3{font-size:max(22px,calc(28*var(--u)));letter-spacing:-.02em;line-height:1.15}
+p.lead{font-size:max(16px,calc(19*var(--u)));max-width:calc(560*var(--u));color:var(--color-white-a85)}
+
+.btn{position:relative;display:inline-flex;align-items:center;gap:10px;padding:max(14px,calc(16*var(--u))) max(24px,calc(30*var(--u)));border-radius:999px;font-family:var(--font-display);font-weight:600;font-size:max(15px,calc(16*var(--u)));will-change:transform}
+.btn.primary{background:var(--color-accent);color:#120b02;box-shadow:0 10px 40px -10px rgba(232,163,61,.7)}
+.btn.ghost{background:var(--glass-bg);border:1px solid var(--glass-border);color:#fff;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.cta-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:calc(36*var(--u))}
+
+/* hero */
+#hero{min-height:100vh;min-height:100svh;display:flex;align-items:flex-end;padding-top:calc(160*var(--u));padding-bottom:calc(110*var(--u));overflow:hidden}
+#trail{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+#hero .wrap{position:relative;z-index:2;width:100%}
+#hero h1{font-size:max(46px,calc(148*var(--u)));max-width:calc(940*var(--u));color:var(--color-accent);text-shadow:0 8px 60px rgba(0,0,0,.6)}
+#hero h1 .line{display:block;overflow:hidden;padding-bottom:.06em}
+#hero h1 .line>span{display:inline-block;will-change:transform}
+#hero .sub{margin-top:calc(26*var(--u));font-size:max(17px,calc(24*var(--u)));color:var(--color-white);font-family:var(--font-display);font-weight:500}
+.marquee{position:absolute;left:0;right:0;bottom:calc(22*var(--u));z-index:1;white-space:nowrap;overflow:hidden;opacity:.9;pointer-events:none}
+.marquee div{display:inline-block;font-family:var(--font-display);font-weight:700;font-size:max(20px,calc(34*var(--u)));letter-spacing:.04em;text-transform:uppercase;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.28);will-change:transform}
+.marquee em{font-style:normal;color:var(--color-accent);-webkit-text-stroke:0;padding:0 .6em}
+
+/* performance */
+.perf-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:calc(24*var(--u));margin-top:calc(56*var(--u))}
+.glass{position:relative;border-radius:calc(28*var(--u));background:var(--glass-bg);border:1px solid var(--glass-border);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);overflow:hidden}
+.metric{padding:calc(34*var(--u));min-height:calc(280*var(--u))}
+.metric .num{font-family:var(--font-display);font-weight:700;font-size:max(56px,calc(104*var(--u)));line-height:1;color:var(--color-white);letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.metric .num small{font-size:.32em;color:var(--color-accent);margin-left:.15em;letter-spacing:0}
+.metric h3{margin:calc(18*var(--u)) 0 8px}
+.meter{margin-top:calc(22*var(--u));height:6px;border-radius:6px;background:rgba(255,255,255,.1);overflow:hidden}
+.meter i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--color-clay),var(--color-accent-glow));transform-origin:left center;transform:scaleX(0)}
+
+/* services */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:calc(24*var(--u));margin-top:calc(56*var(--u))}
+.card{padding:calc(36*var(--u));min-height:calc(440*var(--u));display:flex;flex-direction:column;will-change:transform}
+.card canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.card>*:not(canvas){position:relative;z-index:1}
+.card .idx{font-family:var(--font-display);font-size:14px;letter-spacing:.2em;color:var(--color-accent);font-weight:600}
+.card h3{margin:calc(60*var(--u)) 0 14px}
+.card p{flex:1;color:var(--color-white-a85)}
+.price{margin-top:calc(28*var(--u));font-family:var(--font-display);font-weight:700;font-size:max(30px,calc(44*var(--u)));color:var(--color-white);letter-spacing:-.03em}
+.price span{font-size:.4em;color:var(--color-accent);font-weight:600;letter-spacing:0;margin-left:.3em}
+
+/* about */
+#about{padding-top:calc(180*var(--u));padding-bottom:calc(180*var(--u))}
+#about .wrap{display:grid;grid-template-columns:1fr 1fr;gap:calc(80*var(--u))}
+#about .copy{grid-column:2}
+#about p{margin-bottom:calc(20*var(--u));font-size:max(16px,calc(19*var(--u)))}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:calc(36*var(--u))}
+.facts div{padding:18px;border-radius:18px;background:var(--glass-bg);border:1px solid var(--glass-border)}
+.facts b{display:block;font-family:var(--font-display);font-size:max(26px,calc(36*var(--u)));color:var(--color-accent);line-height:1}
+.facts span{font-size:13px}
+
+/* contact */
+#contact{text-align:center;padding-bottom:calc(60*var(--u))}
+#contact h2{font-size:max(40px,calc(112*var(--u)));margin-bottom:calc(30*var(--u))}
+#contact .lead{margin:0 auto}
+#contact .cta-row{justify-content:center}
+footer{margin-top:calc(120*var(--u));padding-top:28px;border-top:1px solid var(--glass-border);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13px;color:rgba(255,255,255,.55)}
+
+/* ---------- responsive: 1920 / 1440 base / 1280 hamburger / 1024 / 768 / 640 ---------- */
+@media (min-width:1921px){#app{--u:calc(1920px/1440)}}
+@media (max-width:1280px){.links{display:none}#burger{display:block}}
+@media (max-width:1024px){
+  #app{--u:calc(100cqw/1024)}
+  section{padding-left:calc(48*var(--u));padding-right:calc(48*var(--u))}
+  .cards{grid-template-columns:1fr 1fr}
+  .cards .card:last-child{grid-column:1/-1;min-height:calc(320*var(--u))}
+  #about .wrap{grid-template-columns:1fr}#about .copy{grid-column:1}
+}
+@media (max-width:768px){
+  #app{--u:calc(100cqw/640)}
+  section{padding:calc(90*var(--u)) 22px}
+  .perf-grid,.cards{grid-template-columns:1fr}
+  .cards .card:last-child{grid-column:auto}
+  .card{min-height:0}.card h3{margin-top:calc(48*var(--u))}
+  .metric{min-height:0}
+  #scene{opacity:.55}
+}
+@media (max-width:640px){
+  #app{--u:calc(100cqw/420)}
+  .facts{grid-template-columns:1fr}
+  #hero h1{font-size:max(44px,calc(64*var(--u)))}
+}
+@media (prefers-reduced-motion:reduce){#glow{display:none}}
+</style>
+<noscript><style>[data-reveal]{opacity:1!important}#loader{display:none!important}body.is-loading{overflow:auto}</style></noscript>
+</head>
+<body class="is-loading">
+
+<div id="loader" role="status" aria-live="polite">
+  <div class="brand">Guardian Gloves</div>
+  <div id="count" aria-label="Loading">000</div>
+  <div id="bar"><i></i></div>
+</div>
+
+<canvas id="scene" aria-hidden="true"></canvas>
+<canvas id="dither" aria-hidden="true"></canvas>
+<div id="glow" aria-hidden="true"></div>
+
+<header id="nav">
+  <a class="logo" href="#hero" data-link><b></b>Guardian Gloves</a>
+  <nav class="links" aria-label="Primary">
+    <a href="#performance" data-link>Performance</a>
+    <a href="#services" data-link>Services</a>
+    <a href="#about" data-link>About</a>
+    <a href="#contact" data-link>Contact</a>
+  </nav>
+  <button id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="sheet"><span></span><span></span></button>
+</header>
+<div id="scrim"></div>
+<aside id="sheet" aria-label="Menu" aria-hidden="true">
+  <button id="sheetClose" aria-label="Close menu">&times;</button>
+  <a href="#performance" data-link>Performance</a>
+  <a href="#services" data-link>Services</a>
+  <a href="#about" data-link>About</a>
+  <a href="#contact" data-link>Contact</a>
+</aside>
+
+<main id="app">
+  <section id="hero">
+    <canvas id="trail" aria-hidden="true"></canvas>
+    <div class="wrap">
+      <h1 aria-label="Sovereign of the Six Yards">
+        <span class="line"><span>Sovereign of</span></span>
+        <span class="line"><span>the Six Yards</span></span>
+      </h1>
+      <p class="sub" data-reveal>Elite Goalkeeper Training &amp; Equipment</p>
+      <div class="cta-row" data-reveal>
+        <a class="btn primary" href="#contact" data-link data-hover>Book Training</a>
+        <a class="btn ghost" href="#performance" data-link data-hover>Watch Demo</a>
+      </div>
+    </div>
+    <div class="marquee" aria-hidden="true"><div id="marq"></div></div>
+  </section>
+
+  <section id="performance">
+    <div class="wrap">
+      <p class="eyebrow" data-reveal>The Keeper</p>
+      <h2 data-reveal>Numbers that stop shots.</h2>
+      <p class="lead" data-reveal>Every athlete in our programme is measured against three benchmarks. Here is what a Guardian-trained keeper averages after twelve weeks.</p>
+      <div class="perf-grid">
+        <article class="glass metric" data-reveal data-hover><div class="num"><span data-count="96">0</span><small>/100</small></div><h3>Reaction</h3><p>Close-range reaction saves, scored against a calibrated rebound wall.</p><div class="meter"><i data-meter="0.96"></i></div></article>
+        <article class="glass metric" data-reveal data-hover><div class="num"><span data-count="91">0</span><small>/100</small></div><h3>Aerial</h3><p>Command of the box on crosses, corners and contested high balls.</p><div class="meter"><i data-meter="0.91"></i></div></article>
+        <article class="glass metric" data-reveal data-hover><div class="num"><span data-count="98">0</span><small>/100</small></div><h3>Reflex</h3><p>Recovery speed and second-save positioning after the first stop.</p><div class="meter"><i data-meter="0.98"></i></div></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="services">
+    <div class="wrap">
+      <p class="eyebrow" data-reveal>Programmes</p>
+      <h2 data-reveal>Train. Analyse. Equip.</h2>
+      <div class="cards">
+        <article class="glass card" data-reveal data-hover data-sheet><canvas></canvas><span class="idx">01</span><h3>Individual Coaching</h3><p>One-on-one goalkeeper training built around your position, your weaknesses and your match schedule.</p><div class="price">$49<span>/ hour</span></div></article>
+        <article class="glass card" data-reveal data-hover data-sheet><canvas></canvas><span class="idx">02</span><h3>Keeper Analysis</h3><p>Upload match footage and receive a frame-by-frame video breakdown of positioning, decisions and technique.</p><div class="price">$29<span>/ upload</span></div></article>
+        <article class="glass card" data-reveal data-hover data-sheet><canvas></canvas><span class="idx">03</span><h3>Equipment</h3><p>Premium match gloves and training kits, tested by keepers who play in all weather.</p><div class="price"><span style="margin:0 .3em 0 0">from</span>$89</div></article>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap">
+      <div class="copy">
+        <p class="eyebrow" data-reveal>About</p>
+        <h2 data-reveal>Built for the Clean Sheet</h2>
+        <p data-reveal>Guardian Gloves was founded by a former academy goalkeeper who spent a decade learning that saves are rarely made in the moment. They are made in the hours before it: footwork, angles, and the habit of staying calm when the whole stadium is not.</p>
+        <p data-reveal>Our philosophy is simple. Train the fundamentals until they are invisible, study the game honestly, and wear equipment you never have to think about. Everything we coach and sell serves one outcome.</p>
+        <p data-reveal>We are committed to elite training for keepers at every level, from Sunday league to scholarship trials.</p>
+        <div class="facts" data-reveal><div><b>10+</b><span>years in goal</span></div><div><b>1:1</b><span>coaching focus</span></div><div><b>0</b><span>goals, ideally</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap">
+      <p class="eyebrow" data-reveal>Contact</p>
+      <h2 data-reveal>Book Your Session</h2>
+      <p class="lead" data-reveal>Tell us your position, your level and what you want to fix. We reply within one working day.</p>
+      <div class="cta-row" data-reveal><a class="btn primary" href="mailto:coaching@guardiangloves.com" data-hover>Book Now — coaching@guardiangloves.com</a></div>
+      <footer><span>&copy; Guardian Gloves</span><span>Elite goalkeeper training &amp; equipment</span></footer>
+    </div>
+  </section>
+</main>
+
+<script type="module">
+/* =====================================================================
+   CONSTANTS
+   ===================================================================== */
+const SPRING = {
+  REVEAL:{tension:90, friction:26},   // hero elements
+  ITEM:  {tension:170,friction:24},   // cards, buttons
+  SHEET: {tension:190,friction:26},   // panels sliding in
+  HOVER: {tension:300,friction:20},   // interactive elements
+  SLOW:  {tension:40, friction:28},   // background parallax
+  FAST:  {tension:400,friction:18},   // cursor reactions
+};
+const FIT = .74;   // fits the procedural model inside the 6.5-unit camera frame
+const CAMERA = {fov:35, z:6.5, subjectScale:1.15, parallax:0.02};
+const TRAIL  = {samples:64, pointerLerp:0.17, radius:0.46, sweepPeriod:5, sweepStroke:0.45, idleAfter:2.2};
+const SHEET_DITHER = {CELL:24, SOLID_UNTIL:0.16, LIFT:2, ACCENT_SHARE:0.06};
+const LOADER = {total:4000, entrance:1300};
+const STAGGER = 90;
+const COLORS = {bg:'#0a0e0a', surface:'#141a14', surfaceAlt:'#1f2a1f', accent:'#e8a33d', glow:'#ffb347', clay:'#d4883a', turf:'#1a3a2a', pitch:'#14281c', mantle:'#2a1f14'};
+
+const $  = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const easeInOutCubic=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const coarse  = matchMedia('(hover: none)').matches;
+
+/* =====================================================================
+   SPRING ENGINE  (semi-implicit Euler, sub-stepped for stability)
+   ===================================================================== */
+class Spring{
+  constructor(cfg,x=0){this.cfg=cfg;this.x=x;this.v=0;this.t=x;}
+  step(dt){
+    const n=2,h=dt/n;
+    for(let i=0;i<n;i++){
+      const a=-this.cfg.tension*(this.x-this.t)-this.cfg.friction*this.v;
+      this.v+=a*h; this.x+=this.v*h;
+    }
+    return this.x;
+  }
+  get settled(){return Math.abs(this.x-this.t)<1e-3&&Math.abs(this.v)<1e-3;}
+}
+const active=new Set();            // {spring, apply}
+function animate(spring,target,apply){
+  spring.t=target;
+  let rec=[...active].find(r=>r.spring===spring);
+  if(!rec){rec={spring,apply};active.add(rec);}
+  rec.apply=apply;
+}
+
+/* =====================================================================
+   REVEALS, HOVER, LOADER STATE
+   ===================================================================== */
+let ready=false;
+const pending=[];                   // reveal queue so batches stagger by 90ms
+function reveal(el,delay=0){
+  if(el._revealed)return; el._revealed=true;
+  const s=new Spring(SPRING.REVEAL,0);
+  setTimeout(()=>animate(s,1,x=>{
+    el.style.opacity=clamp(x,0,1);
+    el.style.transform=`translateY(${20*(1-x)}px)`;
+    if(s.settled){el.style.transform='';el.style.opacity=1;}
+  }),delay);
+}
+function setupReveals(){
+  const io=new IntersectionObserver(entries=>{
+    const vis=entries.filter(e=>e.isIntersecting);
+    vis.forEach((e,i)=>{reveal(e.target,i*STAGGER);io.unobserve(e.target);});
+  },{threshold:.15,rootMargin:'0px 0px -6% 0px'});
+  $$('[data-reveal]').forEach(el=>io.observe(el));
+}
+function setupHover(){
+  $$('[data-hover]').forEach(el=>{
+    const s=new Spring(SPRING.HOVER,1);
+    const to=v=>animate(s,v,x=>{ el.style.scale=x.toFixed(4); if(s.settled&&s.t===1) el.style.scale=''; });
+    el.addEventListener('pointerenter',()=>to(el.classList.contains('btn')?1.05:1.02));
+    el.addEventListener('pointerleave',()=>to(1));
+    el.addEventListener('pointerdown',()=>to(.97));
+    el.addEventListener('pointerup',()=>to(el.matches(':hover')?1.04:1));
+    el.addEventListener('focus',()=>to(1.03)); el.addEventListener('blur',()=>to(1));
+  });
+}
+
+/* =====================================================================
+   MASTER LOOP
+   ===================================================================== */
+const frameFns=[];
+let last=performance.now(), lenis=null;
+function loop(now){
+  const dt=Math.min((now-last)/1000,1/30); last=now;
+  lenis&&lenis.raf(now);
+  for(const r of active){r.spring.step(dt);r.apply(r.spring.x);if(r.spring.settled){r.apply(r.spring.t);active.delete(r);}}
+  for(const f of frameFns)f(dt,now/1000);
+  requestAnimationFrame(loop);
+}
+
+/* =====================================================================
+   RAW WEBGL HELPERS (used by the trail + dither shaders; no CDN needed)
+   ===================================================================== */
+function glProgram(canvas,frag,opts){
+  const gl=canvas.getContext('webgl',opts||{alpha:true,premultipliedAlpha:true,antialias:false});
+  if(!gl)return null;
+  const mk=(type,src)=>{const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);
+    if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){console.warn(gl.getShaderInfoLog(s));return null;}return s;};
+  const vs=mk(gl.VERTEX_SHADER,'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}');
+  const fs=mk(gl.FRAGMENT_SHADER,frag); if(!vs||!fs)return null;
+  const pr=gl.createProgram();gl.attachShader(pr,vs);gl.attachShader(pr,fs);gl.linkProgram(pr);
+  if(!gl.getProgramParameter(pr,gl.LINK_STATUS)){console.warn(gl.getProgramInfoLog(pr));return null;}
+  gl.useProgram(pr);
+  const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+  const loc=gl.getAttribLocation(pr,'p');gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+  const u={};return {gl,pr,u:n=>u[n]||(u[n]=gl.getUniformLocation(pr,n))};
+}
+const hex=h=>{const n=parseInt(h.slice(1),16);return [(n>>16&255)/255,(n>>8&255)/255,(n&255)/255];};
+
+/* =====================================================================
+   4.1 LIQUID CURSOR TRAIL (hero)
+   ===================================================================== */
+function initTrail(){
+  const canvas=$('#trail'), hero=$('#hero');
+  const P=glProgram(canvas,`
+    precision highp float;
+    uniform vec2 uRes; uniform float uTime; uniform vec3 uT[${TRAIL.samples}]; uniform float uRad;
+    uniform vec3 cAcc; uniform vec3 cTurf; uniform vec3 cPitch;
+    void main(){
+      vec2 uv=gl_FragCoord.xy/uRes; float asp=uRes.x/uRes.y;
+      vec2 q=vec2(uv.x*asp,uv.y);
+      float f=0.;
+      for(int i=0;i<${TRAIL.samples};i++){
+        vec3 s=uT[i]; vec2 d=q-vec2(s.x*asp,s.y);
+        f+=s.z*uRad*uRad/(dot(d,d)+0.0009);
+      }
+      /* pitch: mown stripes + centre circle + halfway line, revealed through the liquid */
+      float stripe=step(.5,fract(uv.x*asp*6.));
+      vec3 pitch=mix(cPitch,cTurf,stripe*.55);
+      vec2 c=q-vec2(asp*.5,.5); float ring=abs(length(c)-.22);
+      float line=smoothstep(.006,.0,ring)+smoothstep(.004,.0,abs(c.x));
+      pitch=mix(pitch,cAcc,clamp(line,0.,1.)*.8);
+      float edge=smoothstep(.85,1.0,f);
+      float rim=smoothstep(.55,.85,f)*(1.-edge);
+      vec3 col=pitch*edge+cAcc*rim*.55;
+      float a=clamp(edge*.92+rim*.5,0.,1.);
+      /* faint idle stripes so the hero never reads as empty */
+      float idle=.07*(.5+.5*sin(uv.x*asp*6.2831+uTime*.25));
+      col+=cTurf*idle; a=max(a,idle*.6);
+      gl_FragColor=vec4(col*a,a);
+    }`);
+  if(!P)return;
+  const {gl}=P;
+  gl.uniform3fv(P.u('cAcc'),hex(COLORS.glow));gl.uniform3fv(P.u('cTurf'),hex('#2c6b49'));gl.uniform3fv(P.u('cPitch'),hex(COLORS.turf));
+  gl.uniform1f(P.u('uRad'),TRAIL.radius*0.17);
+  const buf=new Float32Array(TRAIL.samples*3);
+  const head={x:.5,y:.5}, ptr={x:.5,y:.5}; let lastMove=-99, vis=true;
+  const resize=()=>{const r=hero.getBoundingClientRect();const d=Math.min(devicePixelRatio,1.5);
+    canvas.width=Math.round(r.width*d*.6);canvas.height=Math.round(r.height*d*.6);gl.viewport(0,0,canvas.width,canvas.height);
+    gl.uniform2f(P.u('uRes'),canvas.width,canvas.height);};
+  resize(); addEventListener('resize',resize);
+  new IntersectionObserver(e=>vis=e[0].isIntersecting).observe(hero);
+  hero.addEventListener('pointermove',e=>{const r=hero.getBoundingClientRect();
+    ptr.x=(e.clientX-r.left)/r.width; ptr.y=1-(e.clientY-r.top)/r.height; lastMove=performance.now()/1000;});
+  let idx=0;
+  frameFns.push((dt,t)=>{
+    if(!vis||reduced)return;
+    let tx=ptr.x,ty=ptr.y;
+    if(t-lastMove>TRAIL.idleAfter){            // auto-sweep idle animation
+      const ph=(t%TRAIL.sweepPeriod)/TRAIL.sweepPeriod*Math.PI*2;
+      tx=.5+Math.sin(ph)*TRAIL.sweepStroke; ty=.5+Math.sin(ph*2)*.16;
+    }
+    head.x=lerp(head.x,tx,1-Math.pow(1-TRAIL.pointerLerp,dt*60));
+    head.y=lerp(head.y,ty,1-Math.pow(1-TRAIL.pointerLerp,dt*60));
+    idx=(idx+1)%TRAIL.samples;                 // 64-sample ring buffer
+    buf[idx*3]=head.x;buf[idx*3+1]=head.y;buf[idx*3+2]=1;
+    for(let i=0;i<TRAIL.samples;i++)buf[i*3+2]*=Math.pow(.955,dt*60);  // age fade
+    gl.uniform3fv(P.u('uT'),buf);gl.uniform1f(P.u('uTime'),t);
+    gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);gl.drawArrays(gl.TRIANGLES,0,3);
+  });
+}
+
+/* =====================================================================
+   4.3 PROCEDURAL DITHERING SHADER (fixed overlay, scroll-driven)
+   ===================================================================== */
+const scroll={y:0,p:0,max:1};
+function initDither(){
+  const canvas=$('#dither');
+  const P=glProgram(canvas,`
+    precision mediump float;
+    uniform vec2 uRes; uniform float uTime, uScroll, uAbout;
+    uniform vec3 c0,c1,c2,c3;
+    float bayer(vec2 p){ p=mod(floor(p),4.); float v=mod(p.x*3.+p.y*5.+floor(p.x*.5)*7.+floor(p.y*.5)*11.,16.);return (v+.5)/16.;}
+    float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+    float field(vec2 uv,float t){
+      return .5+.25*sin(uv.x*5.+t*.4+uScroll*6.)+.25*sin(uv.y*7.-t*.3+uv.x*3.);
+    }
+    vec3 pal(float v){ v=clamp(v,0.,.999)*4.; return v<1.?c0:v<2.?c1:v<3.?c2:c3; }
+    void main(){
+      vec2 uv=gl_FragCoord.xy/uRes; float t=uTime;
+      float th=bayer(gl_FragCoord.xy);
+      float sh=.004+.012*uAbout;                      /* RGB shift */
+      float r=field(uv+vec2(sh,0.),t), g=field(uv,t), b=field(uv-vec2(sh,0.),t);
+      float n=(hash(gl_FragCoord.xy+floor(t*12.))-.5)*.18;   /* animated noise */
+      vec3 col=vec3(
+        pal(floor((r+n)*4.+th)/4.).r,
+        pal(floor((g+n)*4.+th)/4.).g,
+        pal(floor((b+n)*4.+th)/4.).b);
+      float scan=.82+.18*sin(gl_FragCoord.y*3.14159);        /* scanlines */
+      float a=(.035+.15*uAbout+.02*uScroll)*scan;
+      gl_FragColor=vec4(col*a,a);
+    }`);
+  if(!P)return;
+  const {gl}=P;
+  gl.uniform3fv(P.u('c0'),hex(COLORS.bg));gl.uniform3fv(P.u('c1'),hex(COLORS.surfaceAlt));
+  gl.uniform3fv(P.u('c2'),hex(COLORS.accent));gl.uniform3fv(P.u('c3'),hex(COLORS.mantle));
+  const about=$('#about'); let aboutK=0;
+  const resize=()=>{canvas.width=Math.ceil(innerWidth/3);canvas.height=Math.ceil(innerHeight/3);gl.viewport(0,0,canvas.width,canvas.height);gl.uniform2f(P.u('uRes'),canvas.width,canvas.height);};
+  resize();addEventListener('resize',resize);
+  frameFns.push((dt,t)=>{
+    const r=about.getBoundingClientRect();
+    const target=clamp(1-Math.abs((r.top+r.height/2)-innerHeight/2)/(innerHeight*.9),0,1);
+    aboutK=lerp(aboutK,target,.08);
+    gl.uniform1f(P.u('uTime'),reduced?0:t);gl.uniform1f(P.u('uScroll'),scroll.p);gl.uniform1f(P.u('uAbout'),aboutK);
+    gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);gl.drawArrays(gl.TRIANGLES,0,3);
+  });
+}
+
+/* =====================================================================
+   4.4 SHEET DITHERING (service cards)
+   ===================================================================== */
+function initSheets(){
+  const {CELL,SOLID_UNTIL,LIFT,ACCENT_SHARE}=SHEET_DITHER;
+  const hash=(i,j)=>{const s=Math.sin(i*127.1+j*311.7)*43758.5453;return s-Math.floor(s);};
+  $$('[data-sheet]').forEach(card=>{
+    const cv=$('canvas',card), ctx=cv.getContext('2d'); const s=new Spring(SPRING.ITEM,0);
+    let w=0,h=0;
+    const draw=p=>{
+      ctx.clearRect(0,0,w,h); if(p<.005)return;
+      const cols=Math.ceil(w/CELL), rows=Math.ceil(h/CELL), lift=LIFT*p;
+      for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){
+        const t=i/cols; let on,col;
+        if(t<SOLID_UNTIL){on=true;col=COLORS.turf;}
+        else{
+          const fall=1-(t-SOLID_UNTIL)/(1-SOLID_UNTIL);
+          on=((i+j)&1)===0 && hash(i,j)<fall*p*.9; col=hash(j,i)<ACCENT_SHARE*2?COLORS.accent:COLORS.surfaceAlt;
+        }
+        if(!on)continue;
+        ctx.globalAlpha=t<SOLID_UNTIL?clamp(p*1.4,0,1)*.9:.8;
+        ctx.fillStyle=col; ctx.fillRect(i*CELL,j*CELL-lift,CELL-1,CELL-1);
+      }
+      ctx.globalAlpha=1;
+    };
+    const size=()=>{const r=card.getBoundingClientRect();w=cv.width=Math.round(r.width);h=cv.height=Math.round(r.height);draw(s.x);};
+    size();addEventListener('resize',size);
+    const to=v=>animate(s,v,draw);
+    card.addEventListener('pointerenter',()=>to(1));card.addEventListener('pointerleave',()=>to(.0));
+    card.addEventListener('focusin',()=>to(1));card.addEventListener('focusout',()=>to(0));
+    const io=new IntersectionObserver(e=>{if(e[0].isIntersecting){setTimeout(()=>{to(.35);setTimeout(()=>to(0),700);},200);io.disconnect();}},{threshold:.4});
+    io.observe(card);
+  });
+}
+
+/* =====================================================================
+   METRICS (spring-driven counters + bars)
+   ===================================================================== */
+function initMetrics(){
+  $$('.metric').forEach(m=>{
+    const num=$('[data-count]',m), bar=$('[data-meter]',m), tgt=+num.dataset.count, bt=+bar.dataset.meter;
+    const s=new Spring(SPRING.ITEM,0);
+    const io=new IntersectionObserver(e=>{if(!e[0].isIntersecting)return;io.disconnect();
+      setTimeout(()=>animate(s,1,x=>{num.textContent=Math.round(tgt*clamp(x,0,1.02));bar.style.transform=`scaleX(${clamp(bt*x,0,1)})`;}),300);},{threshold:.5});
+    io.observe(m);
+  });
+}
+
+/* =====================================================================
+   CURSOR GLOW DOT
+   ===================================================================== */
+function initCursor(){
+  if(coarse||reduced)return;
+  const el=$('#glow'); const sx=new Spring(SPRING.FAST,0),sy=new Spring(SPRING.FAST,0),ss=new Spring(SPRING.HOVER,1);
+  let seen=false, vx=0, px=0, py=0;
+  addEventListener('pointermove',e=>{
+    if(!seen){seen=true;sx.x=e.clientX;sy.x=e.clientY;el.style.opacity=1;}
+    sx.t=e.clientX;sy.t=e.clientY; vx=Math.hypot(e.clientX-px,e.clientY-py);px=e.clientX;py=e.clientY;
+  });
+  document.addEventListener('pointerover',e=>{ss.t=e.target.closest('a,button,[data-hover]')?2.6:1;});
+  frameFns.push(dt=>{
+    sx.step(dt);sy.step(dt);ss.step(dt);
+    const stretch=1+Math.min(vx*.02,.6); vx*=.85;
+    el.style.transform=`translate(${sx.x}px,${sy.x}px) scale(${(ss.x*stretch).toFixed(3)})`;
+  });
+}
+
+/* =====================================================================
+   NAV: sheet, smooth anchor scroll
+   ===================================================================== */
+function initNav(){
+  const sheet=$('#sheet'),scrim=$('#scrim'),burger=$('#burger'),s=new Spring(SPRING.SHEET,105),sc=new Spring(SPRING.SHEET,0);
+  let open=false;
+  const set=v=>{
+    open=v; burger.setAttribute('aria-expanded',v);sheet.setAttribute('aria-hidden',!v);
+    if(v){sheet.style.visibility='visible';scrim.style.pointerEvents='auto';$('#sheetClose').focus();}
+    else{scrim.style.pointerEvents='none';burger.focus({preventScroll:true});}
+    animate(s,v?0:105,x=>{sheet.style.transform=`translateX(${x}%)`;if(!v&&s.settled)sheet.style.visibility='hidden';});
+    animate(sc,v?1:0,x=>scrim.style.opacity=clamp(x,0,1));
+  };
+  burger.onclick=()=>set(true);$('#sheetClose').onclick=()=>set(false);scrim.onclick=()=>set(false);
+  addEventListener('keydown',e=>{if(e.key==='Escape'&&open)set(false);});
+  $$('[data-link]').forEach(a=>a.addEventListener('click',e=>{
+    const id=a.getAttribute('href'); if(!id.startsWith('#'))return; e.preventDefault();
+    if(open)set(false);
+    const t=$(id); lenis?lenis.scrollTo(t,{offset:0,duration:1.4}):t.scrollIntoView({behavior:reduced?'auto':'smooth'});
+  }));
+  sheet.style.visibility='hidden';
+}
+
+/* =====================================================================
+   MARQUEE (scroll + time driven)
+   ===================================================================== */
+function initMarquee(){
+  const m=$('#marq'); const unit='Clean Sheet<em>/</em>Six Yards<em>/</em>Command the Box<em>/</em>';
+  m.innerHTML=unit.repeat(6); let off=0;
+  frameFns.push((dt)=>{ const w=m.scrollWidth/2; off=(off+dt*(40+Math.abs(velocity)*.6))%w; m.style.transform=`translateX(${-off}px)`; });
+}
+let velocity=0;
+
+/* =====================================================================
+   3D SCENE — procedural goalkeeper (no external model)
+   ===================================================================== */
+async function initScene(THREE){
+  const canvas=$('#scene');
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFShadowMap;
+  renderer.setClearColor(0x000000,0);
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(CAMERA.fov,1,.1,60); camera.position.set(0,0,CAMERA.z);
+
+  scene.add(new THREE.HemisphereLight(0xcfe9d6,0x1a1208,.7));
+  const key=new THREE.DirectionalLight(0xffffff,2.2);key.position.set(3,5,4);key.castShadow=true;
+  key.shadow.mapSize.set(1024,1024);Object.assign(key.shadow.camera,{left:-4,right:4,top:4,bottom:-4,near:.5,far:16});scene.add(key);
+  const rim=new THREE.PointLight(0xffb347,40,14);rim.position.set(-3,2.2,-2);scene.add(rim);
+  const fill=new THREE.PointLight(0x2c6b49,18,12);fill.position.set(2.5,.5,2.5);scene.add(fill);
+
+  const M=(c,r=.55,m=.05)=>new THREE.MeshStandardMaterial({color:c,roughness:r,metalness:m});
+  const jersey=M(0x1f5a3b,.7), shorts=M(0x0d1a12,.8), skin=M(0xc58c62,.7), glove=M(0xf4f1ea,.5), gold=M(0xe8a33d,.3,.7), sock=M(0x1a3a2a,.8), boot=M(0x111111,.4);
+
+  const keeper=new THREE.Group(); scene.add(keeper);
+  const body=new THREE.Group(); keeper.add(body);
+  const add=(geo,mat,x,y,z,parent=body)=>{const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m;};
+
+  add(new THREE.CylinderGeometry(.3,.26,.78,28),jersey,0,1.52,0);                 // torso
+  add(new THREE.BoxGeometry(.52,.07,.3),gold,0,1.74,.0).scale.set(1,1,1);          // chest band
+  add(new THREE.BoxGeometry(.56,.32,.32),shorts,0,1.02,0);                         // shorts
+  for(const s of[-1,1]){
+    add(new THREE.CylinderGeometry(.11,.1,.52,18),shorts,s*.15,.74,0).scale.z=1;   // thigh
+    add(new THREE.CylinderGeometry(.085,.075,.46,18),sock,s*.16,.28,0);            // shin
+    add(new THREE.BoxGeometry(.17,.1,.32),boot,s*.16,.05,.06);                     // boot
+  }
+  add(new THREE.CylinderGeometry(.08,.09,.14,14),skin,0,1.96,0);                   // neck
+  const head=new THREE.Group();head.position.set(0,2.12,0);body.add(head);
+  add(new THREE.SphereGeometry(.2,32,24),skin,0,0,0,head);
+  add(new THREE.SphereGeometry(.205,32,16,0,Math.PI*2,0,Math.PI*.46),M(0x1a1209,.9),0,.01,-.005,head); // hair cap
+  add(new THREE.BoxGeometry(.3,.04,.02),gold,0,.07,.2,head);                       // headband
+
+  const arms=[];
+  for(const s of[-1,1]){                                                           // arms: raised ready stance
+    const piv=new THREE.Group();piv.position.set(s*.37,1.8,0);body.add(piv);
+    add(new THREE.SphereGeometry(.11,18,14),jersey,0,0,0,piv);                       // shoulder
+    add(new THREE.CapsuleGeometry(.075,.5,6,14),jersey,0,-.3,0,piv);
+    add(new THREE.CapsuleGeometry(.065,.32,6,14),skin,0,-.7,0,piv);
+    add(new THREE.BoxGeometry(.2,.24,.1),glove,0,-.98,0,piv);                      // glove
+    add(new THREE.BoxGeometry(.21,.045,.11),gold,0,-.88,0,piv);                    // gold cuff
+    for(let f=0;f<3;f++)add(new THREE.BoxGeometry(.05,.07,.1),gold,(f-1)*.06,-1.13,0,piv); // gold fingertips
+    arms.push({piv,s,spread:new Spring(SPRING.ITEM,2.2)});
+  }
+
+  // goal frame + net behind the keeper
+  const goal=new THREE.Group();goal.position.set(0,0,-1.8);keeper.add(goal);
+  const postM=M(0xffffff,.4,.1);
+  for(const s of[-1,1])add(new THREE.CylinderGeometry(.04,.04,2.44,12),postM,s*3.2,1.22,0,goal);
+  add(new THREE.CylinderGeometry(.04,.04,6.4,12),postM,0,2.44,0,goal).rotation.z=Math.PI/2;
+  const pts=[];for(let i=-16;i<=16;i++){pts.push(i*.2,0,-.9, i*.2,2.44,-.9);}for(let j=0;j<=12;j++){pts.push(-3.2,j*.2,-.9, 3.2,j*.2,-.9);}
+  const lg=new THREE.BufferGeometry();lg.setAttribute('position',new THREE.Float32BufferAttribute(pts,3));
+  goal.add(new THREE.LineSegments(lg,new THREE.LineBasicMaterial({color:0xffffff,transparent:true,opacity:.12})));
+
+  const floor=new THREE.Mesh(new THREE.PlaneGeometry(30,30),new THREE.ShadowMaterial({opacity:.4}));
+  floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;keeper.add(floor);
+
+  keeper.scale.setScalar(CAMERA.subjectScale*FIT);
+  keeper.position.y=-1.5;
+
+  // springs: scroll-linked placement, idle head bob, pointer parallax
+  const px=new Spring(SPRING.SLOW,0),py=new Spring(SPRING.SLOW,0);
+  const rotY=new Spring(SPRING.REVEAL,0),posX=new Spring(SPRING.SLOW,0),bob=new Spring(SPRING.HOVER,0),tilt=new Spring(SPRING.ITEM,0);
+  const intro=new Spring(SPRING.SLOW,0);
+  const KEYS=[[0,2.3],[.25,-2.3],[.5,2.3],[.75,-2.3],[1,0]];            // x offset along the page
+  const xAt=p=>{for(let i=0;i<KEYS.length-1;i++){const[a,x0]=KEYS[i],[b,x1]=KEYS[i+1];if(p<=b)return lerp(x0,x1,easeInOutCubic(clamp((p-a)/(b-a),0,1)));}return 0;};
+  addEventListener('pointermove',e=>{px.t=(e.clientX/innerWidth-.5)*2;py.t=(e.clientY/innerHeight-.5)*2;});
+  window.__sceneIntro=()=>animate(intro,1,()=>{});
+
+  const resize=()=>{const w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();};
+  resize();addEventListener('resize',resize);
+
+  let sceneVisible=true;
+  document.addEventListener('visibilitychange',()=>sceneVisible=!document.hidden);
+  frameFns.push((dt,t)=>{
+    if(!sceneVisible)return;
+    const wide=innerWidth>900;
+    posX.t=wide?xAt(scroll.p):0; rotY.t=Math.sin(scroll.p*Math.PI*3)*1.1; tilt.t=clamp(velocity*.0006,-.25,.25);
+    bob.t=reduced?0:Math.sin(t*1.8)*.035;                                  // idle head bob target
+    posX.step(dt);rotY.step(dt);bob.step(dt);px.step(dt);py.step(dt);tilt.step(dt);intro.step(dt);
+    keeper.position.x=posX.x; keeper.rotation.y=rotY.x*.5+px.x*.25; keeper.rotation.z=tilt.x*.2;
+    keeper.scale.setScalar(CAMERA.subjectScale*FIT*lerp(.7,1,clamp(intro.x,0,1.05))*(wide?1:.85));
+    body.position.y=bob.x*.4; head.position.y=2.12+bob.x; head.rotation.y=px.x*.35; head.rotation.x=py.x*.12+Math.sin(t*1.3)*.03;
+    camera.position.x=px.x*CAMERA.parallax*20; camera.position.y=-py.x*CAMERA.parallax*12; camera.lookAt(0,0,0);
+    for(const a of arms){                                                  // arms flex with idle motion and pointer
+      a.spread.t=2.15+Math.sin(t*1.6+(a.s>0?0:1.3))*.09+Math.abs(px.x)*.06+(reduced?0:0);
+      a.spread.step(dt);a.piv.rotation.z=a.s*a.spread.x;
+    }
+    renderer.render(scene,camera);
+  });
+  return true;
+}
+
+/* =====================================================================
+   BOOT
+   ===================================================================== */
+async function boot(){
+  initCursor();setupHover();initNav();initMarquee();initTrail();initDither();initSheets();initMetrics();
+  requestAnimationFrame(t=>{last=t;loop(t)});
+
+  // hero headline is revealed by GSAP timeline when available, spring fallback otherwise
+  const heroLines=$$('#hero h1 .line>span');
+  const useGsap=!!window.gsap&&!reduced;
+  if(useGsap)gsap.set(heroLines,{yPercent:110});
+
+  // load libs in parallel with the loader; any failure degrades gracefully
+  const libs=Promise.allSettled([
+    import('three').then(T=>initScene(T)).catch(e=>{console.warn('3D scene unavailable:',e);}),
+    import('lenis').then(({default:Lenis})=>{
+      lenis=new Lenis({lerp:.1,smoothWheel:!reduced}); lenis.stop();
+      lenis.on('scroll',e=>{scroll.y=e.scroll;scroll.max=e.limit||1;scroll.p=clamp(e.scroll/(e.limit||1),0,1);velocity=e.velocity||0;});
+    }).catch(e=>console.warn('Smooth scroll unavailable:',e)),
+    document.fonts?document.fonts.ready:Promise.resolve()
+  ]);
+  if(!lenis){                                  // native-scroll fallback for the scroll-linked values
+    addEventListener('scroll',()=>{const m=document.documentElement.scrollHeight-innerHeight||1;scroll.y=scrollY;scroll.p=clamp(scrollY/m,0,1);},{passive:true});
+  }
+
+  // ---- loader: 000 -> 100 over LOADER.total, entrance eased over LOADER.entrance ----
+  const count=$('#count'),bar=$('#bar i'),loader=$('#loader'); const t0=performance.now();
+  const total=reduced?600:LOADER.total;
+  await new Promise(res=>{
+    (function tick(){
+      const e=performance.now()-t0;
+      const k=clamp(e/(total*.82),0,1);                                   // counter finishes just before the burn-out
+      const v=Math.round(100*easeInOutCubic(k));
+      count.textContent=String(v).padStart(3,'0');bar.style.transform=`scaleX(${v/100})`;
+      const ent=easeInOutCubic(clamp(e/(reduced?1:LOADER.entrance),0,1)); // entrance of the counter block
+      count.style.transform=`translateY(${(1-ent)*40}px)`;count.style.opacity=ent;
+      if(e>=total*.82&&v>=100){res();return;}
+      requestAnimationFrame(tick);
+    })();
+  });
+  await libs;                                                              // never leave before libraries settle
+  const wait=Math.max(0,total-(performance.now()-t0)); await new Promise(r=>setTimeout(r,wait));
+
+  // ---- burn-out: loader scales/fades via spring, then hero choreography ----
+  const lf=new Spring(SPRING.SHEET,0);
+  loader.style.pointerEvents='none';
+  window.__sceneIntro&&window.__sceneIntro();
+  animate(lf,1,x=>{loader.style.opacity=clamp(1-x,0,1);count.style.transform=`scale(${1+x*.25})`;
+    if(lf.settled){loader.remove();}});
+  document.body.classList.remove('is-loading'); lenis&&lenis.start();
+  ready=true;
+
+  if(useGsap){
+    const tl=gsap.timeline({defaults:{ease:'power4.out'}});
+    tl.to(heroLines,{yPercent:0,duration:1.3,stagger:.12},0.1);
+  }
+  setupReveals();
+  window.__ready=true;
+}
+boot();
+</script>
+</body>
+</html>
