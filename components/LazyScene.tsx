@@ -1,15 +1,16 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 
 const HeroScene = dynamic(() => import('./three/HeroScene'), { ssr: false });
 
 /**
- * Mounts the 3D scene only when: motion is allowed, the browser is idle, and the box is on screen.
- * The poster (static fallback) is always in the DOM underneath, so JS-off / SEO / social previews are covered.
+ * The real product photo is always rendered (JS-off, SEO, social previews, reduced motion).
+ * The 3D layer mounts on top only when motion is allowed, the browser is idle and the box is on screen.
  */
-export function LazyScene({ poster, label }: { poster: string; label: string }) {
+export function LazyScene({ src, width, height, alt }: { src: string; width: number; height: number; alt: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const [live, setLive] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -32,10 +33,9 @@ export function LazyScene({ poster, label }: { poster: string; label: string }) 
   }, []);
 
   return (
-    <div ref={ref} className="absolute inset-0" role="img" aria-label={label}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={poster} alt="" className="h-full w-full object-cover" />
-      {live && visible && <div className="absolute inset-0"><HeroScene /></div>}
+    <div ref={ref} className="relative overflow-hidden" style={{ aspectRatio: `${width} / ${height}` }}>
+      <Image src={src} alt={alt} width={width} height={height} priority sizes="(min-width: 768px) 40vw, 80vw" className="h-full w-full object-cover" />
+      {live && visible && <div className="absolute inset-0" aria-hidden><HeroScene src={src} aspect={width / height} /></div>}
     </div>
   );
 }

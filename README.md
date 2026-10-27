@@ -24,4 +24,4 @@ Nothing is invented. See `docs/PRE-LAUNCH-CHECKLIST.md`. `npm run check:tbc` fai
 
 ## 3D
 
-Scenes are lazy-loaded (`components/LazyScene.tsx`) after idle + in-view, skipped for `prefers-reduced-motion` / Save-Data, and always sit over a static poster (`public/hero-poster.svg`). The hero is a material study, not a garment, until real product models/photos exist.
+Scenes are lazy-loaded (`components/LazyScene.tsx`) after idle + in-view, skipped for `prefers-reduced-motion` / Save-Data, and always sit over a static poster (`public/images/base-layer-hero.webp`). The hero is a material study, not a garment, until real product models/photos exist.

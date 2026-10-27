@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { Accordion } from '@/components/Accordion';
 import { Hero } from '@/components/Hero';
@@ -106,7 +107,7 @@ export default async function Home() {
       {/* 7 — Purchase area */}
       <section id="buy" className="section" aria-label="Buy the padded base layer">
         <div className="grid gap-10 md:grid-cols-2">
-          <PhotoSlot label="Front-view product photograph" className="min-h-[360px]" />
+          <Image src="/images/base-layer-hero.webp" alt="A3GK padded base layer top and leggings laid flat" width={1125} height={2000} sizes="(min-width:768px) 40vw, 100vw" className="w-full max-w-sm justify-self-center" />
           {base && <PurchasePanel product={base} preorderNote={null} />}
         </div>
       </section>

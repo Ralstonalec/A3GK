@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: { handle: string } 
   return p ? { title: p.title } : {};
 }
 
-const GALLERY_SLOTS = ['Front view', 'Back view', 'Side view', 'Padding close-ups', 'Fabric and seam details', 'Worn on a person', 'Colour options', 'Short product video'];
+const GALLERY_SLOTS = ['Flat lay (supplied)', 'Back view', 'Side view', 'Padding close-ups', 'Fabric and seam details', 'Worn on a person', 'Colour options', 'Short product video'];
 
 export default async function ProductPage({ params }: { params: { handle: string } }) {
   const product = await getProduct(params.handle);
@@ -55,7 +55,7 @@ export default async function ProductPage({ params }: { params: { handle: string
               ))}
             </ul>
           ) : isBase ? (
-            <ul className="grid grid-cols-2 gap-3">{GALLERY_SLOTS.map((s, i) => <li key={s} className={i === 0 ? 'col-span-2' : ''}><PhotoSlot label={s} className={i === 0 ? 'min-h-[360px]' : 'min-h-[180px]'} /></li>)}</ul>
+            <ul className="grid grid-cols-2 gap-3">{GALLERY_SLOTS.map((s, i) => <li key={s} className={i === 0 ? 'col-span-2' : ''}>{i === 0 ? <Image src="/images/base-layer-hero.webp" alt="A3GK padded base layer top and leggings laid flat" width={1125} height={2000} priority sizes="(min-width:768px) 50vw, 100vw" className="mx-auto max-h-[720px] w-auto" /> : <PhotoSlot label={s} className="min-h-[180px]" />}</li>)}</ul>
           ) : <PhotoSlot label="Product photographs" className="min-h-[360px]" />}
           {isBase && <p className="mt-3 text-sm text-charcoal-500">Outer kit shown in photos is not included unless stated under “What you receive”.</p>}
         </div>

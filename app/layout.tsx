@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: { default: 'A3GK — Padded base layer for goalkeepers', template: '%s | A3GK' },
   description: 'Meet the A3GK padded base layer. Explore the design, see the padding details, and find your size.',
-  openGraph: { images: ['/hero-poster.svg'], siteName: 'A3GK' },
+  openGraph: { images: ['/images/base-layer-hero.webp'], siteName: 'A3GK' },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
