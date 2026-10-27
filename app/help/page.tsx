@@ -5,7 +5,7 @@ import { BASE_LAYER, POLICIES } from '@/lib/content';
 export const metadata: Metadata = { title: 'Help' };
 
 const Block = ({ id, title, children }: { id: string; title: string; children: React.ReactNode }) => (
-  <section id={id} className="scroll-mt-24 border-t border-charcoal-700/20 pt-8">
+  <section id={id} className="scroll-mt-24 border-t border-white/15 pt-8">
     <h2 className="text-2xl font-bold">{title}</h2>
     <div className="mt-3 space-y-2">{children}</div>
   </section>

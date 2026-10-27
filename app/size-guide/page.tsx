@@ -16,8 +16,8 @@ export default function SizeGuide() {
       <div className="mt-6 overflow-x-auto">
         {SIZE_GUIDE.rows.length ? (
           <table className="w-full min-w-[420px] border-collapse text-left text-base">
-            <thead><tr>{SIZE_GUIDE.columns.map((c) => <th key={c} scope="col" className="border-b-2 border-ink p-3">{c}</th>)}</tr></thead>
-            <tbody>{SIZE_GUIDE.rows.map((r, i) => <tr key={i} className="border-b border-charcoal-700/20">{r.map((c, j) => j === 0 ? <th key={j} scope="row" className="p-3">{c}</th> : <td key={j} className="p-3">{c}</td>)}</tr>)}</tbody>
+            <thead><tr>{SIZE_GUIDE.columns.map((c) => <th key={c} scope="col" className="border-b-2 border-white/60 p-3">{c}</th>)}</tr></thead>
+            <tbody>{SIZE_GUIDE.rows.map((r, i) => <tr key={i} className="border-b border-white/15">{r.map((c, j) => j === 0 ? <th key={j} scope="row" className="p-3">{c}</th> : <td key={j} className="p-3">{c}</td>)}</tr>)}</tbody>
           </table>
         ) : <Tbc label="Sizes and measurement chart" />}
       </div>

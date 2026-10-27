@@ -12,7 +12,7 @@ const config: Config = {
         accent: 'rgb(var(--accent) / <alpha-value>)',
       },
       fontFamily: {
-        display: ['var(--font-display)', 'system-ui', 'sans-serif'],
+        display: ['var(--font-display)', 'Arial Narrow', 'Arial', 'sans-serif'],
         sans: ['var(--font-body)', 'system-ui', 'sans-serif'],
       },
     },

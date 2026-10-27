@@ -37,20 +37,20 @@ export function PurchasePanel({ product, sizeGuide = true, preorderNote }: { pro
     <div className="space-y-5" id="purchase">
       <h2 className="font-display text-3xl font-bold uppercase">{product.title}</h2>
       <p className="text-2xl font-semibold" aria-live="polite">
-        {price ? <>{formatMoney(price.amount, price.currencyCode)} <span className="text-sm font-normal text-charcoal-500">{price.currencyCode}</span></> : <Tbc label="Retail price and currency" />}
+        {price ? <>{formatMoney(price.amount, price.currencyCode)} <span className="text-sm font-normal text-white/55">{price.currencyCode}</span></> : <Tbc label="Retail price and currency" />}
       </p>
 
       {product.options.map((o) => (
         <fieldset key={o.name}>
           <legend className="mb-2 text-sm font-bold uppercase tracking-wider">
-            {o.name}{sel[o.name] && <span className="ml-2 font-normal normal-case text-charcoal-500">{sel[o.name]}</span>}
+            {o.name}{sel[o.name] && <span className="ml-2 font-normal normal-case text-white/55">{sel[o.name]}</span>}
           </legend>
           <div className="flex flex-wrap gap-2">
             {o.values.map((val) => {
               const ok = valueAvailable(o.name, val);
               const checked = sel[o.name] === val;
               return (
-                <label key={val} className={`relative flex min-h-[48px] min-w-[56px] cursor-pointer items-center justify-center border px-4 text-sm font-semibold ${checked ? 'border-ink bg-ink text-white' : 'border-charcoal-700/40 bg-white'} ${ok ? '' : 'opacity-50'}`}>
+                <label key={val} className={`relative flex min-h-[48px] min-w-[56px] cursor-pointer items-center justify-center border px-4 text-sm font-semibold ${checked ? 'border-accent bg-accent text-ink' : 'border-white/25 bg-white/[0.06]'} ${ok ? '' : 'opacity-50'}`}>
                   <input type="radio" name={o.name} value={val} checked={checked} onChange={() => setSel((s) => ({ ...s, [o.name]: val }))} className="sr-only" />
                   <span className={ok ? '' : 'line-through'}>{val}</span>
                   {!ok && <span className="sr-only"> (sold out)</span>}
@@ -58,7 +58,7 @@ export function PurchasePanel({ product, sizeGuide = true, preorderNote }: { pro
               );
             })}
           </div>
-          {o.values.some((v) => !valueAvailable(o.name, v)) && <p className="mt-1 text-xs text-charcoal-500">Struck-through options are sold out.</p>}
+          {o.values.some((v) => !valueAvailable(o.name, v)) && <p className="mt-1 text-xs text-white/55">Struck-through options are sold out.</p>}
         </fieldset>
       ))}
 
@@ -66,16 +66,16 @@ export function PurchasePanel({ product, sizeGuide = true, preorderNote }: { pro
 
       <div className="flex items-center gap-3">
         <label htmlFor={`qty-${product.handle}`} className="text-sm font-bold uppercase tracking-wider">Quantity</label>
-        <div className="flex items-center border border-charcoal-700/40 bg-white">
+        <div className="flex items-center border border-white/25 bg-white/[0.06]">
           <button type="button" className="h-12 w-12" aria-label="Decrease quantity" onClick={() => setQty((q) => Math.max(1, q - 1))}>−</button>
-          <input id={`qty-${product.handle}`} inputMode="numeric" className="h-12 w-12 text-center" value={qty} onChange={(e) => setQty(Math.max(1, Math.min(20, Number(e.target.value.replace(/\D/g, '')) || 1)))} />
+          <input id={`qty-${product.handle}`} inputMode="numeric" className="h-12 w-12 bg-transparent text-center text-white" value={qty} onChange={(e) => setQty(Math.max(1, Math.min(20, Number(e.target.value.replace(/\D/g, '')) || 1)))} />
           <button type="button" className="h-12 w-12" aria-label="Increase quantity" onClick={() => setQty((q) => Math.min(20, q + 1))}>+</button>
         </div>
       </div>
 
       <div className="text-sm">
         {product.connected
-          ? variant ? <p>{variant.availableForSale ? 'In stock' : 'Sold out'}</p> : <p className="text-charcoal-500">Choose {missing.join(' and ')} to see availability.</p>
+          ? variant ? <p>{variant.availableForSale ? 'In stock' : 'Sold out'}</p> : <p className="text-white/55">Choose {missing.join(' and ')} to see availability.</p>
           : <Tbc label="Stock, preorder or made-to-order status" />}
         {preorderNote && <p className="mt-1 font-semibold">{preorderNote}</p>}
       </div>
@@ -84,11 +84,11 @@ export function PurchasePanel({ product, sizeGuide = true, preorderNote }: { pro
         <button className="btn-primary w-full" disabled={busy || (product.connected && variant ? !variant.availableForSale : false) || !product.connected} onClick={onAdd}>
           {!product.connected ? 'Store not connected yet' : busy ? 'Adding…' : 'Add to cart'}
         </button>
-        {tried && !variant && missing.length > 0 && <p role="alert" className="mt-2 text-sm text-red-700">Please choose {missing.join(' and ')} first.</p>}
-        {error && <p role="alert" className="mt-2 text-sm text-red-700">{error}</p>}
+        {tried && !variant && missing.length > 0 && <p role="alert" className="mt-2 text-sm text-red-300">Please choose {missing.join(' and ')} first.</p>}
+        {error && <p role="alert" className="mt-2 text-sm text-red-300">{error}</p>}
       </div>
 
-      <p className="text-sm text-charcoal-700">
+      <p className="text-sm text-white/75">
         <Link className="underline underline-offset-4" href="/help#shipping">Shipping information</Link>
         {' · '}
         <Link className="underline underline-offset-4" href="/help#returns">Returns information</Link>

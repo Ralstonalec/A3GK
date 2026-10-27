@@ -28,7 +28,9 @@ export const NAV = [
 
 /** Facts about the base layer. `null` = not yet confirmed. */
 export const BASE_LAYER = {
-  garmentType: null as string | null, // e.g. "top", "bottom", "set"
+  // From the supplied product photograph: a long-sleeve top and leggings. CONFIRM before launch,
+  // including whether they are sold together or separately (piecesSoldTogether).
+  garmentType: 'long-sleeve top and leggings' as string | null,
   productName: 'A3GK Padded Base Layer', // working name from brief; confirm exact name
   included: null as string | null, // what is in each purchase
   piecesSoldTogether: null as boolean | null,
@@ -39,7 +41,15 @@ export const BASE_LAYER = {
   origin: null as string | null,
   fulfilment: null as string | null,
   /** Only padded areas that really exist. Empty until confirmed — hotspots/labels render nothing. */
-  paddedAreas: [] as { id: string; label: string; description: string }[],
+  paddedAreas: [
+    // Read from the supplied product photograph. CONFIRM each zone against the real garment.
+    { id: 'chest', label: 'Chest', description: 'One panel across the front of the chest (top).' },
+    { id: 'ribs', label: 'Ribs', description: 'A panel on each side of the lower front (top).' },
+    { id: 'shoulders', label: 'Shoulders', description: 'A panel on the top of each shoulder (top).' },
+    { id: 'elbows', label: 'Elbows', description: 'A panel on the outer elbow of each sleeve (top).' },
+    { id: 'hips', label: 'Hips', description: 'A panel on each hip (leggings).' },
+    { id: 'knees', label: 'Knees', description: 'A panel over each knee (leggings).' },
+  ] as { id: string; label: string; description: string }[],
 };
 
 export const SIZE_GUIDE = {
