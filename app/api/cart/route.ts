@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { allow, clientIp } from '@/lib/ratelimit';
 import { addToCart, getCart, shopifyConfigured, updateLine } from '@/lib/shopify';
 
 export const dynamic = 'force-dynamic';
@@ -27,6 +28,8 @@ function sameOrigin(req: Request) {
 
 export async function POST(req: Request) {
   if (!sameOrigin(req)) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  const rl = allow(`cart:${clientIp(req.headers)}`, 60, 60_000);
+  if (!rl.ok) return NextResponse.json({ error: 'Too many requests. Try again shortly.' }, { status: 429, headers: { 'Retry-After': String(rl.retryAfter) } });
   if (!shopifyConfigured) {
     return NextResponse.json({ error: 'Store is not connected yet.' }, { status: 503 });
   }

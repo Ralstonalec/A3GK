@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
+import { allow, clientIp } from '@/lib/ratelimit';
 import { createClient } from '@/lib/supabase/server';
 import { supabaseConfigured } from '@/lib/supabase/env';
 
@@ -16,6 +17,7 @@ function baseUrl(request: NextRequest) {
 /** Email confirmation, magic-link and password-reset links land here. */
 export async function GET(request: NextRequest) {
   const base = baseUrl(request);
+  if (!allow(`callback:${clientIp(request.headers)}`, 20, 60_000).ok) return new NextResponse('Too many requests', { status: 429, headers: { 'Retry-After': '60' } });
   const { searchParams } = new URL(request.url);
   const code = searchParams.get('code');
   const requested = searchParams.get('next') ?? '/account';

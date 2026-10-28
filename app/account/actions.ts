@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { allow } from '@/lib/ratelimit';
 import { createClient } from '@/lib/supabase/server';
 
 const text = (f: FormData, k: string, max: number) => {
@@ -21,6 +22,7 @@ async function requireUser() {
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
+  if (!allow(`acct:${user.id}`, 60, 60_000).ok) throw new Error('Too many requests');
   return { supabase, user };
 }
 
@@ -64,6 +66,7 @@ export async function toggleSaved(handle: string): Promise<{ saved: boolean; err
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { saved: false, signedOut: true };
+  if (!allow(`acct:${user.id}`, 60, 60_000).ok) return { saved: false, error: 'Too many requests. Try again shortly.' };
   if (typeof handle !== 'string' || handle.length < 1 || handle.length > 120) return { saved: false, error: 'Could not save this item.' };
   // delete-then-insert, each a single statement, so a double click can't create a duplicate (unique key + ignoreDuplicates)
   const { data: removed } = await supabase.from('saved_items').delete().eq('user_id', user.id).eq('product_handle', handle).select('id');
