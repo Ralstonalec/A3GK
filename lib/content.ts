@@ -26,6 +26,9 @@ export const NAV = [
   { label: 'Help', href: '/help' },
 ];
 
+/** Owner-supplied guidance: wearing it with short sleeves or shorts is possible but not recommended. */
+export const WEAR_NOTE = 'You can wear the base layer under a short-sleeve jersey and shorts, but we do not recommend it. Leaving the sleeves and legs exposed can reduce its durability. It is designed to sit fully under a long-sleeve jersey and long pants.';
+
 /** Facts about the base layer. `null` = not yet confirmed. */
 export const BASE_LAYER = {
   // From the supplied product photograph: a long-sleeve top and leggings. CONFIRM before launch,
@@ -83,6 +86,7 @@ export const BRAND_INTRO =
 export const FAQ = [
   { q: 'What am I buying?', a: BASE_LAYER.included, tbc: 'What is included in each purchase' },
   { q: 'Where is it padded?', a: BASE_LAYER.paddedAreas.length ? BASE_LAYER.paddedAreas.map((p) => p.label).join(', ') : null, tbc: 'Actual padding locations' },
+  { q: 'Can I wear it under a short-sleeve jersey or shorts?', a: WEAR_NOTE, tbc: '' },
   { q: 'How is it meant to be worn?', a: BASE_LAYER.intendedFit, tbc: 'Intended fit and how it sits under kit' },
   { q: 'What is it made from?', a: BASE_LAYER.fabricComposition, tbc: 'Fabric composition' },
   { q: 'Which size should I choose?', a: SIZE_GUIDE.rows.length ? 'See the size guide for measurements and how to measure.' : null, tbc: 'Sizes and measurement chart' },

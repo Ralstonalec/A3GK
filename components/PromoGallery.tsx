@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { HANDLES } from '@/lib/content';
+import { HANDLES, WEAR_NOTE } from '@/lib/content';
 import { PROMO, type Promo } from '@/lib/photos';
 
 const get = (id: Promo['id']) => PROMO.find((p) => p.id === id);
@@ -32,7 +32,8 @@ export function PromoGallery() {
         {stance && <Tile p={stance} className={closeup ? 'aspect-[3/4] md:row-span-2' : 'aspect-[3/4] md:aspect-auto'} sizes="(min-width:768px) 33vw, 100vw" />}
         {closeup && <Tile p={closeup} className="aspect-[4/3] md:col-span-2 md:aspect-auto" sizes="(min-width:768px) 66vw, 100vw" />}
       </div>
-      <p className="mt-3 text-sm text-white/55">Renderings based on the real garments, not photographs. Padding is on the front only: the back is plain fabric.</p>
+      <p className="mt-3 max-w-3xl text-sm text-white/70"><strong className="text-white">Short sleeves or shorts?</strong> {WEAR_NOTE}</p>
+      <p className="mt-2 text-sm text-white/55">Renderings based on the real garments, not photographs. Padding is on the front only: the back is plain fabric.</p>
     </div>
   );
 }
