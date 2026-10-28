@@ -64,13 +64,14 @@ export async function toggleSaved(handle: string): Promise<{ saved: boolean; err
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { saved: false, signedOut: true };
-  const { data: existing } = await supabase.from('saved_items').select('id').eq('user_id', user.id).eq('product_handle', handle).maybeSingle();
-  if (existing) {
-    await supabase.from('saved_items').delete().eq('id', existing.id).eq('user_id', user.id);
+  if (typeof handle !== 'string' || handle.length < 1 || handle.length > 120) return { saved: false, error: 'Could not save this item.' };
+  // delete-then-insert, each a single statement, so a double click can't create a duplicate (unique key + ignoreDuplicates)
+  const { data: removed } = await supabase.from('saved_items').delete().eq('user_id', user.id).eq('product_handle', handle).select('id');
+  if (removed && removed.length) {
     revalidatePath('/account');
     return { saved: false };
   }
-  const { error } = await supabase.from('saved_items').insert({ user_id: user.id, product_handle: handle });
+  const { error } = await supabase.from('saved_items').upsert({ user_id: user.id, product_handle: handle }, { onConflict: 'user_id,product_handle', ignoreDuplicates: true });
   if (error) return { saved: false, error: 'Could not save this item.' };
   revalidatePath('/account');
   return { saved: true };

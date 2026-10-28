@@ -13,6 +13,7 @@ export function ContactForm() {
     e.preventDefault();
     const form = e.currentTarget;
     const f = new FormData(form);
+    if (String(f.get('website') ?? '') !== '') { form.reset(); setState('sent'); return; } // honeypot: bots fill the hidden field
     setState('sending');
     const { error } = await createClient().from('contact_messages').insert({
       name: String(f.get('name') ?? '').trim(),
@@ -26,6 +27,7 @@ export function ContactForm() {
   }
   return (
     <form onSubmit={onSubmit} className="mt-4 space-y-4">
+      <div aria-hidden className="absolute -left-[9999px] h-0 w-0 overflow-hidden"><label>Website<input name="website" tabIndex={-1} autoComplete="off" /></label></div>
       <label className="block text-sm font-semibold">Name<input name="name" required maxLength={120} autoComplete="name" className={field} /></label>
       <label className="block text-sm font-semibold">Email<input name="email" type="email" required maxLength={254} autoComplete="email" className={field} /></label>
       <label className="block text-sm font-semibold">Order number (optional)<input name="order_number" maxLength={40} className={field} /></label>
