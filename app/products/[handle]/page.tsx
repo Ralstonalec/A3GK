@@ -11,6 +11,9 @@ import { PurchasePanel } from '@/components/PurchasePanel';
 import { Fact, Tbc } from '@/components/Tbc';
 import { BASE_LAYER, FAQ, HANDLES, POLICIES, SIZE_GUIDE } from '@/lib/content';
 import { getProduct } from '@/lib/shopify';
+import { SaveButton } from '@/components/SaveButton';
+import { createClient } from '@/lib/supabase/server';
+import { supabaseConfigured } from '@/lib/supabase/env';
 
 export const generateStaticParams = () => Object.values(HANDLES).map((handle) => ({ handle }));
 export const dynamicParams = false;
@@ -25,6 +28,12 @@ const GALLERY_SLOTS = ['Back view', 'Side view', 'Worn on a person', 'Colour opt
 export default async function ProductPage({ params }: { params: { handle: string } }) {
   const product = await getProduct(params.handle);
   if (!product) notFound();
+  let savedAlready = false;
+  if (supabaseConfigured) {
+    const sb = createClient();
+    const { data: { user } } = await sb.auth.getUser();
+    if (user) savedAlready = Boolean((await sb.from('saved_items').select('id').eq('user_id', user.id).eq('product_handle', product.handle).maybeSingle()).data);
+  }
   const isBase = product.handle === HANDLES.base;
   const [socks, bandages] = isBase ? await Promise.all([getProduct(HANDLES.socks), getProduct(HANDLES.bandages)]) : [null, null];
 
@@ -68,6 +77,7 @@ export default async function ProductPage({ params }: { params: { handle: string
 
         <div className="md:sticky md:top-24 md:self-start">
           <PurchasePanel product={product} sizeGuide={isBase} />
+          {supabaseConfigured && <div className="mt-3"><SaveButton handle={product.handle} initialSaved={savedAlready} /></div>}
           {isBase && (
             <div className="mt-6 border-l-4 border-white/60 bg-white/[0.06] p-4 text-sm">
               <p className="font-bold">Before you buy</p>
