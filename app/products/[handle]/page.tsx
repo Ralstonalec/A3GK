@@ -4,14 +4,13 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { Accordion } from '@/components/Accordion';
 import { MacroGrid } from '@/components/MacroGrid';
-import { Viewer3D } from '@/components/Viewer3D';
+import { RenderFigure } from '@/components/RenderFigure';
 import { PhotoSlot } from '@/components/PhotoSlot';
 import { ProductCard } from '@/components/ProductCard';
 import { PurchasePanel } from '@/components/PurchasePanel';
 import { Fact, Tbc } from '@/components/Tbc';
 import { BASE_LAYER, FAQ, HANDLES, POLICIES, SIZE_GUIDE } from '@/lib/content';
 import { getProduct } from '@/lib/shopify';
-import { PHOTOS } from '@/lib/photos';
 
 export const generateStaticParams = () => Object.values(HANDLES).map((handle) => ({ handle }));
 export const dynamicParams = false;
@@ -59,11 +58,7 @@ export default async function ProductPage({ params }: { params: { handle: string
             </ul>
           ) : isBase ? (
             <div className="space-y-3">
-              <div className="glass flex items-center justify-center gap-4 rounded-3xl p-4">
-                <Image src={PHOTOS.top.src} alt={PHOTOS.top.alt} width={PHOTOS.top.w} height={PHOTOS.top.h} priority sizes="(min-width:768px) 28vw, 60vw" className="h-auto w-[62%]" />
-                <Image src={PHOTOS.legs.src} alt={PHOTOS.legs.alt} width={PHOTOS.legs.w} height={PHOTOS.legs.h} priority sizes="(min-width:768px) 14vw, 30vw" className="h-auto w-[30%]" />
-              </div>
-              <Viewer3D />
+              <div className="glass rounded-3xl p-4"><RenderFigure priority sizes="(min-width:768px) 55vw, 100vw" /></div>
               <MacroGrid />
               <ul className="grid grid-cols-2 gap-3">{GALLERY_SLOTS.map((s) => <li key={s}><PhotoSlot label={s} className="min-h-[160px]" /></li>)}</ul>
             </div>

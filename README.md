@@ -24,6 +24,6 @@ Nothing is invented. See `docs/PRE-LAUNCH-CHECKLIST.md`. `npm run check:tbc` fai
 
 ## 3D and photography
 
-- `components/three/` is a procedural 3D model of the garments (long-sleeve top + leggings, quilted hex pads) built to match the supplied photographs. It is a reconstruction, not a scan; its materials are tuned against the photos.
+- `components/three/` places a photoreal rendering (`public/photos/render-set.webp`, AI-generated from the real garment photos, always labelled "Rendering") on a WebGL stage with cursor tilt, particles, view zooms and a scroll tour of each padded area. It is not a scan; real close-up photographs sit beside it as proof. Swap in a supplier 3D model or studio photography when available.
 - The real photographs live in `public/photos/`, produced by `scripts/process-photos.py` from the supplied flat lays (`top.jpg`, `leggings.jpg`; needs numpy + Pillow). They are the static fallback (JS off, reduced motion, no WebGL), the close-up gallery and the social preview image.
 - The scene is lazy-loaded after idle and skipped for `prefers-reduced-motion` / Save-Data / no WebGL.

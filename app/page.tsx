@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { Accordion } from '@/components/Accordion';
 import { Hero } from '@/components/Hero';
@@ -11,7 +10,8 @@ import { StageHost } from '@/components/StageHost';
 import { Fact, Tbc } from '@/components/Tbc';
 import { BASE_LAYER, BRAND_INTRO, FAQ, HANDLES, POLICIES, SIZE_GUIDE } from '@/lib/content';
 import { getProduct } from '@/lib/shopify';
-import { PHOTOS } from '@/lib/photos';
+import { PaddingTour } from '@/components/PaddingTour';
+import { RenderFigure } from '@/components/RenderFigure';
 
 export default async function Home() {
   const [base, socks, bandages] = await Promise.all([getProduct(HANDLES.base), getProduct(HANDLES.socks), getProduct(HANDLES.bandages)]);
@@ -54,12 +54,8 @@ export default async function Home() {
             <div className="max-w-sm">
               <p className="eyebrow">Padding and construction</p>
               <h2 id="padding" className="h2 text-4xl md:text-6xl">Where it is padded</h2>
-              <p className="mt-4 text-white/75"><span className="md:hidden">Scroll to separate the padding.</span><span className="hidden md:inline">Scroll to lift each padded panel off the garment. Panels are labelled only where they exist.</span></p>
-              <ul className="mt-6 hidden space-y-2 text-sm md:block">
-                {BASE_LAYER.paddedAreas.map((p) => (
-                  <li key={p.id}><strong className="text-white">{p.label}.</strong> <span className="text-white/70">{p.description}</span></li>
-                ))}
-              </ul>
+              <p className="mt-4 text-white/75"><span className="md:hidden">Scroll to move across the padded areas.</span><span className="hidden md:inline">Scroll to move across each padded area. Areas are listed only where they exist on the garment.</span></p>
+              <PaddingTour />
               <p className="mt-5 hidden text-sm text-white/70 md:block"><Fact value={BASE_LAYER.paddingSpec} label="Padding material, thickness and how it is built in" /></p>
             </div>
           </div>
@@ -72,7 +68,7 @@ export default async function Home() {
         <section className="section !py-10" aria-labelledby="closeups">
           <h2 id="closeups" className="font-display text-3xl font-extrabold uppercase">Close-ups</h2>
           <div className="mt-5"><MacroGrid /></div>
-          <p className="mt-3 text-sm text-white/55">Photographs of the real garments, shown at native size. The 3D model above is built from them.</p>
+          <p className="mt-3 text-sm text-white/55">Photographs of the real garments, shown at native size. The rendering above is based on these garments.</p>
         </section>
 
         {/* 5 — Fit & sizing (garment drifts left) */}
@@ -114,10 +110,7 @@ export default async function Home() {
         {/* 7 — Purchase area */}
         <section id="buy" className="section" aria-label="Buy the padded base layer">
           <div className="grid items-center gap-10 md:grid-cols-2">
-            <div className="glass flex items-center justify-center gap-3 rounded-3xl p-4">
-              <Image src={PHOTOS.top.src} alt={PHOTOS.top.alt} width={PHOTOS.top.w} height={PHOTOS.top.h} sizes="(min-width:768px) 28vw, 60vw" className="h-auto w-[62%]" />
-              <Image src={PHOTOS.legs.src} alt={PHOTOS.legs.alt} width={PHOTOS.legs.w} height={PHOTOS.legs.h} sizes="(min-width:768px) 14vw, 30vw" className="h-auto w-[30%]" />
-            </div>
+            <div className="glass rounded-3xl p-4"><RenderFigure sizes="(min-width:768px) 45vw, 100vw" /></div>
             <div className="glass rounded-[2rem] p-6 md:p-10">{base && <PurchasePanel product={base} preorderNote={null} />}</div>
           </div>
         </section>

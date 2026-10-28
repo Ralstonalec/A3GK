@@ -1,7 +1,13 @@
-/** Real photographs of the garments, produced by scripts/process-photos.py from the supplied flat lays. */
-export const PHOTOS = {
-  top: { src: '/photos/top-cutout.webp', w: 1490, h: 1150, alt: 'The A3GK padded top laid flat: mock neck, long sleeves, a bib-shaped chest panel, two rib panels, and upper-arm and forearm panels' },
-  legs: { src: '/photos/leggings-cutout.webp', w: 707, h: 1509, alt: 'The A3GK padded leggings laid flat: printed waistband, joined hip and thigh panels, and a knee panel' },
+/**
+ * Imagery. RENDER is a photoreal rendering generated from photographs of the real garments (it is a rendering,
+ * not a photograph — it is always captioned as such). MACRO are real photographs produced by
+ * scripts/process-photos.py from the supplied flat lays.
+ */
+export const RENDER = {
+  src: '/photos/render-set.webp',
+  w: 2000,
+  h: 1116,
+  alt: 'Rendering of the A3GK padded base layer: a black mock-neck long-sleeve top with a bib chest panel, two rib panels and long arm panels, beside black leggings with a printed waistband, hip and thigh panels and knee panels',
 };
 
 export const MACRO = [

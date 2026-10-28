@@ -1,7 +1,6 @@
 'use client';
 
-import Image from 'next/image';
-import { PHOTOS } from '@/lib/photos';
+import { RENDER } from '@/lib/photos';
 import { useEffect, useState } from 'react';
 import { stage, type View } from '@/lib/stage';
 
@@ -34,8 +33,11 @@ export function HeroViews() {
             className={`glass group relative flex w-[104px] flex-col items-center gap-2 rounded-3xl p-2 pb-3 text-center transition hover:bg-white/10 md:w-[118px] ${active === v.id ? '!border-accent' : ''}`}
           >
             <span className="relative flex h-24 w-full items-center justify-center gap-1 overflow-hidden rounded-2xl bg-black/30 p-1.5">
-              {v.id !== 'legs' && <Image src={PHOTOS.top.src} alt="" width={PHOTOS.top.w} height={PHOTOS.top.h} sizes="120px" className="h-auto max-h-full w-auto max-w-[70%] object-contain transition duration-500 group-hover:scale-110" />}
-              {v.id !== 'top' && <Image src={PHOTOS.legs.src} alt="" width={PHOTOS.legs.w} height={PHOTOS.legs.h} sizes="60px" className="h-full w-auto object-contain transition duration-500 group-hover:scale-110" />}
+              <span
+                aria-hidden
+                className="h-full w-full rounded-xl bg-no-repeat transition duration-500 group-hover:scale-110"
+                style={{ backgroundImage: `url(${RENDER.src})`, backgroundSize: v.id === 'set' ? '100% auto' : v.id === 'top' ? '230% auto' : '420% auto', backgroundPosition: v.id === 'set' ? '50% 50%' : v.id === 'top' ? '22% 38%' : '94% 40%' }}
+              />
             </span>
             <span className="text-xs font-bold">{v.label}</span>
           </button>

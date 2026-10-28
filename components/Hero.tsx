@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { HANDLES } from '@/lib/content';
-import { PHOTOS } from '@/lib/photos';
+import { RENDER } from '@/lib/photos';
 import { HeroViews } from './HeroViews';
 
 export function Hero() {
@@ -9,8 +9,7 @@ export function Hero() {
     <section data-stage="hero" className="relative flex min-h-[100svh] flex-col justify-between px-4 pb-10 pt-28 md:px-[4%]">
       {/* static fallback: the real photographs (JS off, reduced motion, no WebGL) */}
       <div className="hero-poster pointer-events-none absolute inset-0 flex items-end justify-center gap-4 pb-4 md:items-center md:justify-end md:pb-0 md:pr-[8%]">
-        <Image src={PHOTOS.top.src} alt={PHOTOS.top.alt} width={PHOTOS.top.w} height={PHOTOS.top.h} priority sizes="(min-width:768px) 36vw, 50vw" className="h-auto w-[48vw] max-w-[560px] self-center" />
-        <Image src={PHOTOS.legs.src} alt={PHOTOS.legs.alt} width={PHOTOS.legs.w} height={PHOTOS.legs.h} priority sizes="(min-width:768px) 16vw, 24vw" className="h-auto w-[24vw] max-w-[260px] self-center" />
+        <Image src={RENDER.src} alt={RENDER.alt} width={RENDER.w} height={RENDER.h} priority sizes="(min-width:768px) 60vw, 100vw" className="h-auto w-full max-w-[900px] self-center" />
       </div>
 
       <div className="relative z-10 grid flex-1 items-stretch gap-8 md:grid-cols-[1fr_auto]">
@@ -47,8 +46,8 @@ export function Hero() {
 
       <p className="relative z-10 mt-6 flex flex-wrap items-center gap-x-4 text-xs text-white/55">
         <span className="stage-only inline-flex items-center gap-2"><span className="inline-block h-6 w-px animate-pulse bg-white/40" /> Scroll to look closer</span>
-        <span className="stage-only">3D model built from photographs of the product. Real photographs are further down the page.</span>
-        <span className="stage-off">Photographs of the real garments.</span>
+        <span className="stage-only">Rendering based on the real garments. Real photographs are further down the page.</span>
+        <span className="stage-off">Rendering based on the real garments.</span>
       </p>
     </section>
   );

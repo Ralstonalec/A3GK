@@ -3,18 +3,14 @@
  * so pointer and scroll updates cost no re-renders.
  */
 export type View = 'set' | 'top' | 'legs';
-export type Mode = 'flat' | 'worn';
 
 export const stage = {
   mouse: { x: 0, y: 0 }, // -0.5..0.5
   ndc: { x: 0, y: 0 }, // -1..1, y up
   view: 'set' as View,
-  mode: 'worn' as Mode,
-  fx: { spin: 0, blur: 0, implode: 0 },
-  reshuffle: 0,
-  switching: false,
+  fx: { blur: 0 },
+  padZone: -1,
   live: false,
   el: null as HTMLElement | null,
   requestView: null as null | ((v: View) => void),
-  requestMode: null as null | ((m: Mode) => void),
 };

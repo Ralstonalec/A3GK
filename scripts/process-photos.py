@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-Turn the supplied flat-lay photographs into site assets (cutouts + pad close-ups).
+Turn the supplied flat-lay photographs into the pad close-ups used on the site.
 
   python3 scripts/process-photos.py <dir containing top.jpg and leggings.jpg> [out_dir]
 
 - Cuts each garment out of its background (dark, low-saturation pixels), keeps the garment's own
   detail untouched, fades edges where the frame crops the garment.
 - Neutralises the warm room light using the white table as the reference.
-- Writes RGBA cutouts and RGB macro crops of each padded panel. No pixels are painted or invented.
+- Writes RGB macro crops of each padded panel. No pixels are painted or invented.
 Needs only numpy + Pillow. Re-run with better photographs when they exist; keep the same file names.
 """
 import sys
@@ -91,7 +91,6 @@ def crop(img, box, name, max_w=1100):
 top = white_balance(Image.open(src / 'top.jpg'))
 al = garment_mask(top, seed=(740, 800), rows=(330, 1555), polys=[[(0, 1500), (230, 1500), (230, 2000), (0, 2000)], [(1330, 1500), (1500, 1500), (1500, 2000), (1330, 2000)]])
 al = edge_fade(al, left=140, right=140)
-save_cutout(top, al, 'top-cutout.webp')
 crop(top, (520, 600, 970, 960), 'pad-chest.webp')
 crop(top, (240, 880, 740, 1190), 'pad-ribs.webp')
 crop(top, (0, 780, 290, 1240), 'pad-forearm.webp', 700)
@@ -103,27 +102,7 @@ al = garment_mask(leg, seed=(714, 640), rows=(280, 985), cols=(180, 1745), close
 rot = Image.fromarray((al * 255).astype(np.uint8))
 leg_rot = leg.rotate(-90, expand=True)
 al_rot = edge_fade(np.asarray(rot.rotate(-90, expand=True)).astype(np.float32) / 255, bottom=90)
-save_cutout(leg_rot, al_rot, 'leggings-cutout.webp')
 crop(leg, (350, 420, 960, 930), 'pad-hip-thigh.webp')
 crop(leg, (1170, 520, 1760, 950), 'pad-knee.webp')
 crop(leg, (240, 360, 390, 950), 'waistband.webp', 400)
 
-
-# ---------- social preview: real photographs on the stage colour ----------
-W, H = 1200, 630
-bg = Image.new('RGB', (W, H))
-px = bg.load()
-for yy in range(H):
-    for xx in range(W):
-        d = (((xx - W * 0.5) / (W * 0.7)) ** 2 + ((yy - H * 0.46) / (H * 0.75)) ** 2) ** 0.5
-        t = min(1, d)
-        px[xx, yy] = (int(89 * (1 - t) + 7 * t), int(97 * (1 - t) + 8 * t), int(107 * (1 - t) + 10 * t))
-t_im = Image.open(out / 'top-cutout.webp').convert('RGBA')
-l_im = Image.open(out / 'leggings-cutout.webp').convert('RGBA')
-t_im = t_im.resize((int(t_im.width * 470 / t_im.height), 470), Image.LANCZOS)
-l_im = l_im.resize((int(l_im.width * 560 / l_im.height), 560), Image.LANCZOS)
-bg = bg.convert('RGBA')
-bg.alpha_composite(t_im, (70, 80))
-bg.alpha_composite(l_im, (820, 35))
-bg.convert('RGB').save(out.parent / 'og.jpg', quality=88)
-print('og.jpg')
