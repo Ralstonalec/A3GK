@@ -5,7 +5,7 @@ import { Html } from '@react-three/drei';
 import { useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 import type { View } from '@/lib/stage';
-import { buildPadMesh, buildTube, curveSurface, ellipseSurface, lineSamples, makeKnitTexture, ringSamples, seamGeometry, type PadMesh, type PadSpec } from './geometry';
+import { buildPadMesh, buildTube, curveSurface, ellipseSurface, lineSamples, makeKnitTexture, makeRibTexture, ringSamples, seamGeometry, type PadMesh, type PadSpec } from './geometry';
 
 /**
  * Procedural model of the A3GK padded set, built from photographs of the real garments:
@@ -25,17 +25,20 @@ const TOP_Y = 0.12;
 
 const BIB: [number, number][] = [[-0.095, 0.085], [-0.05, 0.098], [0, 0.092], [0.05, 0.098], [0.095, 0.085], [0.1, 0.05], [0.07, 0.0], [0.055, -0.04], [0.04, -0.085], [0, -0.1], [-0.04, -0.085], [-0.055, -0.04], [-0.07, 0.0], [-0.1, 0.05]];
 
+const BEAN: [number, number][] = ([[-0.105, 0.0], [-0.09, 0.055], [-0.045, 0.078], [0.0, 0.07], [0.045, 0.078], [0.09, 0.06], [0.118, 0.012], [0.112, -0.045], [0.07, -0.075], [0.0, -0.068], [-0.05, -0.078], [-0.095, -0.05]] as [number, number][]).map(([x, y]) => [x * 0.9, y * 0.9]);
+const BEAN_L: [number, number][] = BEAN.map(([x, y]) => [-x, y]);
+
 const TOP_PADS: PadSpec[] = [
   { id: 'chest', zone: 'chest', label: 'Chest', surf: 'torso', u0: 0, y0: 0.46, shape: { kind: 'poly', pts: BIB } },
-  { id: 'ribs-r', zone: 'ribs', label: 'Ribs', surf: 'torso', u0: 0.135, y0: 0.31, shape: { kind: 'ellipse', a: 0.115, b: 0.08, n: 2.3 }, rot: 0.1 },
-  { id: 'ribs-l', zone: 'ribs', label: 'Ribs', surf: 'torso', u0: 0.865, y0: 0.31, shape: { kind: 'ellipse', a: 0.115, b: 0.08, n: 2.3 }, rot: -0.1 },
+  { id: 'ribs-r', zone: 'ribs', label: 'Ribs', surf: 'torso', u0: 0.15, y0: 0.285, shape: { kind: 'poly', pts: BEAN }, rot: 0.06 },
+  { id: 'ribs-l', zone: 'ribs', label: 'Ribs', surf: 'torso', u0: 0.85, y0: 0.285, shape: { kind: 'poly', pts: BEAN_L }, rot: -0.06 },
   { id: 'upper-arm', zone: 'upper-arms', label: 'Upper arm', surf: 'sleeve', u0: 0.08, v0: 0.3, shape: { kind: 'ellipse', a: 0.052, b: 0.105, n: 3.2 }, mirror: true },
   { id: 'elbow', zone: 'elbows', label: 'Elbow', surf: 'sleeve', u0: 0.03, v0: 0.66, shape: { kind: 'ellipse', a: 0.054, b: 0.12, n: 3 }, mirror: true },
 ];
 const LEG_PADS: PadSpec[] = [
-  { id: 'hip-r', zone: 'hips', label: 'Hip', surf: 'pelvis', u0: 0.215, y0: -0.115, shape: { kind: 'ellipse', a: 0.065, b: 0.085, n: 2.4 }, rot: 0.2 },
-  { id: 'hip-l', zone: 'hips', label: 'Hip', surf: 'pelvis', u0: 0.785, y0: -0.115, shape: { kind: 'ellipse', a: 0.065, b: 0.085, n: 2.4 }, rot: -0.2 },
-  { id: 'thigh', zone: 'thighs', label: 'Thigh', surf: 'leg', u0: 0.12, v0: 0.11, shape: { kind: 'ellipse', a: 0.075, b: 0.105, n: 2.5 }, mirror: true },
+  { id: 'hip-r', zone: 'hips', label: 'Hip', surf: 'pelvis', u0: 0.2, y0: -0.115, shape: { kind: 'ellipse', a: 0.065, b: 0.085, n: 2.4 }, rot: 0.2 },
+  { id: 'hip-l', zone: 'hips', label: 'Hip', surf: 'pelvis', u0: 0.8, y0: -0.115, shape: { kind: 'ellipse', a: 0.065, b: 0.085, n: 2.4 }, rot: -0.2 },
+  { id: 'thigh', zone: 'thighs', label: 'Thigh', surf: 'leg', u0: 0.14, v0: 0.12, shape: { kind: 'ellipse', a: 0.082, b: 0.11, n: 2.5 }, mirror: true },
   { id: 'knee', zone: 'knees', label: 'Knee', surf: 'leg', u0: 0.25, v0: 0.5, shape: { kind: 'ellipse', a: 0.07, b: 0.095, n: 2.5 }, mirror: true },
 ];
 
@@ -62,11 +65,11 @@ function waistTexture() {
 
 function buildModel() {
   const t0 = performance.now();
-  const torso = ellipseSurface([V(0.2, 0, 0.108), V(0.195, 0.12, 0.104), V(0.185, 0.26, 0.1), V(0.2, 0.42, 0.108), V(0.205, 0.52, 0.108), V(0.16, 0.58, 0.095), V(0.085, 0.63, 0.07), V(0.072, 0.645, 0.064), V(0.07, 0.68, 0.062)]);
+  const torso = ellipseSurface([V(0.2, 0, 0.108), V(0.195, 0.12, 0.104), V(0.185, 0.26, 0.1), V(0.2, 0.42, 0.108), V(0.205, 0.52, 0.108), V(0.2, 0.572, 0.1), V(0.15, 0.615, 0.085), V(0.085, 0.64, 0.066), V(0.072, 0.655, 0.064), V(0.07, 0.69, 0.062)]);
   const band = ellipseSurface([V(0.178, 0, 0.112), V(0.178, -0.055, 0.112)]);
-  const pelvis = ellipseSurface([V(0.176, -0.05, 0.11), V(0.185, -0.13, 0.118), V(0.15, -0.2, 0.1), V(0.1, -0.24, 0.09)]);
-  const sleeve = curveSurface([V(0.15, 0.545, 0), V(0.27, 0.47, 0.005), V(0.36, 0.31, 0.03), V(0.415, 0.12, 0.05), V(0.435, 0.02, 0.045)], [[0, 0.075], [0.3, 0.066], [0.55, 0.056], [1, 0.04]], V(1, 0, 0));
-  const leg = curveSurface([V(0.085, -0.2, 0), V(0.09, -0.5, 0.012), V(0.095, -0.9, 0), V(0.097, -1.04, 0)], [[0, 0.105], [0.3, 0.088], [0.5, 0.07], [0.62, 0.066], [1, 0.05]], V(1, 0, 0));
+  const pelvis = ellipseSurface([V(0.176, -0.05, 0.11), V(0.185, -0.13, 0.118), V(0.15, -0.2, 0.1), V(0.11, -0.26, 0.092), V(0.05, -0.29, 0.082)]);
+  const sleeve = curveSurface([V(0.13, 0.565, 0), V(0.26, 0.5, 0.004), V(0.36, 0.31, 0.03), V(0.415, 0.12, 0.05), V(0.435, 0.02, 0.045)], [[0, 0.082], [0.3, 0.068], [0.55, 0.056], [1, 0.04]], V(1, 0, 0));
+  const leg = curveSurface([V(0.08, -0.13, 0), V(0.09, -0.5, 0.012), V(0.095, -0.9, 0), V(0.097, -1.04, 0)], [[0, 0.092], [0.2, 0.09], [0.4, 0.078], [0.5, 0.07], [0.62, 0.066], [1, 0.05]], V(1, 0, 0));
   const surfs = { torso, sleeve, pelvis, leg };
   const mk = (specs: PadSpec[]): PadMesh[] =>
     specs.flatMap((s) => {
@@ -92,10 +95,12 @@ function buildModel() {
     seam(legSeams, leg, lineSamples(0.0, 0.02, 1), false, m);
   }
 
-  const w = { wrinkle: 0.0012 };
+  const wrinkle = 0.0022;
+  const w = { wrinkle };
+  const collarNotch = (u: number, v: number) => { const du = Math.min(u, 1 - u); const t = Math.min(1, Math.max(0, (v - 0.9) / 0.1)); return -0.03 * Math.exp(-Math.pow(du / 0.05, 2)) * t * t * (3 - 2 * t); };
   const out = {
     geo: {
-      torso: buildTube(torso, 80, 72, 110, false, w),
+      torso: buildTube(torso, 96, 72, 110, false, { wrinkle, yPatch: collarNotch }),
       sleeveR: buildTube(sleeve, 56, 32, 110, false, w),
       sleeveL: buildTube(sleeve, 56, 32, 110, true, w),
       band: buildTube(band, 4, 96, 110, false, { unitUV: true }),
@@ -119,12 +124,11 @@ export function Garment({ ctl }: { ctl: GarmentCtl }) {
   const model = useMemo(buildModel, []);
   const mats = useMemo(() => {
     const knit = makeKnitTexture();
-    const knitPad = knit.clone();
-    knitPad.needsUpdate = true;
-    const fabric = new THREE.MeshPhysicalMaterial({ color: '#0d0e11', roughness: 0.88, sheen: 1, sheenColor: new THREE.Color('#566070'), sheenRoughness: 0.55, bumpMap: knit, bumpScale: 0.9, side: THREE.DoubleSide });
-    const pad = new THREE.MeshPhysicalMaterial({ color: '#16181c', roughness: 0.7, sheen: 0.8, sheenColor: new THREE.Color('#6a7484'), sheenRoughness: 0.45, bumpMap: knitPad, bumpScale: 1.4, side: THREE.DoubleSide });
-    const band = new THREE.MeshStandardMaterial({ map: waistTexture(), roughness: 0.82, side: THREE.DoubleSide });
-    const seam = new THREE.MeshStandardMaterial({ color: '#23262b', roughness: 0.9 });
+    const rib = makeRibTexture();
+    const fabric = new THREE.MeshPhysicalMaterial({ color: '#0e0f13', roughness: 0.6, sheen: 1, sheenColor: new THREE.Color('#8a94a8'), sheenRoughness: 0.38, bumpMap: knit, bumpScale: 0.12, side: THREE.DoubleSide });
+    const pad = new THREE.MeshPhysicalMaterial({ color: '#1d1e24', roughness: 0.52, sheen: 0.7, sheenColor: new THREE.Color('#8a94a8'), sheenRoughness: 0.4, vertexColors: true, bumpMap: rib, bumpScale: 0.35, side: THREE.DoubleSide });
+    const band = new THREE.MeshStandardMaterial({ map: waistTexture(), roughness: 0.7, side: THREE.DoubleSide });
+    const seam = new THREE.MeshStandardMaterial({ color: '#2a2c33', roughness: 0.7 });
     return { fabric, pad, band, seam };
   }, []);
 

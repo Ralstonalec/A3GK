@@ -22,6 +22,8 @@ Cart and checkout use the Storefront Cart API via `/api/cart`; checkout hands of
 Unconfirmed facts live in `lib/content.ts` as `null` and render as amber **To confirm** markers (`[data-tbc]`).
 Nothing is invented. See `docs/PRE-LAUNCH-CHECKLIST.md`. `npm run check:tbc` fails while any marker remains in the built pages.
 
-## 3D
+## 3D and photography
 
-Scenes are lazy-loaded (`components/LazyScene.tsx`) after idle + in-view, skipped for `prefers-reduced-motion` / Save-Data, and always sit over a static poster (`public/images/base-layer-hero.webp`). The hero is a material study, not a garment, until real product models/photos exist.
+- `components/three/` is a procedural 3D model of the garments (long-sleeve top + leggings, quilted hex pads) built to match the supplied photographs. It is a reconstruction, not a scan; its materials are tuned against the photos.
+- The real photographs live in `public/photos/`, produced by `scripts/process-photos.py` from the supplied flat lays (`top.jpg`, `leggings.jpg`; needs numpy + Pillow). They are the static fallback (JS off, reduced motion, no WebGL), the close-up gallery and the social preview image.
+- The scene is lazy-loaded after idle and skipped for `prefers-reduced-motion` / Save-Data / no WebGL.

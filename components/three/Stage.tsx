@@ -2,10 +2,11 @@
 
 import { Canvas, useFrame } from '@react-three/fiber';
 import { AdaptiveDpr, Environment, Lightformer } from '@react-three/drei';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { stage } from '@/lib/stage';
-import { Bubbles, FoamCells } from './Ambient';
+import { Bubbles } from './Ambient';
+import { FlatGarment } from './FlatGarment';
 import { BASE_SCALE, Garment, type GarmentCtl } from './Garment';
 import { installActions } from './actions';
 
@@ -33,9 +34,14 @@ function Lights() {
 
 function Scene() {
   const root = useRef<THREE.Group>(null);
+  const [mode, setMode] = useState(stage.mode);
+  useEffect(() => {
+    const f = () => setMode(stage.mode);
+    window.addEventListener('stage-mode', f);
+    return () => window.removeEventListener('stage-mode', f);
+  }, []);
   const ctl = useRef<GarmentCtl>({ explode: 0, view: 'set' });
   const pose = useRef({ x: 0, y: 0, s: 1, ex: 0 });
-  const dim = useRef(1);
   const cur = useRef({ x: 0, y: 0 });
   const sections = useRef<HTMLElement[]>([]);
   const announced = useRef(false);
@@ -72,7 +78,6 @@ function Scene() {
     p.y += (ty - p.y) * k;
     p.s += (ts - p.s) * k;
     p.ex += (tex - p.ex) * (1 - Math.exp(-dt * 5));
-    dim.current += ((name === 'hero' ? 1 : 0.45) - dim.current) * k;
 
     cur.current.x += (stage.mouse.x - cur.current.x) * 0.05;
     cur.current.y += (stage.mouse.y - cur.current.y) * 0.05;
@@ -82,7 +87,7 @@ function Scene() {
     g.visible = p.s > 0.01;
     g.position.set(p.x * (vp.width / 2), p.y * (vp.height / 2) + Math.sin(t * 0.9) * 0.05, 0);
     g.scale.setScalar(Math.max(0.0001, p.s));
-    g.rotation.y = cur.current.x * 0.9 + (name === 'hero' ? 0 : t * 0.22) + stage.fx.spin;
+    g.rotation.y = cur.current.x * (stage.mode === 'flat' ? 0.5 : 0.9) + (name === 'hero' ? 0 : stage.mode === 'flat' ? Math.sin(t * 0.3) * 0.25 : t * 0.22) + stage.fx.spin;
     g.rotation.x = cur.current.y * 0.2;
     ctl.current.explode = p.ex;
     ctl.current.view = stage.view;
@@ -92,9 +97,8 @@ function Scene() {
     <>
       <Lights />
       <group ref={root}>
-        <Garment ctl={ctl.current} />
+        {mode === 'flat' ? <FlatGarment ctl={ctl.current} /> : <Garment ctl={ctl.current} />}
       </group>
-      <FoamCells dim={dim} />
       <Bubbles />
       <AdaptiveDpr pixelated />
     </>
@@ -104,6 +108,7 @@ function Scene() {
 export default function Stage() {
   useEffect(() => {
     installActions();
+    if (process.env.NODE_ENV !== 'production') (window as unknown as { __stage: unknown }).__stage = stage;
     const onMove = (e: PointerEvent) => {
       stage.mouse.x = e.clientX / window.innerWidth - 0.5;
       stage.mouse.y = e.clientY / window.innerHeight - 0.5;

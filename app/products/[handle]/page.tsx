@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { Accordion } from '@/components/Accordion';
+import { MacroGrid } from '@/components/MacroGrid';
 import { Viewer3D } from '@/components/Viewer3D';
 import { PhotoSlot } from '@/components/PhotoSlot';
 import { ProductCard } from '@/components/ProductCard';
@@ -10,6 +11,7 @@ import { PurchasePanel } from '@/components/PurchasePanel';
 import { Fact, Tbc } from '@/components/Tbc';
 import { BASE_LAYER, FAQ, HANDLES, POLICIES, SIZE_GUIDE } from '@/lib/content';
 import { getProduct } from '@/lib/shopify';
+import { PHOTOS } from '@/lib/photos';
 
 export const generateStaticParams = () => Object.values(HANDLES).map((handle) => ({ handle }));
 export const dynamicParams = false;
@@ -19,7 +21,7 @@ export async function generateMetadata({ params }: { params: { handle: string } 
   return p ? { title: p.title } : {};
 }
 
-const GALLERY_SLOTS = ['Flat lay (supplied)', '3D viewer', 'Back view', 'Side view', 'Padding close-ups', 'Fabric and seam details', 'Worn on a person', 'Colour options', 'Short product video'];
+const GALLERY_SLOTS = ['Back view', 'Side view', 'Worn on a person', 'Colour options', 'Short product video'];
 
 export default async function ProductPage({ params }: { params: { handle: string } }) {
   const product = await getProduct(params.handle);
@@ -56,7 +58,15 @@ export default async function ProductPage({ params }: { params: { handle: string
               ))}
             </ul>
           ) : isBase ? (
-            <ul className="grid grid-cols-2 gap-3">{GALLERY_SLOTS.map((s, i) => <li key={s} className={i <= 1 ? 'col-span-2' : ''}>{i === 1 ? <Viewer3D /> : i === 0 ? <Image src="/images/base-layer-hero.webp" alt="A3GK padded base layer top and leggings laid flat" width={1125} height={2000} priority sizes="(min-width:768px) 50vw, 100vw" className="mx-auto max-h-[720px] w-auto" /> : <PhotoSlot label={s} className="min-h-[180px]" />}</li>)}</ul>
+            <div className="space-y-3">
+              <div className="glass flex items-center justify-center gap-4 rounded-3xl p-4">
+                <Image src={PHOTOS.top.src} alt={PHOTOS.top.alt} width={PHOTOS.top.w} height={PHOTOS.top.h} priority sizes="(min-width:768px) 28vw, 60vw" className="h-auto w-[62%]" />
+                <Image src={PHOTOS.legs.src} alt={PHOTOS.legs.alt} width={PHOTOS.legs.w} height={PHOTOS.legs.h} priority sizes="(min-width:768px) 14vw, 30vw" className="h-auto w-[30%]" />
+              </div>
+              <Viewer3D />
+              <MacroGrid />
+              <ul className="grid grid-cols-2 gap-3">{GALLERY_SLOTS.map((s) => <li key={s}><PhotoSlot label={s} className="min-h-[160px]" /></li>)}</ul>
+            </div>
           ) : <PhotoSlot label="Product photographs" className="min-h-[360px]" />}
           {isBase && <p className="mt-3 text-sm text-white/55">Outer kit shown in photos is not included unless stated under “What you receive”.</p>}
         </div>

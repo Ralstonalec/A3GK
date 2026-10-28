@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Accordion } from '@/components/Accordion';
 import { Hero } from '@/components/Hero';
+import { MacroGrid } from '@/components/MacroGrid';
 import { PhotoSlot } from '@/components/PhotoSlot';
 import { ProductCard } from '@/components/ProductCard';
 import { PurchasePanel } from '@/components/PurchasePanel';
@@ -10,6 +11,7 @@ import { StageHost } from '@/components/StageHost';
 import { Fact, Tbc } from '@/components/Tbc';
 import { BASE_LAYER, BRAND_INTRO, FAQ, HANDLES, POLICIES, SIZE_GUIDE } from '@/lib/content';
 import { getProduct } from '@/lib/shopify';
+import { PHOTOS } from '@/lib/photos';
 
 export default async function Home() {
   const [base, socks, bandages] = await Promise.all([getProduct(HANDLES.base), getProduct(HANDLES.socks), getProduct(HANDLES.bandages)]);
@@ -58,15 +60,19 @@ export default async function Home() {
                   <li key={p.id}><strong className="text-white">{p.label}.</strong> <span className="text-white/70">{p.description}</span></li>
                 ))}
               </ul>
-              <p className="mt-5 hidden text-sm md:block text-white/70"><Fact value={BASE_LAYER.paddingSpec} label="Padding material, thickness and how it is built in" /></p>
+              <p className="mt-5 hidden text-sm text-white/70 md:block"><Fact value={BASE_LAYER.paddingSpec} label="Padding material, thickness and how it is built in" /></p>
             </div>
           </div>
         </section>
-        {/* readable copy of the same information for small screens and assistive tech */}
         <section className="section !py-10 md:hidden" aria-label="Padded areas">
           <ul className="glass space-y-2 rounded-3xl p-5 text-sm">
             {BASE_LAYER.paddedAreas.map((p) => <li key={p.id}><strong>{p.label}.</strong> <span className="text-white/70">{p.description}</span></li>)}
           </ul>
+        </section>
+        <section className="section !py-10" aria-labelledby="closeups">
+          <h2 id="closeups" className="font-display text-3xl font-extrabold uppercase">Close-ups</h2>
+          <div className="mt-5"><MacroGrid /></div>
+          <p className="mt-3 text-sm text-white/55">Photographs of the real garments, shown at native size. The 3D model above is built from them.</p>
         </section>
 
         {/* 5 — Fit & sizing (garment drifts left) */}
@@ -108,7 +114,10 @@ export default async function Home() {
         {/* 7 — Purchase area */}
         <section id="buy" className="section" aria-label="Buy the padded base layer">
           <div className="grid items-center gap-10 md:grid-cols-2">
-            <Image src="/images/base-layer-hero.webp" alt="A3GK padded base layer top and leggings laid flat" width={1125} height={2000} sizes="(min-width:768px) 40vw, 100vw" className="w-full max-w-sm justify-self-center rounded-3xl" />
+            <div className="glass flex items-center justify-center gap-3 rounded-3xl p-4">
+              <Image src={PHOTOS.top.src} alt={PHOTOS.top.alt} width={PHOTOS.top.w} height={PHOTOS.top.h} sizes="(min-width:768px) 28vw, 60vw" className="h-auto w-[62%]" />
+              <Image src={PHOTOS.legs.src} alt={PHOTOS.legs.alt} width={PHOTOS.legs.w} height={PHOTOS.legs.h} sizes="(min-width:768px) 14vw, 30vw" className="h-auto w-[30%]" />
+            </div>
             <div className="glass rounded-[2rem] p-6 md:p-10">{base && <PurchasePanel product={base} preorderNote={null} />}</div>
           </div>
         </section>

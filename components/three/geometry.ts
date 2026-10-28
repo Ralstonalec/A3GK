@@ -7,6 +7,8 @@ export interface Surface {
   circumference(v: number): number;
   length: number;
   vAtY?: (y: number) => number;
+  /** Explicit surface normal (flat surfaces); otherwise derived radially from the axis. */
+  normalAt?: (u: number, v: number, out: THREE.Vector3) => THREE.Vector3;
 }
 
 function measure(s: Surface) {
@@ -103,13 +105,14 @@ export function surfaceFrame(s: Surface, u: number, v: number) {
   const P = s.point(u, v);
   const e = 0.002;
   const V = s.point(u, Math.min(1, v + e)).sub(s.point(u, Math.max(0, v - e))).normalize();
-  const out = P.clone().sub(s.axis(v));
-  const N = out.addScaledVector(V, -out.dot(V)).normalize();
+  let N: THREE.Vector3;
+  if (s.normalAt) N = s.normalAt(u, v, new THREE.Vector3());
+  else { const out = P.clone().sub(s.axis(v)); N = out.addScaledVector(V, -out.dot(V)).normalize(); }
   const X = new THREE.Vector3().crossVectors(V, N);
   return { P, X, Y: V, Z: N };
 }
 
-export function buildTube(s: Surface, vSeg: number, uSeg: number, stitchesPerM = 110, mirrorX = false, opts: { unitUV?: boolean; wrinkle?: number } = {}) {
+export function buildTube(s: Surface, vSeg: number, uSeg: number, stitchesPerM = 110, mirrorX = false, opts: { unitUV?: boolean; wrinkle?: number; yPatch?: (u: number, v: number) => number } = {}) {
   const pos: number[] = [];
   const uv: number[] = [];
   const p = new THREE.Vector3();
@@ -120,10 +123,12 @@ export function buildTube(s: Surface, vSeg: number, uSeg: number, stitchesPerM =
       const u = i / uSeg;
       s.point(u, v, p);
       if (opts.wrinkle) {
-        const w = opts.wrinkle * (Math.sin(u * 37 + v * 11) * 0.5 + Math.sin(u * 91 - v * 23 + 1.3) * 0.3 + Math.sin(v * 47 + u * 5) * 0.2);
+        const fold = 1 + 2.2 * Math.exp(-v * 9);
+        const w = opts.wrinkle * fold * (Math.sin(u * 23 + v * 9 + Math.sin(v * 6) * 2) * 0.5 + Math.sin(u * 61 - v * 19 + 1.3) * 0.3 + Math.sin(v * 41 + u * 5) * 0.2);
         const ax = s.axis(v);
         p.addScaledVector(p.clone().sub(ax).normalize(), w);
       }
+      if (opts.yPatch) p.y += opts.yPatch(u, v);
       pos.push(mirrorX ? -p.x : p.x, p.y, p.z);
       if (opts.unitUV) uv.push(u, v); else uv.push(u * circ * stitchesPerM, v * s.length * stitchesPerM);
     }
@@ -229,40 +234,59 @@ function shapeSD(shape: Shape): { sd: SD; hx: number; hy: number } {
 const R_HEX = 0.0145; // hex circumradius
 const smooth01 = (a: number, b: number, v: number) => { const t = Math.min(1, Math.max(0, (v - a) / (b - a))); return t * t * (3 - 2 * t); };
 
-/** Distance (m) from the point to the nearest hex edge, positive inside. Pointy-top lattice. */
-function hexInset(x: number, y: number) {
-  const R = R_HEX;
-  const q = ((Math.sqrt(3) / 3) * x - y / 3) / R;
-  const r = ((2 / 3) * y) / R;
-  const cx = q;
-  const cz = r;
-  const cy = -cx - cz;
-  let rx = Math.round(cx);
-  let ry = Math.round(cy);
-  let rz = Math.round(cz);
-  const dx = Math.abs(rx - cx);
-  const dy = Math.abs(ry - cy);
-  const dz = Math.abs(rz - cz);
-  if (dx > dy && dx > dz) rx = -ry - rz; else if (dy > dz) ry = -rx - rz; else rz = -rx - ry;
-  const px = x - R * Math.sqrt(3) * (rx + rz / 2);
-  const py = y - R * 1.5 * rz;
-  const d = Math.max(Math.abs(px), Math.abs(px * 0.5 + py * 0.8660254), Math.abs(-px * 0.5 + py * 0.8660254));
-  return (R * Math.sqrt(3)) / 2 - d;
+function hash(i: number, j: number, k: number) {
+  let h = (Math.imul(i, 374761393) + Math.imul(j, 668265263) + Math.imul(k, 2147483647)) | 0;
+  h = Math.imul(h ^ (h >>> 13), 1274126177);
+  return ((h ^ (h >>> 16)) >>> 0) / 4294967296;
 }
 
-const LIP = 0.0028; // stitched border band height
-const CELL = 0.0052; // cell height above the band
-const BAND = 0.0075; // border band width
-const GROOVE = 0.0026;
+/** Distance (m) to the nearest cell boundary of a jittered hex tessellation (irregular, like hand-moulded foam). */
+function cellEdge(x: number, y: number) {
+  const R = R_HEX;
+  const dx = R * Math.sqrt(3);
+  const dy = R * 1.5;
+  const j0 = Math.round(y / dy);
+  const i0 = Math.round(x / dx - (j0 & 1) * 0.5);
+  let d1 = 1e9;
+  let d2 = 1e9;
+  let s1x = 0;
+  let s1y = 0;
+  let s2x = 0;
+  let s2y = 0;
+  for (let dj = -2; dj <= 2; dj++) {
+    for (let di = -2; di <= 2; di++) {
+      const j = j0 + dj;
+      const i = i0 + di;
+      const sx = dx * (i + (j & 1) * 0.5) + (hash(i, j, 1) - 0.5) * 0.34 * R;
+      const sy = dy * j + (hash(i, j, 2) - 0.5) * 0.34 * R;
+      const d = (x - sx) * (x - sx) + (y - sy) * (y - sy);
+      if (d < d1) { d2 = d1; s2x = s1x; s2y = s1y; d1 = d; s1x = sx; s1y = sy; }
+      else if (d < d2) { d2 = d; s2x = sx; s2y = sy; }
+    }
+  }
+  const sep = Math.hypot(s2x - s1x, s2y - s1y) || 1;
+  return (d2 - d1) / (2 * sep);
+}
 
-function padHeight(s: number, x: number, y: number) {
+const LIP = 0.0028; // stitched border tape height
+const CELL = 0.0054; // cell height above the tape
+const BAND = 0.0072; // border tape width
+const GROOVE = 0.0022;
+
+/** Returns surface height and a colour factor (ambient occlusion in the grooves, lighter satin tape, stitch line). */
+function padSample(s: number, x: number, y: number): { h: number; c: number } {
   const lip = LIP * smooth01(0, 0.002, s);
+  if (s < BAND) {
+    const stitch = Math.abs(s - BAND * 0.52) < 0.0006 ? 0.55 : 1;
+    return { h: lip, c: 1.75 * stitch * (0.7 + 0.3 * smooth01(0, 0.002, s)) };
+  }
   const inset = smooth01(BAND, BAND + 0.0025, s);
-  if (inset <= 0) return lip;
-  const t = hexInset(x, y) - GROOVE / 2;
-  const cell = smooth01(0, 0.0032, t);
-  const dome = 0.82 + 0.18 * smooth01(0, 0.012, t);
-  return lip + CELL * cell * dome * inset;
+  const t = cellEdge(x, y) - GROOVE / 2;
+  const cell = smooth01(0, 0.0034, t) * inset;
+  const dome = 0.84 + 0.16 * smooth01(0, 0.01, t);
+  const h = lip + CELL * cell * dome;
+  const ao = 0.28 + 0.72 * Math.pow(smooth01(0, 0.004, t) * inset + (1 - inset) * 0.4, 0.75);
+  return { h, c: ao };
 }
 
 export function buildPadMesh(spec: PadSpec, surf: Surface, side: 1 | -1): PadMesh {
@@ -280,6 +304,7 @@ export function buildPadMesh(spec: PadSpec, surf: Surface, side: 1 | -1): PadMes
   const idx = new Int32Array(n * n).fill(-1);
   const pos: number[] = [];
   const uv: number[] = [];
+  const col: number[] = [];
   const S: number[] = [];
   let count = 0;
   for (let j = 0; j < n; j++) {
@@ -291,10 +316,11 @@ export function buildPadMesh(spec: PadSpec, surf: Surface, side: 1 | -1): PadMes
       const v = Math.min(1, Math.max(0, v0 + y / surf.length));
       const u = (((spec.u0 + x / surf.circumference(v)) % 1) + 1) % 1;
       const f = surfaceFrame(surf, u, v);
-      const h = (s > 0 ? padHeight(s, x, y) : 0) + 0.0004;
-      const P = mir(f.P.addScaledVector(f.Z, h));
+      const smp = s > 0 ? padSample(s, x, y) : { h: 0, c: 1.2 };
+      const P = mir(f.P.addScaledVector(f.Z, smp.h + 0.0004));
       pos.push(P.x, P.y, P.z);
-      uv.push(x * 90, y * 90);
+      uv.push(x * 40, y * 40);
+      col.push(smp.c, smp.c, smp.c);
       S.push(s);
       idx[j * n + i] = count++;
     }
@@ -314,24 +340,11 @@ export function buildPadMesh(spec: PadSpec, surf: Surface, side: 1 | -1): PadMes
   const geo = new THREE.BufferGeometry();
   geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
   geo.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+  geo.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
   geo.setIndex(tri);
   geo.computeVertexNormals();
   const fc = surfaceFrame(surf, spec.u0, v0);
   return { spec, side, geo, centre: mir(fc.P), normal: mir(fc.Z) };
-}
-
-export function hexPillow(radius: number, depth: number, bevel: number) {
-  const sh = new THREE.Shape();
-  for (let k = 0; k < 6; k++) {
-    const a = Math.PI / 6 + (k * Math.PI) / 3;
-    const px = Math.cos(a) * radius;
-    const py = Math.sin(a) * radius;
-    if (k === 0) sh.moveTo(px, py); else sh.lineTo(px, py);
-  }
-  sh.closePath();
-  const g = new THREE.ExtrudeGeometry(sh, { depth, bevelEnabled: true, bevelThickness: bevel, bevelSize: bevel, bevelSegments: 2, curveSegments: 1 });
-  g.translate(0, 0, bevel);
-  return g;
 }
 
 export function makeKnitTexture() {
@@ -371,3 +384,24 @@ export function seamGeometry(s: Surface, samples: [number, number][], closed: bo
 }
 export const ringSamples = (v: number, steps = 96): [number, number][] => Array.from({ length: steps }, (_, i) => [i / steps, v] as [number, number]);
 export const lineSamples = (u: number, v0: number, v1: number, steps = 40): [number, number][] => Array.from({ length: steps + 1 }, (_, i) => [u, v0 + ((v1 - v0) * i) / steps] as [number, number]);
+
+/** Fine parallel ribs seen on the foam tops in the photographs (bump map). */
+export function makeRibTexture() {
+  const c = document.createElement('canvas');
+  c.width = c.height = 64;
+  const g = c.getContext('2d')!;
+  g.fillStyle = '#808080';
+  g.fillRect(0, 0, 64, 64);
+  for (let y = 0; y < 64; y += 4) {
+    const grad = g.createLinearGradient(0, y, 0, y + 4);
+    grad.addColorStop(0, '#d8d8d8');
+    grad.addColorStop(0.5, '#808080');
+    grad.addColorStop(1, '#303030');
+    g.fillStyle = grad;
+    g.fillRect(0, y, 64, 4);
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.anisotropy = 8;
+  return t;
+}

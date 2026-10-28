@@ -33,3 +33,4 @@ body::before { content: ''; position: fixed; inset: 0; z-index: -1; background: 
 html[data-stage-live] .hero-poster { opacity: 0; }
 .hero-poster { transition: opacity .8s ease; }
 html:not([data-stage-live]) .stage-only { display: none; }
+html[data-stage-live] .stage-off { display: none; }

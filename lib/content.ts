@@ -47,10 +47,9 @@ export const BASE_LAYER = {
     { id: 'ribs', label: 'Ribs', description: 'A wide panel on each side of the lower front (top).' },
     { id: 'upper-arms', label: 'Upper arms', description: 'A long panel on the outer upper arm of each sleeve (top).' },
     { id: 'elbows', label: 'Elbows and forearms', description: 'A panel over each elbow, running down the forearm (top).' },
-    { id: 'hips', label: 'Hips', description: 'A panel on each hip (leggings).' },
-    { id: 'thighs', label: 'Thighs', description: 'A panel on the front-outer thigh of each leg, joined to the hip panel (leggings).' },
+    { id: 'hips-thighs', label: 'Hips and thighs', description: 'A hip panel joined to a larger thigh panel on each leg (leggings).' },
     { id: 'knees', label: 'Knees', description: 'A panel over each knee (leggings).' },
-] as { id: string; label: string; description: string }[],
+  ] as { id: string; label: string; description: string }[],
 };
 
 export const SIZE_GUIDE = {

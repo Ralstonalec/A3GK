@@ -1,5 +1,5 @@
 import gsap from 'gsap';
-import { stage, type View } from '@/lib/stage';
+import { stage, type Mode, type View } from '@/lib/stage';
 
 const THEME: Record<View, { inner: string; mid: string; outer: string }> = {
   set: { inner: '#59616b', mid: '#22262b', outer: '#07080a' },
@@ -30,5 +30,14 @@ export function installActions() {
       .to(fx, { implode: 1, duration: 0.5, ease: 'power2.in' })
       .to(fx, { duration: 0.3 })
       .to(fx, { implode: 0, duration: 0.9, ease: 'back.out(1.5)' });
+  };
+  stage.requestMode = (mode: Mode) => {
+    if (stage.switching || mode === stage.mode) return;
+    stage.switching = true;
+    const fx = stage.fx;
+    gsap.timeline({ onComplete: () => { stage.switching = false; fx.spin = 0; blur(); } })
+      .to(fx, { spin: Math.PI * 2, blur: 14, duration: 0.6, ease: 'power2.in', onUpdate: blur })
+      .add(() => { stage.mode = mode; window.dispatchEvent(new Event('stage-mode')); })
+      .to(fx, { spin: Math.PI * 4, blur: 0, duration: 1.4, ease: 'back.out(0.7)', onUpdate: blur });
   };
 }
