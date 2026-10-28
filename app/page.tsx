@@ -3,6 +3,8 @@ import { Accordion } from '@/components/Accordion';
 import { Hero } from '@/components/Hero';
 import { MacroGrid } from '@/components/MacroGrid';
 import { PhotoSlot } from '@/components/PhotoSlot';
+import { PromoBanner, PromoGallery } from '@/components/PromoGallery';
+import { PROMO } from '@/lib/photos';
 import { ProductCard } from '@/components/ProductCard';
 import { PurchasePanel } from '@/components/PurchasePanel';
 import { Reveal } from '@/components/Reveal';
@@ -100,13 +102,21 @@ export default async function Home() {
           <Reveal>
             <p className="eyebrow">In use</p>
             <h2 id="in-use" className="h2">How it sits under your kit</h2>
-            <div className="mt-8 grid gap-4 md:grid-cols-2">
-              <PhotoSlot label="Real photo: worn alone, showing fit" className="min-h-[300px] rounded-3xl" />
-              <PhotoSlot label="Real photo: worn under goalkeeper kit" className="min-h-[300px] rounded-3xl" />
+            <div className="mt-8">
+              {PROMO.length ? <PromoGallery /> : (
+                <>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <PhotoSlot label="Real photo: worn alone, showing fit" className="min-h-[300px] rounded-3xl" />
+                    <PhotoSlot label="Real photo: worn under goalkeeper kit" className="min-h-[300px] rounded-3xl" />
+                  </div>
+                  <p className="mt-4 text-sm text-white/55">Only authentic photography of the real product will be used here. Outer kit shown is not included unless stated.</p>
+                </>
+              )}
             </div>
-            <p className="mt-4 text-sm text-white/55">Only authentic photography of the real product will be used here. Outer kit shown is not included unless stated.</p>
           </Reveal>
         </section>
+
+        <PromoBanner />
 
         {/* 7 — Purchase area */}
         <section id="buy" className="section" aria-label="Buy the padded base layer">

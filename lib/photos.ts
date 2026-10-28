@@ -19,3 +19,11 @@ export const MACRO = [
   { id: 'knee', src: '/photos/pad-knee.webp', w: 590, h: 430, label: 'Knee panel' },
   { id: 'waistband', src: '/photos/waistband.webp', w: 150, h: 590, label: 'Printed waistband' },
 ] as const;
+
+export type Promo = { id: 'dive' | 'stance' | 'closeup' | 'banner'; src: string; w: number; h: number; alt: string };
+
+/**
+ * AI-generated promo renderings of the padded base layer on a body (front views only: the back has NO padding,
+ * see docs/IMAGE-RULES.md). Always labelled "Rendering". Add an entry here once the file exists in /public/photos.
+ */
+export const PROMO: Promo[] = [];
