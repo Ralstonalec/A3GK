@@ -54,7 +54,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [cart, run]);
 
   const setQuantity = useCallback(async (lineId: string, quantity: number) => {
-    if (cart) await run({ action: 'update', cartId: cart.id, lineId, quantity });
+    if (cart) await run({ action: 'update', cartId: cart.id, lineId, quantity: Math.max(0, Math.min(20, quantity)) });
   }, [cart, run]);
 
   const value = useMemo(() => ({ cart, open, busy, error, setOpen, add, setQuantity }), [cart, open, busy, error, add, setQuantity]);
