@@ -24,8 +24,8 @@ function Lights() {
   return (
     <Environment resolution={256} frames={1}>
       <Lightformer form="rect" intensity={7} position={[-3, 4, 4]} scale={[7, 4, 1]} target={[0, 0, 0]} color="#ffffff" />
-      <Lightformer form="rect" intensity={5} position={[4.5, 1, -3]} scale={[1.4, 9, 1]} target={[0, 0, 0]} color="#e4ffa0" />
-      <Lightformer form="rect" intensity={3.2} position={[-4.5, 0, -3]} scale={[1.4, 9, 1]} target={[0, 0, 0]} color="#b4ccff" />
+      <Lightformer form="rect" intensity={5} position={[4.5, 1, -3]} scale={[1.4, 9, 1]} target={[0, 0, 0]} color="#f4f6ff" />
+      <Lightformer form="rect" intensity={3.2} position={[-4.5, 0, -3]} scale={[1.4, 9, 1]} target={[0, 0, 0]} color="#cfe0ff" />
       <Lightformer form="ring" intensity={1.4} position={[0, -4, 3]} scale={5} target={[0, 0, 0]} color="#ffffff" />
     </Environment>
   );

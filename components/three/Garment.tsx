@@ -5,120 +5,141 @@ import { Html } from '@react-three/drei';
 import { useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 import type { View } from '@/lib/stage';
-import { buildPad, buildTube, curveSurface, ellipseSurface, hexPillow, makeKnitTexture, PITCH, type PadData, type PadSpec } from './geometry';
+import { buildPadMesh, buildTube, curveSurface, ellipseSurface, lineSamples, makeKnitTexture, ringSamples, seamGeometry, type PadMesh, type PadSpec } from './geometry';
 
 /**
- * Procedural ghost-mannequin model of the A3GK padded set, built from the supplied product photograph:
- * a long-sleeve top and leggings with hexagon-cell padded panels. It is an illustration, not a scan.
- * Replace with a GLB made from the real product when available; everything else (views, explode,
- * labels) keys off the pad zones below.
+ * Procedural model of the A3GK padded set, built from photographs of the real garments:
+ * a mock-neck long-sleeve top (bib chest pad, two kidney rib pads, long upper-arm pads, forearm pads)
+ * and full-length leggings (hip + thigh pad pair, knee pads, printed waistband).
+ * Pad outlines and positions are traced from flat-lay photos. It is a reconstruction, not a scan:
+ * replace with a measured/scanned GLB when available. Keep zone names (see PAD specs) for labels/explode.
  */
 
 export type GarmentCtl = { explode: number; view: View };
 
 const V = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z);
 const EX_DIST = 0.2;
-const LIFT = 0.001;
-export const BASE_SCALE: Record<View, number> = { set: 1.6, top: 2.6, legs: 1.95 };
-const CENTRE_Y: Record<View, number> = { set: -0.14, top: 0.42, legs: -0.51 };
-const TOP_Y = 0.1;
+export const BASE_SCALE: Record<View, number> = { set: 1.55, top: 2.55, legs: 1.9 };
+const CENTRE_Y: Record<View, number> = { set: -0.17, top: 0.42, legs: -0.58 };
+const TOP_Y = 0.12;
+
+const BIB: [number, number][] = [[-0.095, 0.085], [-0.05, 0.098], [0, 0.092], [0.05, 0.098], [0.095, 0.085], [0.1, 0.05], [0.07, 0.0], [0.055, -0.04], [0.04, -0.085], [0, -0.1], [-0.04, -0.085], [-0.055, -0.04], [-0.07, 0.0], [-0.1, 0.05]];
 
 const TOP_PADS: PadSpec[] = [
-  { id: 'chest', zone: 'chest', label: 'Chest', surf: 'torso', u0: 0, y0: 0.4, a: 0.095, b: 0.09, shape: 'shield' },
-  { id: 'ribs-r', zone: 'ribs', label: 'Ribs', surf: 'torso', u0: 0.135, y0: 0.2, a: 0.062, b: 0.075, shape: 'ellipse', rot: 0.25 },
-  { id: 'ribs-l', zone: 'ribs', label: 'Ribs', surf: 'torso', u0: 0.865, y0: 0.2, a: 0.062, b: 0.075, shape: 'ellipse', rot: -0.25 },
-  { id: 'shoulder', zone: 'shoulders', label: 'Shoulders', surf: 'sleeve', u0: 0.02, v0: 0.2, a: 0.058, b: 0.07, shape: 'ellipse', mirror: true },
-  { id: 'elbow', zone: 'elbows', label: 'Elbows', surf: 'sleeve', u0: 0.96, v0: 0.56, a: 0.045, b: 0.075, shape: 'ellipse', mirror: true },
+  { id: 'chest', zone: 'chest', label: 'Chest', surf: 'torso', u0: 0, y0: 0.46, shape: { kind: 'poly', pts: BIB } },
+  { id: 'ribs-r', zone: 'ribs', label: 'Ribs', surf: 'torso', u0: 0.135, y0: 0.31, shape: { kind: 'ellipse', a: 0.115, b: 0.08, n: 2.3 }, rot: 0.1 },
+  { id: 'ribs-l', zone: 'ribs', label: 'Ribs', surf: 'torso', u0: 0.865, y0: 0.31, shape: { kind: 'ellipse', a: 0.115, b: 0.08, n: 2.3 }, rot: -0.1 },
+  { id: 'upper-arm', zone: 'upper-arms', label: 'Upper arm', surf: 'sleeve', u0: 0.08, v0: 0.3, shape: { kind: 'ellipse', a: 0.052, b: 0.105, n: 3.2 }, mirror: true },
+  { id: 'elbow', zone: 'elbows', label: 'Elbow', surf: 'sleeve', u0: 0.03, v0: 0.66, shape: { kind: 'ellipse', a: 0.054, b: 0.12, n: 3 }, mirror: true },
 ];
 const LEG_PADS: PadSpec[] = [
-  { id: 'hip-r', zone: 'hips', label: 'Hips', surf: 'pelvis', u0: 0.215, y0: -0.09, a: 0.07, b: 0.09, shape: 'ellipse', rot: 0.15 },
-  { id: 'hip-l', zone: 'hips', label: 'Hips', surf: 'pelvis', u0: 0.785, y0: -0.09, a: 0.07, b: 0.09, shape: 'ellipse', rot: -0.15 },
-  { id: 'knee', zone: 'knees', label: 'Knees', surf: 'leg', u0: 0.25, v0: 0.5, a: 0.052, b: 0.085, shape: 'ellipse', mirror: true },
+  { id: 'hip-r', zone: 'hips', label: 'Hip', surf: 'pelvis', u0: 0.215, y0: -0.115, shape: { kind: 'ellipse', a: 0.065, b: 0.085, n: 2.4 }, rot: 0.2 },
+  { id: 'hip-l', zone: 'hips', label: 'Hip', surf: 'pelvis', u0: 0.785, y0: -0.115, shape: { kind: 'ellipse', a: 0.065, b: 0.085, n: 2.4 }, rot: -0.2 },
+  { id: 'thigh', zone: 'thighs', label: 'Thigh', surf: 'leg', u0: 0.12, v0: 0.11, shape: { kind: 'ellipse', a: 0.075, b: 0.105, n: 2.5 }, mirror: true },
+  { id: 'knee', zone: 'knees', label: 'Knee', surf: 'leg', u0: 0.25, v0: 0.5, shape: { kind: 'ellipse', a: 0.07, b: 0.095, n: 2.5 }, mirror: true },
 ];
 
+function waistTexture() {
+  const c = document.createElement('canvas');
+  c.width = 2048;
+  c.height = 128;
+  const g = c.getContext('2d')!;
+  g.fillStyle = '#0d0e11';
+  g.fillRect(0, 0, 2048, 128);
+  g.fillStyle = '#c3c6cc';
+  g.font = '600 46px "Arial Narrow", Arial, sans-serif';
+  g.textAlign = 'center';
+  g.textBaseline = 'middle';
+  (g as CanvasRenderingContext2D & { letterSpacing: string }).letterSpacing = '7px';
+  for (const x of [256, 768, 1280, 1792]) g.fillText('COMPRESSION', x, 66);
+  const t = new THREE.CanvasTexture(c);
+  t.anisotropy = 8;
+  t.wrapS = THREE.RepeatWrapping;
+  t.repeat.x = -1;
+  t.offset.x = 1;
+  return t;
+}
+
 function buildModel() {
-  const torso = ellipseSurface([V(0.165, 0, 0.095), V(0.158, 0.12, 0.09), V(0.15, 0.27, 0.088), V(0.172, 0.42, 0.098), V(0.18, 0.52, 0.098), V(0.14, 0.58, 0.085), V(0.075, 0.615, 0.065), V(0.068, 0.64, 0.06)]);
-  const band = ellipseSurface([V(0.166, 0, 0.106), V(0.166, -0.045, 0.106)]);
-  const pelvis = ellipseSurface([V(0.164, -0.04, 0.104), V(0.172, -0.12, 0.112), V(0.15, -0.22, 0.1), V(0.1, -0.26, 0.09)]);
-  const sleeve = curveSurface([V(0.12, 0.54, 0), V(0.25, 0.46, 0.005), V(0.335, 0.3, 0.03), V(0.39, 0.12, 0.05), V(0.41, 0.02, 0.045)], [[0, 0.07], [0.3, 0.06], [0.55, 0.05], [1, 0.036]], V(1, 0, 0));
-  const leg = curveSurface([V(0.08, -0.16, 0), V(0.085, -0.5, 0.012), V(0.09, -0.9, 0), V(0.09, -1.02, 0)], [[0, 0.098], [0.3, 0.082], [0.5, 0.066], [0.62, 0.062], [1, 0.046]], V(1, 0, 0));
+  const t0 = performance.now();
+  const torso = ellipseSurface([V(0.2, 0, 0.108), V(0.195, 0.12, 0.104), V(0.185, 0.26, 0.1), V(0.2, 0.42, 0.108), V(0.205, 0.52, 0.108), V(0.16, 0.58, 0.095), V(0.085, 0.63, 0.07), V(0.072, 0.645, 0.064), V(0.07, 0.68, 0.062)]);
+  const band = ellipseSurface([V(0.178, 0, 0.112), V(0.178, -0.055, 0.112)]);
+  const pelvis = ellipseSurface([V(0.176, -0.05, 0.11), V(0.185, -0.13, 0.118), V(0.15, -0.2, 0.1), V(0.1, -0.24, 0.09)]);
+  const sleeve = curveSurface([V(0.15, 0.545, 0), V(0.27, 0.47, 0.005), V(0.36, 0.31, 0.03), V(0.415, 0.12, 0.05), V(0.435, 0.02, 0.045)], [[0, 0.075], [0.3, 0.066], [0.55, 0.056], [1, 0.04]], V(1, 0, 0));
+  const leg = curveSurface([V(0.085, -0.2, 0), V(0.09, -0.5, 0.012), V(0.095, -0.9, 0), V(0.097, -1.04, 0)], [[0, 0.105], [0.3, 0.088], [0.5, 0.07], [0.62, 0.066], [1, 0.05]], V(1, 0, 0));
   const surfs = { torso, sleeve, pelvis, leg };
-  const mk = (specs: PadSpec[]) =>
+  const mk = (specs: PadSpec[]): PadMesh[] =>
     specs.flatMap((s) => {
       const surf = surfs[s.surf as keyof typeof surfs];
-      return s.mirror ? [buildPad(s, surf, 1), buildPad(s, surf, -1)] : [buildPad(s, surf, 1)];
+      return s.mirror ? [buildPadMesh(s, surf, 1), buildPadMesh(s, surf, -1)] : [buildPadMesh(s, surf, 1)];
     });
-  return {
+
+  const seam = (g: THREE.BufferGeometry[], s: typeof torso, samples: [number, number][], closed: boolean, mirror = false) => g.push(seamGeometry(s, samples, closed, mirror));
+  const topSeams: THREE.BufferGeometry[] = [];
+  seam(topSeams, torso, ringSamples(0.03), true);
+  seam(topSeams, torso, ringSamples(0.9), true);
+  seam(topSeams, torso, lineSamples(0.25, 0.0, 0.62), false);
+  seam(topSeams, torso, lineSamples(0.75, 0.0, 0.62), false);
+  for (const m of [false, true]) {
+    seam(topSeams, sleeve, ringSamples(0.105, 48), true, m);
+    seam(topSeams, sleeve, ringSamples(0.97, 48), true, m);
+    seam(topSeams, sleeve, lineSamples(0.5, 0.1, 0.97), false, m);
+  }
+  const legSeams: THREE.BufferGeometry[] = [];
+  seam(legSeams, pelvis, ringSamples(0.02), true);
+  for (const m of [false, true]) {
+    seam(legSeams, leg, lineSamples(0.5, 0.02, 1), false, m);
+    seam(legSeams, leg, lineSamples(0.0, 0.02, 1), false, m);
+  }
+
+  const w = { wrinkle: 0.0012 };
+  const out = {
     geo: {
-      torso: buildTube(torso, 56, 56),
-      sleeveR: buildTube(sleeve, 44, 28),
-      sleeveL: buildTube(sleeve, 44, 28, 110, true),
-      band: buildTube(band, 4, 56),
-      pelvis: buildTube(pelvis, 20, 56),
-      legR: buildTube(leg, 56, 28),
-      legL: buildTube(leg, 56, 28, 110, true),
+      torso: buildTube(torso, 80, 72, 110, false, w),
+      sleeveR: buildTube(sleeve, 56, 32, 110, false, w),
+      sleeveL: buildTube(sleeve, 56, 32, 110, true, w),
+      band: buildTube(band, 4, 96, 110, false, { unitUV: true }),
+      pelvis: buildTube(pelvis, 24, 72, 110, false, w),
+      legR: buildTube(leg, 72, 32, 110, false, w),
+      legL: buildTube(leg, 72, 32, 110, true, w),
     },
     topPads: mk(TOP_PADS),
     legPads: mk(LEG_PADS),
+    topSeams,
+    legSeams,
   };
-}
-
-function applyPart(cells: THREE.InstancedMesh, back: THREE.InstancedMesh, pads: PadData[], ex: number) {
-  const d = new THREE.Object3D();
-  const off = new THREE.Vector3();
-  let k = 0;
-  for (const p of pads) {
-    off.copy(p.normal).multiplyScalar(ex * EX_DIST);
-    for (const c of p.cells) {
-      d.quaternion.copy(c.quat);
-      d.position.copy(c.pos).addScaledVector(c.nrm, LIFT).add(off);
-      d.updateMatrix();
-      cells.setMatrixAt(k, d.matrix);
-      d.position.copy(c.pos).addScaledVector(c.nrm, LIFT - 0.0025).add(off);
-      d.updateMatrix();
-      back.setMatrixAt(k, d.matrix);
-      k++;
-    }
+  if (process.env.NODE_ENV !== 'production') {
+    const verts = [...Object.values(out.geo), ...out.topPads.map((p) => p.geo), ...out.legPads.map((p) => p.geo)].reduce((n, g) => n + g.attributes.position.count, 0);
+    console.info('[model] vertices', verts, 'pads', out.topPads.length + out.legPads.length, 'ms', Math.round(performance.now() - t0));
   }
-  cells.instanceMatrix.needsUpdate = true;
-  back.instanceMatrix.needsUpdate = true;
+  return out;
 }
-
-const count = (pads: PadData[]) => pads.reduce((n, p) => n + p.cells.length, 0);
 
 export function Garment({ ctl }: { ctl: GarmentCtl }) {
   const model = useMemo(buildModel, []);
   const mats = useMemo(() => {
     const knit = makeKnitTexture();
-    const fabric = new THREE.MeshPhysicalMaterial({ color: '#1a1d22', roughness: 0.78, sheen: 1, sheenColor: new THREE.Color('#7a8494'), sheenRoughness: 0.5, bumpMap: knit, bumpScale: 1.6, side: THREE.DoubleSide });
-    const band = fabric.clone();
-    band.color = new THREE.Color('#20232a');
-    return {
-      fabric,
-      band,
-      cell: new THREE.MeshStandardMaterial({ color: '#2d3239', roughness: 0.88, metalness: 0 }),
-      back: new THREE.MeshStandardMaterial({ color: '#101216', roughness: 1, metalness: 0 }),
-    };
+    const knitPad = knit.clone();
+    knitPad.needsUpdate = true;
+    const fabric = new THREE.MeshPhysicalMaterial({ color: '#0d0e11', roughness: 0.88, sheen: 1, sheenColor: new THREE.Color('#566070'), sheenRoughness: 0.55, bumpMap: knit, bumpScale: 0.9, side: THREE.DoubleSide });
+    const pad = new THREE.MeshPhysicalMaterial({ color: '#16181c', roughness: 0.7, sheen: 0.8, sheenColor: new THREE.Color('#6a7484'), sheenRoughness: 0.45, bumpMap: knitPad, bumpScale: 1.4, side: THREE.DoubleSide });
+    const band = new THREE.MeshStandardMaterial({ map: waistTexture(), roughness: 0.82, side: THREE.DoubleSide });
+    const seam = new THREE.MeshStandardMaterial({ color: '#23262b', roughness: 0.9 });
+    return { fabric, pad, band, seam };
   }, []);
-  const geos = useMemo(() => ({ cell: hexPillow(PITCH * 0.975 - 0.003, 0.0035, 0.003), back: hexPillow(PITCH * 1.12 - 0.0015, 0.0015, 0.0015) }), []);
 
   const inner = useRef<THREE.Group>(null);
   const topG = useRef<THREE.Group>(null);
   const legG = useRef<THREE.Group>(null);
-  const tc = useRef<THREE.InstancedMesh>(null);
-  const tb = useRef<THREE.InstancedMesh>(null);
-  const lc = useRef<THREE.InstancedMesh>(null);
-  const lb = useRef<THREE.InstancedMesh>(null);
-  const labelRefs = useRef<Record<string, THREE.Group | null>>({});
+  const padRefs = useRef<Record<string, THREE.Group | null>>({});
   const lastEx = useRef(-1);
   const [labelsOn, setLabelsOn] = useState(false);
 
+  const allPads = useMemo(() => [...model.topPads.map((p) => ({ p, part: 'top' as const })), ...model.legPads.map((p) => ({ p, part: 'legs' as const }))], [model]);
   const labelPads = useMemo(() => {
     const seen = new Set<string>();
-    const pick = (pads: PadData[], part: 'top' | 'legs') =>
-      pads.filter((p) => (seen.has(p.spec.zone) || p.side === -1 ? false : (seen.add(p.spec.zone), true))).map((p) => ({ p, part }));
-    return [...pick(model.topPads, 'top'), ...pick(model.legPads, 'legs')];
-  }, [model]);
+    return allPads.filter(({ p }) => (p.side === -1 || seen.has(p.spec.zone) ? false : (seen.add(p.spec.zone), true)));
+  }, [allPads]);
 
   useFrame(() => {
     const { view, explode } = ctl;
@@ -129,49 +150,49 @@ export function Garment({ ctl }: { ctl: GarmentCtl }) {
     g.position.y = -CENTRE_Y[view] * sc;
     if (topG.current) topG.current.visible = view !== 'legs';
     if (legG.current) legG.current.visible = view !== 'top';
-    if (Math.abs(explode - lastEx.current) > 0.0004 && tc.current && tb.current && lc.current && lb.current) {
-      applyPart(tc.current, tb.current, model.topPads, explode);
-      applyPart(lc.current, lb.current, model.legPads, explode);
-      lastEx.current = explode;
-      for (const { p } of labelPads) {
-        const ref = labelRefs.current[p.spec.id];
-        if (ref) ref.position.copy(p.centre).addScaledVector(p.normal, explode * EX_DIST + 0.02);
+    if (Math.abs(explode - lastEx.current) > 0.0004) {
+      for (const { p } of allPads) {
+        const ref = padRefs.current[`${p.spec.id}${p.side}`];
+        if (ref) ref.position.copy(p.normal).multiplyScalar(explode * EX_DIST);
       }
+      lastEx.current = explode;
     }
     const on = explode > 0.72;
     if (on !== labelsOn) setLabelsOn(on);
   });
 
   const { geo } = model;
+  const renderPads = (part: 'top' | 'legs') =>
+    allPads.filter((a) => a.part === part).map(({ p }) => (
+      <group key={`${p.spec.id}${p.side}`} ref={(r) => { padRefs.current[`${p.spec.id}${p.side}`] = r; }}>
+        <mesh geometry={p.geo} material={mats.pad} />
+      </group>
+    ));
+  const renderLabels = (part: 'top' | 'legs') =>
+    labelsOn && labelPads.filter((l) => l.part === part).map(({ p }) => (
+      <group key={`l-${p.spec.id}`} position={p.centre.clone().addScaledVector(p.normal, ctl.explode * EX_DIST + 0.03)}>
+        <Html center pointerEvents="none" zIndexRange={[20, 0]}><span className="pad-label">{p.spec.label}</span></Html>
+      </group>
+    ));
+
   return (
     <group ref={inner}>
       <group ref={topG} position={[0, TOP_Y, 0]}>
         <mesh geometry={geo.torso} material={mats.fabric} />
         <mesh geometry={geo.sleeveR} material={mats.fabric} />
         <mesh geometry={geo.sleeveL} material={mats.fabric} />
-        <mesh position={[0, 0.632, 0]} rotation={[Math.PI / 2, 0, 0]} scale={[1, 0.9, 1]} material={mats.band}>
-          <torusGeometry args={[0.066, 0.008, 10, 40]} />
-        </mesh>
-        <instancedMesh ref={tc} args={[geos.cell, mats.cell, count(model.topPads)]} frustumCulled={false} />
-        <instancedMesh ref={tb} args={[geos.back, mats.back, count(model.topPads)]} frustumCulled={false} />
-        {labelsOn && labelPads.filter((l) => l.part === 'top').map(({ p }) => (
-          <group key={p.spec.id} ref={(r) => { labelRefs.current[p.spec.id] = r; if (r) r.position.copy(p.centre).addScaledVector(p.normal, ctl.explode * EX_DIST + 0.02); }}>
-            <Html center pointerEvents="none" zIndexRange={[20, 0]}><span className="pad-label">{p.spec.label}</span></Html>
-          </group>
-        ))}
+        {model.topSeams.map((g, i) => <mesh key={i} geometry={g} material={mats.seam} />)}
+        {renderPads('top')}
+        {renderLabels('top')}
       </group>
       <group ref={legG}>
         <mesh geometry={geo.band} material={mats.band} />
         <mesh geometry={geo.pelvis} material={mats.fabric} />
         <mesh geometry={geo.legR} material={mats.fabric} />
         <mesh geometry={geo.legL} material={mats.fabric} />
-        <instancedMesh ref={lc} args={[geos.cell, mats.cell, count(model.legPads)]} frustumCulled={false} />
-        <instancedMesh ref={lb} args={[geos.back, mats.back, count(model.legPads)]} frustumCulled={false} />
-        {labelsOn && labelPads.filter((l) => l.part === 'legs').map(({ p }) => (
-          <group key={p.spec.id} ref={(r) => { labelRefs.current[p.spec.id] = r; if (r) r.position.copy(p.centre).addScaledVector(p.normal, ctl.explode * EX_DIST + 0.02); }}>
-            <Html center pointerEvents="none" zIndexRange={[20, 0]}><span className="pad-label">{p.spec.label}</span></Html>
-          </group>
-        ))}
+        {model.legSeams.map((g, i) => <mesh key={i} geometry={g} material={mats.seam} />)}
+        {renderPads('legs')}
+        {renderLabels('legs')}
       </group>
     </group>
   );

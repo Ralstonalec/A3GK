@@ -30,7 +30,7 @@ export const NAV = [
 export const BASE_LAYER = {
   // From the supplied product photograph: a long-sleeve top and leggings. CONFIRM before launch,
   // including whether they are sold together or separately (piecesSoldTogether).
-  garmentType: 'long-sleeve top and leggings' as string | null,
+  garmentType: 'mock-neck long-sleeve top and full-length leggings' as string | null,
   productName: 'A3GK Padded Base Layer', // working name from brief; confirm exact name
   included: null as string | null, // what is in each purchase
   piecesSoldTogether: null as boolean | null,
@@ -42,14 +42,15 @@ export const BASE_LAYER = {
   fulfilment: null as string | null,
   /** Only padded areas that really exist. Empty until confirmed — hotspots/labels render nothing. */
   paddedAreas: [
-    // Read from the supplied product photograph. CONFIRM each zone against the real garment.
-    { id: 'chest', label: 'Chest', description: 'One panel across the front of the chest (top).' },
-    { id: 'ribs', label: 'Ribs', description: 'A panel on each side of the lower front (top).' },
-    { id: 'shoulders', label: 'Shoulders', description: 'A panel on the top of each shoulder (top).' },
-    { id: 'elbows', label: 'Elbows', description: 'A panel on the outer elbow of each sleeve (top).' },
+    // Read from photographs of the real garments. CONFIRM before launch.
+    { id: 'chest', label: 'Chest', description: 'One bib-shaped panel across the front of the chest (top).' },
+    { id: 'ribs', label: 'Ribs', description: 'A wide panel on each side of the lower front (top).' },
+    { id: 'upper-arms', label: 'Upper arms', description: 'A long panel on the outer upper arm of each sleeve (top).' },
+    { id: 'elbows', label: 'Elbows and forearms', description: 'A panel over each elbow, running down the forearm (top).' },
     { id: 'hips', label: 'Hips', description: 'A panel on each hip (leggings).' },
+    { id: 'thighs', label: 'Thighs', description: 'A panel on the front-outer thigh of each leg, joined to the hip panel (leggings).' },
     { id: 'knees', label: 'Knees', description: 'A panel over each knee (leggings).' },
-  ] as { id: string; label: string; description: string }[],
+] as { id: string; label: string; description: string }[],
 };
 
 export const SIZE_GUIDE = {

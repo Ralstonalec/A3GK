@@ -109,7 +109,7 @@ export function surfaceFrame(s: Surface, u: number, v: number) {
   return { P, X, Y: V, Z: N };
 }
 
-export function buildTube(s: Surface, vSeg: number, uSeg: number, stitchesPerM = 110, mirrorX = false) {
+export function buildTube(s: Surface, vSeg: number, uSeg: number, stitchesPerM = 110, mirrorX = false, opts: { unitUV?: boolean; wrinkle?: number } = {}) {
   const pos: number[] = [];
   const uv: number[] = [];
   const p = new THREE.Vector3();
@@ -119,8 +119,13 @@ export function buildTube(s: Surface, vSeg: number, uSeg: number, stitchesPerM =
     for (let i = 0; i <= uSeg; i++) {
       const u = i / uSeg;
       s.point(u, v, p);
+      if (opts.wrinkle) {
+        const w = opts.wrinkle * (Math.sin(u * 37 + v * 11) * 0.5 + Math.sin(u * 91 - v * 23 + 1.3) * 0.3 + Math.sin(v * 47 + u * 5) * 0.2);
+        const ax = s.axis(v);
+        p.addScaledVector(p.clone().sub(ax).normalize(), w);
+      }
       pos.push(mirrorX ? -p.x : p.x, p.y, p.z);
-      uv.push(u * circ * stitchesPerM, v * s.length * stitchesPerM);
+      if (opts.unitUV) uv.push(u, v); else uv.push(u * circ * stitchesPerM, v * s.length * stitchesPerM);
     }
   }
   const idx: number[] = [];
@@ -163,69 +168,156 @@ export function buildTube(s: Surface, vSeg: number, uSeg: number, stitchesPerM =
   return g;
 }
 
-// ---------- padding ----------
+// ---------- padding: one continuous quilted surface per pad ----------
+
+export type Shape =
+  | { kind: 'ellipse'; a: number; b: number; n?: number }
+  | { kind: 'capsule'; a: number; r: number }
+  | { kind: 'poly'; pts: [number, number][] };
 
 export type PadSpec = {
   id: string;
-  zone: string; // matches a BASE_LAYER.paddedAreas id
+  zone: string;
   label: string;
   surf: string;
   u0: number;
   v0?: number;
-  y0?: number; // for ellipse surfaces: world y of the pad centre
-  a: number; // half width (m)
-  b: number; // half height (m)
-  shape: 'ellipse' | 'shield';
+  y0?: number;
+  shape: Shape;
   rot?: number;
   mirror?: boolean;
 };
 
-export const PITCH = 0.0175; // hex cell circumradius incl. groove
+export type PadMesh = { spec: PadSpec; side: 1 | -1; geo: THREE.BufferGeometry; centre: THREE.Vector3; normal: THREE.Vector3 };
 
-export type PadCell = { pos: THREE.Vector3; quat: THREE.Quaternion; nrm: THREE.Vector3 };
-export type PadData = { spec: PadSpec; side: 1 | -1; cells: PadCell[]; centre: THREE.Vector3; normal: THREE.Vector3 };
+type SD = (x: number, y: number) => number;
 
-function inside(spec: PadSpec, x: number, y: number) {
-  const rot = spec.rot ?? 0;
-  const c = Math.cos(-rot);
-  const s = Math.sin(-rot);
-  const rx = x * c - y * s;
-  const ry = x * s + y * c;
-  const { a, b } = spec;
-  const n = 2.6;
-  const sq = (px: number, py: number, ca: number, cb: number) => Math.pow(Math.abs(px / ca), n) + Math.pow(Math.abs(py / cb), n) <= 1;
-  if (spec.shape === 'ellipse') return sq(rx, ry, a, b);
-  return sq(rx, ry - 0.36 * b, a, 0.6 * b) || sq(rx, ry + 0.42 * b, 0.52 * a, 0.62 * b);
+function shapeSD(shape: Shape): { sd: SD; hx: number; hy: number } {
+  if (shape.kind === 'ellipse') {
+    const { a, b } = shape;
+    const n = shape.n ?? 2.6;
+    return { hx: a, hy: b, sd: (x, y) => (Math.pow(Math.pow(Math.abs(x / a), n) + Math.pow(Math.abs(y / b), n), 1 / n) - 1) * Math.min(a, b) };
+  }
+  if (shape.kind === 'capsule') {
+    const { a, r } = shape;
+    return { hx: a + r, hy: r, sd: (x, y) => Math.hypot(x - Math.max(-a, Math.min(a, x)), y) - r };
+  }
+  const curve = new THREE.CatmullRomCurve3(shape.pts.map(([x, y]) => new THREE.Vector3(x, y, 0)), true, 'catmullrom', 0.5);
+  const poly = curve.getPoints(160);
+  let hx = 0;
+  let hy = 0;
+  for (const p of poly) { hx = Math.max(hx, Math.abs(p.x)); hy = Math.max(hy, Math.abs(p.y)); }
+  return {
+    hx, hy,
+    sd: (x, y) => {
+      let d = Infinity;
+      let inside = false;
+      for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+        const a = poly[j];
+        const b = poly[i];
+        if ((b.y > y) !== (a.y > y) && x < ((a.x - b.x) * (y - b.y)) / (a.y - b.y) + b.x) inside = !inside;
+        const ex = b.x - a.x;
+        const ey = b.y - a.y;
+        const t = Math.max(0, Math.min(1, ((x - a.x) * ex + (y - a.y) * ey) / (ex * ex + ey * ey || 1)));
+        d = Math.min(d, Math.hypot(x - a.x - t * ex, y - a.y - t * ey));
+      }
+      return inside ? -d : d;
+    },
+  };
 }
 
-export function buildPad(spec: PadSpec, surf: Surface, side: 1 | -1): PadData {
-  const cells: PadCell[] = [];
-  const r = PITCH;
-  const dx = Math.sqrt(3) * r;
-  const dy = 1.5 * r;
+const R_HEX = 0.0145; // hex circumradius
+const smooth01 = (a: number, b: number, v: number) => { const t = Math.min(1, Math.max(0, (v - a) / (b - a))); return t * t * (3 - 2 * t); };
+
+/** Distance (m) from the point to the nearest hex edge, positive inside. Pointy-top lattice. */
+function hexInset(x: number, y: number) {
+  const R = R_HEX;
+  const q = ((Math.sqrt(3) / 3) * x - y / 3) / R;
+  const r = ((2 / 3) * y) / R;
+  const cx = q;
+  const cz = r;
+  const cy = -cx - cz;
+  let rx = Math.round(cx);
+  let ry = Math.round(cy);
+  let rz = Math.round(cz);
+  const dx = Math.abs(rx - cx);
+  const dy = Math.abs(ry - cy);
+  const dz = Math.abs(rz - cz);
+  if (dx > dy && dx > dz) rx = -ry - rz; else if (dy > dz) ry = -rx - rz; else rz = -rx - ry;
+  const px = x - R * Math.sqrt(3) * (rx + rz / 2);
+  const py = y - R * 1.5 * rz;
+  const d = Math.max(Math.abs(px), Math.abs(px * 0.5 + py * 0.8660254), Math.abs(-px * 0.5 + py * 0.8660254));
+  return (R * Math.sqrt(3)) / 2 - d;
+}
+
+const LIP = 0.0028; // stitched border band height
+const CELL = 0.0052; // cell height above the band
+const BAND = 0.0075; // border band width
+const GROOVE = 0.0026;
+
+function padHeight(s: number, x: number, y: number) {
+  const lip = LIP * smooth01(0, 0.002, s);
+  const inset = smooth01(BAND, BAND + 0.0025, s);
+  if (inset <= 0) return lip;
+  const t = hexInset(x, y) - GROOVE / 2;
+  const cell = smooth01(0, 0.0032, t);
+  const dome = 0.82 + 0.18 * smooth01(0, 0.012, t);
+  return lip + CELL * cell * dome * inset;
+}
+
+export function buildPadMesh(spec: PadSpec, surf: Surface, side: 1 | -1): PadMesh {
+  const { sd: sd0, hx, hy } = shapeSD(spec.shape);
+  const rot = spec.rot ?? 0;
+  const c = Math.cos(-rot);
+  const sn = Math.sin(-rot);
+  const sd: SD = (x, y) => sd0(x * c - y * sn, x * sn + y * c);
+  const half = Math.hypot(hx, hy) + 0.004;
+  const step = 0.0022;
+  const n = Math.ceil((half * 2) / step) + 1;
   const v0 = spec.v0 ?? surf.vAtY!(spec.y0!);
-  const rows = Math.ceil((spec.b * 1.15) / dy);
-  const cols = Math.ceil((spec.a * 1.15) / dx) + 1;
-  const basis = new THREE.Matrix4();
   const mir = (v: THREE.Vector3) => (side === -1 ? new THREE.Vector3(-v.x, v.y, v.z) : v);
-  for (let j = -rows; j <= rows; j++) {
-    for (let i = -cols; i <= cols; i++) {
-      const x = (i + (j & 1 ? 0.5 : 0)) * dx;
-      const y = j * dy;
-      if (!inside(spec, x, y)) continue;
+
+  const idx = new Int32Array(n * n).fill(-1);
+  const pos: number[] = [];
+  const uv: number[] = [];
+  const S: number[] = [];
+  let count = 0;
+  for (let j = 0; j < n; j++) {
+    for (let i = 0; i < n; i++) {
+      const x = -half + i * step;
+      const y = -half + j * step;
+      const s = -sd(x, y);
+      if (s < -0.0025) continue;
       const v = Math.min(1, Math.max(0, v0 + y / surf.length));
-      const u = spec.u0 + x / surf.circumference(v);
-      const f = surfaceFrame(surf, ((u % 1) + 1) % 1, v);
-      const P = mir(f.P);
-      const Y = mir(f.Y);
-      const Z = mir(f.Z);
-      const X = new THREE.Vector3().crossVectors(Y, Z);
-      basis.makeBasis(X, Y, Z);
-      cells.push({ pos: P, quat: new THREE.Quaternion().setFromRotationMatrix(basis), nrm: Z });
+      const u = (((spec.u0 + x / surf.circumference(v)) % 1) + 1) % 1;
+      const f = surfaceFrame(surf, u, v);
+      const h = (s > 0 ? padHeight(s, x, y) : 0) + 0.0004;
+      const P = mir(f.P.addScaledVector(f.Z, h));
+      pos.push(P.x, P.y, P.z);
+      uv.push(x * 90, y * 90);
+      S.push(s);
+      idx[j * n + i] = count++;
     }
   }
+  const tri: number[] = [];
+  for (let j = 0; j < n - 1; j++) {
+    for (let i = 0; i < n - 1; i++) {
+      const a = idx[j * n + i];
+      const b = idx[j * n + i + 1];
+      const cc = idx[(j + 1) * n + i];
+      const d = idx[(j + 1) * n + i + 1];
+      if (a < 0 || b < 0 || cc < 0 || d < 0) continue;
+      if (S[a] < 0 && S[b] < 0 && S[cc] < 0 && S[d] < 0) continue;
+      if (side === 1) tri.push(a, b, d, a, d, cc); else tri.push(a, d, b, a, cc, d);
+    }
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  geo.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+  geo.setIndex(tri);
+  geo.computeVertexNormals();
   const fc = surfaceFrame(surf, spec.u0, v0);
-  return { spec, side, cells, centre: mir(fc.P), normal: mir(fc.Z) };
+  return { spec, side, geo, centre: mir(fc.P), normal: mir(fc.Z) };
 }
 
 export function hexPillow(radius: number, depth: number, bevel: number) {
@@ -270,3 +362,12 @@ export function makeKnitTexture() {
   t.anisotropy = 4;
   return t;
 }
+
+/** A thin raised seam following the surface: pass (u,v) samples. */
+export function seamGeometry(s: Surface, samples: [number, number][], closed: boolean, mirrorX = false, r = 0.0011) {
+  const pts = samples.map(([u, v]) => { const p = s.point(u, v); if (mirrorX) p.x = -p.x; return p; });
+  const curve = new THREE.CatmullRomCurve3(pts, closed);
+  return new THREE.TubeGeometry(curve, Math.max(8, pts.length * 2), r, 5, closed);
+}
+export const ringSamples = (v: number, steps = 96): [number, number][] => Array.from({ length: steps }, (_, i) => [i / steps, v] as [number, number]);
+export const lineSamples = (u: number, v0: number, v1: number, steps = 40): [number, number][] => Array.from({ length: steps + 1 }, (_, i) => [u, v0 + ((v1 - v0) * i) / steps] as [number, number]);
