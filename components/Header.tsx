@@ -11,7 +11,8 @@ export function Header() {
   const count = cart?.totalQuantity ?? 0;
   return (
     <header className="fixed inset-x-0 top-0 z-50">
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4">
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#080a0e] via-[#080a0e]/85 to-transparent md:hidden" />
+      <div className="relative mx-auto flex h-20 max-w-7xl items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2 font-display text-3xl font-extrabold tracking-tight" aria-label="A3GK home">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M12 2l8.66 5v10L12 22 3.34 17V7L12 2z" stroke="rgb(var(--accent))" strokeWidth="2" /><path d="M12 8v8M8 12h8" stroke="#fff" strokeWidth="2" strokeLinecap="round" /></svg>
           A3GK

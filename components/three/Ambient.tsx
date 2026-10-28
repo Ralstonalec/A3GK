@@ -8,7 +8,7 @@ import * as THREE from 'three';
 export function Bubbles({ count = 70 }: { count?: number }) {
   const mesh = useRef<THREE.InstancedMesh>(null);
   const d = useMemo(() => new THREE.Object3D(), []);
-  const seeds = useMemo(() => Array.from({ length: count }, () => ({ x: Math.random(), y: Math.random(), z: -1.5 + Math.random() * 3, s: 0.01 + Math.random() * 0.022, sp: 0.04 + Math.random() * 0.1, ph: Math.random() * 6.28 })), [count]);
+  const seeds = useMemo(() => Array.from({ length: count }, () => ({ x: Math.random(), y: Math.random(), z: -1.5 + Math.random() * 3, s: (typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches ? 0.006 : 0.01) + Math.random() * 0.016, sp: 0.04 + Math.random() * 0.1, ph: Math.random() * 6.28 })), [count]);
   useFrame((state) => {
     const m = mesh.current;
     if (!m) return;
@@ -26,7 +26,7 @@ export function Bubbles({ count = 70 }: { count?: number }) {
   return (
     <instancedMesh ref={mesh} args={[undefined, undefined, count]} frustumCulled={false}>
       <sphereGeometry args={[1, 10, 10]} />
-      <meshBasicMaterial color="#ffffff" transparent opacity={0.28} depthWrite={false} />
+      <meshBasicMaterial color="#ffffff" transparent opacity={0.2} depthWrite={false} />
     </instancedMesh>
   );
 }

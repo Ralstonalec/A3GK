@@ -1,7 +1,6 @@
 'use client';
 
 import { Canvas, useFrame } from '@react-three/fiber';
-import { AdaptiveDpr } from '@react-three/drei';
 import { Suspense, useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { stage } from '@/lib/stage';
@@ -9,6 +8,7 @@ import { Bubbles } from './Ambient';
 import { RenderPlane, TOUR, type RenderCtl } from './RenderPlane';
 import { installActions } from './actions';
 
+const coarseNow = () => typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
 const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 
 /** Where the render sits for each page section (x/y are fractions of half the viewport). */
@@ -27,6 +27,13 @@ function Scene() {
   const cur = useRef({ x: 0, y: 0 });
   const sections = useRef<HTMLElement[]>([]);
   const announced = useRef(false);
+  const onShown = () => {
+    if (announced.current) return;
+    announced.current = true;
+    stage.live = true;
+    document.documentElement.dataset.stageLive = '1';
+    window.dispatchEvent(new Event('stage-live'));
+  };
   const zone = useRef(-1);
 
   useFrame((state, dtRaw) => {
@@ -35,13 +42,6 @@ function Scene() {
     const vp = state.viewport.getCurrentViewport(state.camera, [0, 0, 0]);
     vpRef.current = { width: vp.width, height: vp.height };
     const mobile = vp.width / vp.height < 0.85;
-    if (!announced.current) {
-      announced.current = true;
-      stage.live = true;
-      document.documentElement.dataset.stageLive = '1';
-      window.dispatchEvent(new Event('stage-live'));
-    }
-
     if (!sections.current.length) sections.current = Array.from(document.querySelectorAll<HTMLElement>('[data-stage]'));
     const vh = window.innerHeight;
     let name = 'none';
@@ -53,7 +53,7 @@ function Scene() {
 
     const P = POSES[name] ?? { x: 0, y: 0, s: 0 };
     const tx = mobile ? 0 : P.x;
-    const ty = mobile ? (name === 'hero' ? -0.72 : name === 'padding' ? -0.2 : 0.5) : P.y;
+    const ty = mobile ? (name === 'hero' ? -0.72 : name === 'padding' ? -0.04 : 0.5) : P.y;
     const ts = mobile ? P.s * (name === 'hero' ? 1.25 : name === 'padding' ? 0.9 : 1.5) : P.s;
     const k = 1 - Math.exp(-dt * 3.5);
     const p = pose.current;
@@ -88,11 +88,10 @@ function Scene() {
     <>
       <group ref={root}>
         <Suspense fallback={null}>
-          <RenderPlane ctl={ctl.current} vpRef={vpRef} />
+          <RenderPlane ctl={ctl.current} vpRef={vpRef} onShown={onShown} />
         </Suspense>
       </group>
-      <Bubbles />
-      <AdaptiveDpr pixelated />
+      <Bubbles count={coarseNow() ? 28 : 70} />
     </>
   );
 }
@@ -112,7 +111,7 @@ export default function Stage() {
     return () => window.removeEventListener('pointermove', onMove);
   }, []);
   return (
-    <Canvas dpr={[1, coarse ? 1.5 : 1.75]} resize={{ debounce: 250, scroll: false }} camera={{ position: [0, 0, 6.5], fov: 30 }} gl={{ antialias: !coarse, alpha: true, powerPreference: 'high-performance' }} style={{ background: 'transparent' }}>
+    <Canvas dpr={[1, coarse ? 1.5 : 1.75]} resize={{ debounce: 250, scroll: false }} camera={{ position: [0, 0, 6.5], fov: 30 }} onCreated={({ gl }) => gl.domElement.addEventListener('webglcontextlost', () => { delete document.documentElement.dataset.stageLive; stage.live = false; window.dispatchEvent(new Event('stage-lost')); })} gl={{ antialias: !coarse, alpha: true, powerPreference: 'high-performance' }} style={{ background: 'transparent' }}>
       <Scene />
     </Canvas>
   );

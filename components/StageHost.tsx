@@ -32,6 +32,12 @@ export function StageHost() {
   }, []);
 
   useEffect(() => {
+    const lost = () => setLive(false);
+    window.addEventListener('stage-lost', lost);
+    return () => window.removeEventListener('stage-lost', lost);
+  }, []);
+
+  useEffect(() => {
     stage.el = ref.current;
     return () => { stage.el = null; };
   }, [live]);

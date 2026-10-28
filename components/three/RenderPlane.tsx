@@ -58,7 +58,7 @@ function edgeFade() {
   return t;
 }
 
-export function RenderPlane({ ctl, vpRef }: { ctl: RenderCtl; vpRef: { current: { width: number; height: number } } }) {
+export function RenderPlane({ ctl, vpRef, onShown }: { ctl: RenderCtl; vpRef: { current: { width: number; height: number } }; onShown?: () => void }) {
   const tex = useTexture(RENDER.src);
   const mat = useMemo(() => {
     tex.colorSpace = THREE.SRGBColorSpace;
@@ -80,6 +80,7 @@ export function RenderPlane({ ctl, vpRef }: { ctl: RenderCtl; vpRef: { current: 
   useFrame((_, dtRaw) => {
     const g = inner.current;
     if (!g) return;
+    onShown?.();
     const dt = Math.min(dtRaw, 0.05);
     const vp = vpRef.current;
     const { view, tour } = ctl;
@@ -90,11 +91,12 @@ export function RenderPlane({ ctl, vpRef }: { ctl: RenderCtl; vpRef: { current: 
       const b = Math.min(TOUR.length - 1, a + 1);
       const f = tour - a;
       const e = f * f * (3 - 2 * f);
-      const mk = (i: number) => { const r = TOUR[i].rect; const pl = place(r, vp.width * 0.5, vp.height * 0.62); return { ...pl, s: Math.min(pl.s, 2.6) }; };
+      const mk = (i: number) => { const r = TOUR[i].rect; const narrow = vp.width / vp.height < 0.85;
+      const pl = place(r, vp.width * (narrow ? 0.92 : 0.5), vp.height * (narrow ? 0.42 : 0.62)); return { ...pl, s: Math.min(pl.s, 2.6) }; };
       const A = mk(a);
       const B = mk(b);
       target = { s: lerp(A.s, B.s, e) * (1 - 0.14 * Math.sin(Math.PI * e)), cx: lerp(A.cx, B.cx, e), cy: lerp(A.cy, B.cy, e) };
-      xo = vp.width * 0.1;
+      xo = vp.width / vp.height < 0.85 ? 0 : vp.width * 0.1;
     } else {
       const [fw, fh] = VIEW_FRAC[view];
       target = place(VIEW_RECT[view], vp.width * fw, vp.height * fh);
