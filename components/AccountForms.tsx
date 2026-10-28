@@ -26,7 +26,7 @@ export function ProfileForm({ email, profile }: { email: string; profile: Profil
       <p className="text-sm text-white/65">Signed in as <strong className="text-white">{email}</strong></p>
       <label className="block text-sm font-semibold">Name<input name="full_name" defaultValue={profile.full_name ?? ''} maxLength={120} autoComplete="name" className={field} /></label>
       <label className="block text-sm font-semibold">Phone<input name="phone" type="tel" defaultValue={profile.phone ?? ''} maxLength={40} autoComplete="tel" className={field} /></label>
-      <label className="flex min-h-[44px] items-center gap-3 text-sm"><input name="marketing_opt_in" type="checkbox" defaultChecked={profile.marketing_opt_in} className="h-5 w-5 accent-[rgb(var(--accent))]" /> Email me about new products</label>
+      <label className="flex min-h-[44px] items-center gap-3 text-sm"><input name="marketing_opt_in" type="checkbox" defaultChecked={profile.marketing_opt_in} className="h-5 w-5 accent-[rgb(var(--accent))]" /> Email me about new products and member rewards</label>
       <div className="flex items-center gap-4"><Save /><Msg s={state} /></div>
     </form>
   );

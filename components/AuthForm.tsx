@@ -32,7 +32,7 @@ export function AuthForm({ initialError }: { initialError?: string }) {
         router.push('/account');
         router.refresh();
       } else if (mode === 'signup') {
-        const { data, error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: callback, data: { full_name: String(f.get('name') ?? '').trim() } } });
+        const { data, error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: callback, data: { full_name: String(f.get('name') ?? '').trim(), marketing_opt_in: f.get('marketing_opt_in') === 'on' } } });
         if (error) throw error;
         if (data.session) { router.push('/account'); router.refresh(); }
         else setNotice('Check your email to confirm your account, then sign in.');
@@ -69,6 +69,12 @@ export function AuthForm({ initialError }: { initialError?: string }) {
         {mode !== 'reset' && (
           <label className="block text-sm font-semibold">Password
             <input name="password" type="password" required minLength={8} autoComplete={mode === 'signin' ? 'current-password' : 'new-password'} className={field} />
+          </label>
+        )}
+        {mode === 'signup' && (
+          <label className="flex min-h-[44px] items-start gap-3 text-sm text-white/80">
+            <input name="marketing_opt_in" type="checkbox" className="mt-0.5 h-5 w-5 shrink-0 accent-[rgb(var(--accent))]" />
+            <span>Email me about new products and member rewards. You can unsubscribe at any time.</span>
           </label>
         )}
         {error && <p role="alert" className="rounded-xl border border-red-400/40 bg-red-500/10 p-3 text-sm text-red-200">{error}</p>}
