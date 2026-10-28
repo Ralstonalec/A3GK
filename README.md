@@ -35,3 +35,6 @@ Nothing is invented. See `docs/PRE-LAUNCH-CHECKLIST.md`. `npm run check:tbc` fai
 - Env: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (the publishable key is safe in the browser). Without them, account UI is hidden.
 - In Supabase → Authentication → URL Configuration, set the Site URL to the live site and add `<site>/auth/callback` to Redirect URLs.
 - Orders stay in Shopify; order history in the account page is not connected.
+
+## Imagery rules
+See `docs/IMAGE-RULES.md`. Key rule: the garment has **no padding on the back**; never render back padding.
