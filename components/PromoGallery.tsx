@@ -15,6 +15,7 @@ function Tile({ p, className, sizes, priority }: { p: Promo; className: string; 
       <Image src={p.src} alt={p.alt} width={p.w} height={p.h} sizes={sizes} priority={priority} className="h-full w-full object-cover object-top transition duration-700 group-hover:scale-[1.03]" />
       <div aria-hidden className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
       <Tag />
+      {p.caption && <figcaption className="absolute bottom-3 left-3 right-3 text-sm font-semibold text-white drop-shadow">{p.caption}</figcaption>}
     </figure>
   );
 }
@@ -27,10 +28,10 @@ export function PromoGallery() {
   if (!dive && !stance && !closeup) return null;
   return (
     <div>
-      <div className="grid gap-4 md:grid-cols-3">
-        {dive && <Tile p={dive} className="aspect-video md:col-span-2" sizes="(min-width:768px) 66vw, 100vw" />}
-        {stance && <Tile p={stance} className={closeup ? 'aspect-[3/4] md:row-span-2' : 'aspect-[3/4] md:aspect-auto'} sizes="(min-width:768px) 33vw, 100vw" />}
-        {closeup && <Tile p={closeup} className="aspect-[4/3] md:col-span-2 md:aspect-auto" sizes="(min-width:768px) 66vw, 100vw" />}
+      {dive && <Tile p={dive} className="mb-4 aspect-video" sizes="100vw" />}
+      <div className="grid gap-4 md:grid-cols-5">
+        {closeup && <Tile p={closeup} className="aspect-[4/3] md:col-span-3" sizes="(min-width:768px) 60vw, 100vw" />}
+        {stance && <Tile p={stance} className="aspect-[3/4] md:col-span-2 md:aspect-auto" sizes="(min-width:768px) 40vw, 100vw" />}
       </div>
       <p className="mt-3 max-w-3xl text-sm text-white/70"><strong className="text-white">Short sleeves or shorts?</strong> {WEAR_NOTE}</p>
       <p className="mt-2 text-sm text-white/55">Renderings based on the real garments, not photographs. Padding is on the front only: the back is plain fabric.</p>

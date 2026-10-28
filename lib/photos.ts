@@ -20,14 +20,14 @@ export const MACRO = [
   { id: 'waistband', src: '/photos/waistband.webp', w: 150, h: 590, label: 'Printed waistband' },
 ] as const;
 
-export type Promo = { id: 'dive' | 'stance' | 'closeup' | 'banner'; src: string; w: number; h: number; alt: string };
+export type Promo = { id: 'dive' | 'stance' | 'closeup' | 'banner'; src: string; w: number; h: number; alt: string; caption?: string };
 
 /**
- * AI-generated promo renderings of the padded base layer on a body (front views only: the back has NO padding,
- * see docs/IMAGE-RULES.md). Always labelled "Rendering". Add an entry here once the file exists in /public/photos.
+ * AI-generated promo renderings of the padded base layer on a body (the back has NO padding and is never shown,
+ * see docs/IMAGE-RULES.md). Always labelled "Rendering". No faces. Add an entry here once the file exists in /public/photos.
  */
 export const PROMO: Promo[] = [
-  { id: 'dive', src: '/photos/promo-dive.webp', w: 1800, h: 1004, alt: 'Rendering of a goalkeeper diving for a save at night in the A3GK padded base layer, with honeycomb panels on the chest, ribs, arm, hip and knee' },
-  { id: 'stance', src: '/photos/promo-stance.webp', w: 1100, h: 1474, alt: 'Rendering of a goalkeeper in a ready stance facing the camera in the A3GK padded base layer, with panels on the chest, ribs, arms, hips and knees' },
+  { id: 'stance', src: '/photos/promo-under-stance.webp', w: 1100, h: 1289, alt: 'Rendering of a goalkeeper in a ready stance in a short-sleeve jersey and shorts over the A3GK base layer: honeycomb panels show on the forearms and knees where the base layer is exposed', caption: 'Under a short-sleeve jersey and shorts' },
+  { id: 'closeup', src: '/photos/promo-under-elbow.webp', w: 1600, h: 1194, alt: 'Rendering of the A3GK base layer elbow and forearm panel showing below a short jersey sleeve', caption: 'Elbow panel below a short sleeve' },
   { id: 'banner', src: '/photos/promo-banner.webp', w: 2000, h: 848, alt: 'Rendering of the A3GK padded top and leggings side by side on a dark studio floor' },
 ];
