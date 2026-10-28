@@ -38,11 +38,17 @@ export function AuthForm({ initialError }: { initialError?: string }) {
         else setNotice('Check your email to confirm your account, then sign in.');
       } else {
         const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: `${callback}?next=/account#password` });
-        if (error) throw error;
+        if (error && (error as { code?: string }).code?.startsWith('over_')) throw error;
         setNotice('If that email has an account, a reset link is on its way.');
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong. Try again.');
+      // Same wording whether or not the account exists, so the form can't be used to find out who has one.
+      const code = (err as { code?: string } | null)?.code ?? '';
+      if (code === 'weak_password') setError('Choose a longer or less common password.');
+      else if (code.startsWith('over_')) setError('Too many attempts. Wait a few minutes and try again.');
+      else if (mode === 'signin') setError('We could not sign you in. Check your email and password.');
+      else if (mode === 'signup') setError('We could not create that account. If you already have one, sign in or reset your password.');
+      else setError('Something went wrong. Try again.');
     } finally {
       setBusy(false);
     }
