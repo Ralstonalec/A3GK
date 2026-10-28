@@ -43,7 +43,7 @@ export function HeroViews() {
           </button>
         ))}
       </div>
-      <p className="mt-2 text-right text-xs text-white/55">Move your cursor. Tap a view to flip to it.</p>
+      <p className="mt-2 text-right text-xs text-white/55"><span className="hidden md:inline">Move your cursor. </span>Tap a view to flip to it.</p>
     </div>
   );
 }

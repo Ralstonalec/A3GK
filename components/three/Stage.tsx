@@ -53,8 +53,8 @@ function Scene() {
 
     const P = POSES[name] ?? { x: 0, y: 0, s: 0 };
     const tx = mobile ? 0 : P.x;
-    const ty = mobile ? (name === 'hero' ? -0.62 : name === 'padding' ? -0.2 : 0.34) : P.y;
-    const ts = mobile ? P.s * (name === 'hero' ? 1.45 : name === 'padding' ? 0.9 : 1.2) : P.s;
+    const ty = mobile ? (name === 'hero' ? -0.72 : name === 'padding' ? -0.2 : 0.5) : P.y;
+    const ts = mobile ? P.s * (name === 'hero' ? 1.25 : name === 'padding' ? 0.9 : 1.5) : P.s;
     const k = 1 - Math.exp(-dt * 3.5);
     const p = pose.current;
     p.x += (tx - p.x) * k;
@@ -98,6 +98,7 @@ function Scene() {
 }
 
 export default function Stage() {
+  const coarse = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
   useEffect(() => {
     installActions();
     if (process.env.NODE_ENV !== 'production') (window as unknown as { __stage: unknown }).__stage = stage;
@@ -111,7 +112,7 @@ export default function Stage() {
     return () => window.removeEventListener('pointermove', onMove);
   }, []);
   return (
-    <Canvas dpr={[1, 1.75]} camera={{ position: [0, 0, 6.5], fov: 30 }} gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }} style={{ background: 'transparent' }}>
+    <Canvas dpr={[1, coarse ? 1.5 : 1.75]} resize={{ debounce: 250, scroll: false }} camera={{ position: [0, 0, 6.5], fov: 30 }} gl={{ antialias: !coarse, alpha: true, powerPreference: 'high-performance' }} style={{ background: 'transparent' }}>
       <Scene />
     </Canvas>
   );

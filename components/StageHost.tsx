@@ -37,5 +37,5 @@ export function StageHost() {
   }, [live]);
 
   if (!live) return null;
-  return <div ref={ref} aria-hidden className="pointer-events-none fixed inset-0 z-0"><Stage /></div>;
+  return <div ref={ref} aria-hidden className="stage-host pointer-events-none fixed left-0 top-0 z-0 w-full"><Stage /></div>;
 }

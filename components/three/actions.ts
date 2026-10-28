@@ -8,7 +8,7 @@ const THEME: Record<View, { inner: string; mid: string; outer: string }> = {
 };
 
 const blur = () => {
-  if (stage.el) stage.el.style.filter = stage.fx.blur > 0.1 ? `blur(${stage.fx.blur}px)` : 'none';
+  if (stage.el && !window.matchMedia('(pointer: coarse)').matches) stage.el.style.filter = stage.fx.blur > 0.1 ? `blur(${stage.fx.blur}px)` : 'none';
 };
 
 /** Glide to the chosen view with a short focus pull and a tint change in the backdrop. */

@@ -31,7 +31,7 @@ export function Hero() {
             </Link>
             <Link href="/size-guide" className="min-h-[48px] py-3 font-semibold underline underline-offset-4">View Size Guide</Link>
           </div>
-          <div className="stage-only h-[36svh] md:hidden" aria-hidden />
+          <div className="stage-only h-[46svh] md:hidden" aria-hidden />
         </div>
 
         <div className="flex flex-col items-end justify-between gap-8 md:py-6 md:text-right">

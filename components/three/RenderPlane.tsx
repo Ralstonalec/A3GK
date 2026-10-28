@@ -39,7 +39,7 @@ function edgeFade() {
   const g = c.getContext('2d')!;
   g.fillStyle = '#000';
   g.fillRect(0, 0, 256, 144);
-  const inset = 14;
+  const inset = 40;
   const grad = (x0: number, y0: number, x1: number, y1: number, w: number, h: number, x: number, y: number) => {
     const gr = g.createLinearGradient(x0, y0, x1, y1);
     gr.addColorStop(0, '#000');

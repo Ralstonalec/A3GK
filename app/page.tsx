@@ -25,6 +25,7 @@ export default async function Home() {
         {/* 3 — Quick overview (3D garment slides to the right) */}
         <section data-stage="overview" className="flex min-h-[100svh] items-center" aria-labelledby="overview">
           <div className="mx-auto w-full max-w-7xl px-4 md:px-[4%]">
+            <div className="stage-only h-[36svh] md:hidden" aria-hidden />
             <Reveal className="glass max-w-xl rounded-[2rem] p-6 md:p-10">
               <p className="eyebrow">Overview</p>
               <h2 id="overview" className="h2">What it is</h2>
