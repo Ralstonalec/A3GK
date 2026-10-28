@@ -4,6 +4,7 @@ import { Hero } from '@/components/Hero';
 import { MacroGrid } from '@/components/MacroGrid';
 import { PhotoSlot } from '@/components/PhotoSlot';
 import { PromoBanner, PromoGallery } from '@/components/PromoGallery';
+import { ShortSet } from '@/components/ShortSet';
 import { PROMO } from '@/lib/photos';
 import { ProductCard } from '@/components/ProductCard';
 import { PurchasePanel } from '@/components/PurchasePanel';
@@ -113,6 +114,14 @@ export default async function Home() {
                 </>
               )}
             </div>
+          </Reveal>
+        </section>
+
+        {/* Short-sleeve top and shorts version */}
+        <section className="section" aria-labelledby="short-set">
+          <Reveal>
+            <h2 id="short-set" className="sr-only">Short-sleeve top and shorts</h2>
+            <ShortSet />
           </Reveal>
         </section>
 

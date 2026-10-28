@@ -31,3 +31,15 @@ export const PROMO: Promo[] = [
   { id: 'closeup', src: '/photos/promo-under-elbow.webp', w: 1600, h: 1194, alt: 'Rendering of the A3GK base layer elbow and forearm panel showing below a short jersey sleeve', caption: 'Elbow panel below a short sleeve' },
   { id: 'banner', src: '/photos/promo-banner.webp', w: 2000, h: 848, alt: 'Rendering of the A3GK padded top and leggings side by side on a dark studio floor' },
 ];
+
+export type ShortImage = { src: string; w: number; h: number; alt: string; caption?: string };
+
+/**
+ * AI-generated renderings of the short-sleeve top and padded shorts, made from the owner's product photos
+ * (same padding as the long-sleeve set minus the elbow and knee panels). No faces, no back shown. Always labelled "Rendering".
+ */
+export const SHORT_SET: { banner: ShortImage; stance: ShortImage; closeup: ShortImage } = {
+  banner: { src: '/photos/short-banner.webp', w: 2000, h: 848, alt: 'Rendering of the A3GK short-sleeve padded top and padded shorts with a COMPRESSION waistband, side by side on a dark studio floor' },
+  stance: { src: '/photos/short-stance.webp', w: 1100, h: 1377, alt: 'Rendering of a goalkeeper in a ready stance wearing the A3GK short-sleeve padded top and padded shorts, with honeycomb panels on the chest, ribs, sleeves and hips and thighs', caption: 'Top and shorts worn together' },
+  closeup: { src: '/photos/short-closeup.webp', w: 1600, h: 1195, alt: 'Rendering close-up of the A3GK short-sleeve top: chest panel, two rib panels and a panel on the short sleeve', caption: 'Chest, rib and sleeve panels' },
+};
