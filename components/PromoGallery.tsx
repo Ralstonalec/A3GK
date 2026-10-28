@@ -12,7 +12,7 @@ const Tag = () => (
 function Tile({ p, className, sizes, priority }: { p: Promo; className: string; sizes: string; priority?: boolean }) {
   return (
     <figure className={`group relative overflow-hidden rounded-3xl border border-white/10 bg-black/30 ${className}`}>
-      <Image src={p.src} alt={p.alt} width={p.w} height={p.h} sizes={sizes} priority={priority} className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.03]" />
+      <Image src={p.src} alt={p.alt} width={p.w} height={p.h} sizes={sizes} priority={priority} className="h-full w-full object-cover object-top transition duration-700 group-hover:scale-[1.03]" />
       <div aria-hidden className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
       <Tag />
     </figure>
@@ -27,9 +27,9 @@ export function PromoGallery() {
   if (!dive && !stance && !closeup) return null;
   return (
     <div>
-      <div className="grid gap-4 md:grid-cols-3 md:grid-rows-2">
+      <div className="grid gap-4 md:grid-cols-3">
         {dive && <Tile p={dive} className="aspect-video md:col-span-2" sizes="(min-width:768px) 66vw, 100vw" />}
-        {stance && <Tile p={stance} className="aspect-[3/4] md:row-span-2" sizes="(min-width:768px) 33vw, 100vw" />}
+        {stance && <Tile p={stance} className={closeup ? 'aspect-[3/4] md:row-span-2' : 'aspect-[3/4] md:aspect-auto'} sizes="(min-width:768px) 33vw, 100vw" />}
         {closeup && <Tile p={closeup} className="aspect-[4/3] md:col-span-2 md:aspect-auto" sizes="(min-width:768px) 66vw, 100vw" />}
       </div>
       <p className="mt-3 text-sm text-white/55">Renderings based on the real garments, not photographs. Padding is on the front only: the back is plain fabric.</p>
@@ -44,9 +44,9 @@ export function PromoBanner() {
   return (
     <section className="relative mx-auto w-full max-w-[1600px] px-4 md:px-[4%]" aria-label="A3GK padded base layer">
       <div className="relative overflow-hidden rounded-[2rem] border border-white/10">
-        <Image src={b.src} alt={b.alt} width={b.w} height={b.h} sizes="100vw" className="h-[340px] w-full object-cover object-left md:h-auto" />
+        <Image src={b.src} alt={b.alt} width={b.w} height={b.h} sizes="100vw" className="aspect-[4/3] w-full object-cover object-left md:aspect-auto md:h-auto" />
         <Tag />
-        <div className="absolute inset-y-0 right-0 flex w-full flex-col justify-end gap-4 bg-gradient-to-t from-black/70 via-black/10 to-transparent p-6 md:w-[42%] md:justify-center md:bg-none md:p-10">
+        <div className="flex flex-col gap-4 p-6 md:absolute md:inset-y-0 md:right-0 md:w-[42%] md:justify-center md:p-10">
           <h2 className="font-display text-4xl font-extrabold uppercase leading-[0.9] md:text-6xl"><span className="outline-text">Padded where</span><br />it counts.</h2>
           <p className="max-w-sm text-white/80">Front panels on the chest, ribs, arms, hips, thighs and knees. Smooth fabric everywhere else.</p>
           <Link href={`/products/${HANDLES.base}`} className="btn-primary self-start">Shop the Base Layer</Link>
