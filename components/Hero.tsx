@@ -38,8 +38,8 @@ export function Hero() {
             <div aria-hidden className="float-shadow absolute inset-x-[12%] bottom-0 h-8 rounded-[50%] bg-black/70 blur-xl" />
             <Image src={CUT.longSet.src} alt={CUT.longSet.alt} width={CUT.longSet.w} height={CUT.longSet.h} priority sizes="(min-width:768px) 58vw, 100vw" className="float-product relative mx-auto h-auto w-full drop-shadow-[0_30px_40px_rgba(0,0,0,0.6)]" />
           </div>
-          <div className="relative z-20 mt-3 flex justify-center md:absolute md:right-0 md:top-0 md:mt-0"><HeroViews /></div>
-          <span className="absolute bottom-2 right-0 z-10 rounded-full border border-white/20 bg-black/55 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-white/80 backdrop-blur">Rendering</span>
+          <div className="relative z-20 mt-3 flex justify-center md:justify-end"><HeroViews /></div>
+          <span className="absolute left-0 top-0 z-10 rounded-full border border-white/20 bg-black/55 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-white/80 backdrop-blur">Rendering</span>
         </div>
       </div>
     </section>

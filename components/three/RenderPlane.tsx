@@ -63,17 +63,19 @@ export function RenderPlane({ ctl, vpRef, onShown }: { ctl: RenderCtl; vpRef: { 
     const { view, tour } = ctl;
     let target: { s: number; cx: number; cy: number };
     let xo = 0;
+    let yo = 0;
     if (tour !== null) {
       const a = Math.min(TOUR.length - 1, Math.floor(tour));
       const b = Math.min(TOUR.length - 1, a + 1);
       const f = tour - a;
       const e = f * f * (3 - 2 * f);
       const mk = (i: number) => { const r = TOUR[i].rect; const narrow = vp.width / vp.height < 0.85;
-      const pl = place(r, vp.width * (narrow ? 0.92 : 0.5), vp.height * (narrow ? 0.42 : 0.62)); return { ...pl, s: Math.min(pl.s, 2.6) }; };
+      const pl = place(r, vp.width * (narrow ? 0.8 : 0.4), vp.height * (narrow ? 0.3 : 0.6)); return { ...pl, s: Math.min(pl.s, 2.6) }; };
       const A = mk(a);
       const B = mk(b);
       target = { s: lerp(A.s, B.s, e) * (1 - 0.14 * Math.sin(Math.PI * e)), cx: lerp(A.cx, B.cx, e), cy: lerp(A.cy, B.cy, e) };
-      xo = vp.width / vp.height < 0.85 ? 0 : vp.width * 0.1;
+      if (vp.width / vp.height < 0.85) yo = -vp.height * 0.2;
+      else xo = vp.width * 0.2;
     } else {
       const [fw, fh] = VIEW_FRAC[view];
       target = place(VIEW_RECT[view], vp.width * fw, vp.height * fh);
@@ -84,7 +86,7 @@ export function RenderPlane({ ctl, vpRef, onShown }: { ctl: RenderCtl; vpRef: { 
     cur.cx = (cur.cx ?? target.cx) + (target.cx - (cur.cx ?? target.cx)) * k;
     cur.cy = (cur.cy ?? target.cy) + (target.cy - (cur.cy ?? target.cy)) * k;
     g.scale.setScalar(cur.s);
-    g.position.set(-cur.cx * cur.s + xo, -cur.cy * cur.s, 0);
+    g.position.set(-cur.cx * cur.s + xo, -cur.cy * cur.s + yo, 0);
   });
 
   return (

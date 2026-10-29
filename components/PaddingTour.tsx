@@ -23,9 +23,9 @@ export function PaddingTour() {
     <div aria-live="polite" className="glass absolute inset-x-4 bottom-8 rounded-2xl p-4 text-sm md:hidden">
       {cur ? <><strong className="text-white">{cur.label}.</strong> <span className="text-white/75">{cur.description}</span></> : <span className="text-white/75">Scroll to look at each padded area.</span>}
     </div>
-    <ul className="mt-6 hidden space-y-2 text-sm md:block">
+    <ul className="mt-6 hidden max-w-xs space-y-2 md:block">
       {BASE_LAYER.paddedAreas.map((p, i) => (
-        <li key={p.id} className={`pad-label border-l-2 pl-3 transition ${zone === i ? 'border-accent text-white' : 'border-white/15 text-white/55'}`}>
+        <li key={p.id} className={`glass block rounded-2xl border px-3 py-2 text-xs leading-snug transition ${zone === i ? '!border-accent text-white' : 'text-white/60'}`}>
           <strong className="text-white">{p.label}.</strong> {p.description}
         </li>
       ))}

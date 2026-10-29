@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { Accordion } from '@/components/Accordion';
 import { ClubForm } from '@/components/ClubForm';
@@ -32,7 +33,7 @@ export default async function Home() {
 
       {/* What it is and where it is padded, side by side */}
       <section className="section !py-14 md:!py-20" aria-labelledby="overview">
-        <div className="grid gap-8 md:grid-cols-2">
+        <div className="overview-grid grid gap-8 md:grid-cols-2">
           <Reveal className="glass rounded-[2rem] p-6 md:p-8">
             <p className="eyebrow">Overview</p>
             <h2 id="overview" className="h2 text-4xl md:text-5xl">What it is</h2>
@@ -65,17 +66,29 @@ export default async function Home() {
         </div>
       </section>
 
+      </div>
+
       {/* Scroll tour of the padded areas (the 3D stage moves across the garments). Only takes space when the stage is live. */}
       <section data-stage="padding" className="stage-only relative h-[170svh]" aria-labelledby="padding">
-        <div className="sticky top-0 flex h-[100svh] items-start px-4 pt-20 md:px-[4%] md:pt-28">
-          <div className="max-w-sm">
-            <p className="eyebrow">Padding and construction</p>
-            <h2 id="padding" className="h2 text-4xl md:text-6xl">Where it is padded</h2>
-            <p className="mt-4 text-white/75"><span className="md:hidden">Scroll to move across the padded areas.</span><span className="hidden md:inline">Scroll to move across each padded area.</span></p>
-            <PaddingTour />
+        {/* grass sits under the 3D stage; the text sits above it (two sticky layers, because a sticky element is its own layer) */}
+        <div className="sticky top-0 z-0 h-[100svh] overflow-hidden">
+          <Image src={SCENE.grassLine.src} alt="" width={SCENE.grassLine.w} height={SCENE.grassLine.h} sizes="100vw" className="absolute inset-0 h-full w-full object-cover" />
+          <div aria-hidden className="absolute inset-0 bg-[#080a0e]/65" />
+          <div aria-hidden className="absolute inset-x-0 top-0 h-[38%] bg-gradient-to-b from-[#080a0e] via-[#080a0e]/75 to-transparent md:hidden" />
+        </div>
+        <div className="sticky top-0 z-10 -mt-[100svh] h-[100svh]">
+          <div className="relative flex h-full items-start px-4 pt-20 md:px-[4%] md:pt-28">
+            <div className="max-w-sm">
+              <p className="eyebrow">Padding and construction</p>
+              <h2 id="padding" className="h2 text-4xl md:text-6xl">Where it is padded</h2>
+              <p className="mt-4 text-white/75"><span className="md:hidden">Scroll to move across the padded areas.</span><span className="hidden md:inline">Scroll to move across each padded area.</span></p>
+              <PaddingTour />
+            </div>
           </div>
         </div>
       </section>
+
+      <div className="relative z-10">
 
       <section className="section !py-10" aria-labelledby="closeups">
         <h2 id="closeups" className="sr-only">Close-ups</h2>

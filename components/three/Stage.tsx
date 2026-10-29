@@ -13,7 +13,7 @@ const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 
 /** Where the render sits for each page section (x/y are fractions of half the viewport). */
 const POSES: Record<string, { x: number; y: number; s: number }> = {
-  hero: { x: 0.14, y: 0, s: 1 },
+  hero: { x: 0.3, y: 0.02, s: 0.9 },
   overview: { x: 0.52, y: 0, s: 0.8 },
   padding: { x: 0, y: 0, s: 1 },
   fit: { x: -0.52, y: 0, s: 0.74 },
