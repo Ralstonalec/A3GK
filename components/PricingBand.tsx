@@ -1,12 +1,15 @@
 import Link from 'next/link';
 import { HANDLES, PRICING } from '@/lib/content';
+import { SCENE } from '@/lib/photos';
+import { SceneBackdrop } from './SceneBackdrop';
 
 const save = PRICING.piece * 2 - PRICING.bundle;
 
 /** Price graphic: one piece, or a top and a bottom. Numbers come from PRICING so they match Shopify. */
 export function PricingBand() {
   return (
-    <section className="section !py-12" aria-labelledby="pricing">
+    <section className="section relative isolate !py-12" aria-labelledby="pricing">
+      <SceneBackdrop scene={SCENE.stadiumNight} position="60% 40%" />
       <p className="eyebrow">Pricing</p>
       <h2 id="pricing" className="h2">Pick a piece. Or pair it.</h2>
       <div className="mt-8 grid gap-4 md:grid-cols-2">

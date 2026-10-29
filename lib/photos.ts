@@ -46,5 +46,7 @@ export const SHORT_SET: { banner: ShortImage; stance: ShortImage; closeup: Short
 
 /** AI-generated scenery (no people, no products, no equipment). A rendering, labelled as such where it is shown. */
 export const SCENE = {
+  stadiumNight: { src: '/photos/scene-stadium-night.webp', w: 1800, h: 1004, alt: 'Rendering of an empty floodlit stadium stand at night' },
+  grassLine: { src: '/photos/scene-grass-line.webp', w: 1800, h: 1004, alt: 'Rendering of a white pitch line on wet grass at night with a goal in the mist' },
   pitchNight: { src: '/photos/scene-pitch-night.webp', w: 1424, h: 1052, alt: 'Rendering of an empty floodlit football pitch at night with a goal in the mist' },
 };

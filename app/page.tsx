@@ -5,7 +5,8 @@ import { MacroGrid } from '@/components/MacroGrid';
 import { PhotoSlot } from '@/components/PhotoSlot';
 import { PromoBanner, PromoGallery } from '@/components/PromoGallery';
 import { ShortSet } from '@/components/ShortSet';
-import { PROMO } from '@/lib/photos';
+import { PROMO, SCENE } from '@/lib/photos';
+import { SceneBackdrop } from '@/components/SceneBackdrop';
 import { ProductCard } from '@/components/ProductCard';
 import { KitBuilder } from '@/components/KitBuilder';
 import { Reveal } from '@/components/Reveal';
@@ -155,7 +156,8 @@ export default async function Home() {
 
         {/* Club sign-up */}
         <section className="section !py-12" aria-labelledby="club">
-          <Reveal className="glass grid items-center gap-8 rounded-[2rem] p-6 md:grid-cols-2 md:p-10">
+          <Reveal className="glass relative isolate grid items-center gap-8 overflow-hidden rounded-[2rem] p-6 md:grid-cols-2 md:p-10">
+            <SceneBackdrop scene={SCENE.grassLine} position="50% 70%" fade="bottom" />
             <div>
               <p className="eyebrow">A3 Goalkeepers Club</p>
               <h2 id="club" className="h2 text-4xl md:text-5xl">Hear it first</h2>
