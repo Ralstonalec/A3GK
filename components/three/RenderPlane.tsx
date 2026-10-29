@@ -21,14 +21,8 @@ const PW = PH * (RENDER.w / RENDER.h);
 const VIEW_RECT: Record<View, Rect> = { set: [205, 45, 1540, 990], top: [215, 45, 790, 880], legs: [1345, 85, 400, 950] };
 const VIEW_FRAC: Record<View, [number, number]> = { set: [0.56, 0.8], top: [0.5, 0.78], legs: [0.26, 0.86] };
 
-export const TOUR: { id: string; rect: Rect }[] = [
-  { id: 'chest', rect: [515, 221, 268, 229] },
-  { id: 'ribs', rect: [421, 457, 386, 172] },
-  { id: 'upper-arms', rect: [250, 193, 114, 236] },
-  { id: 'elbows', rect: [221, 471, 122, 272] },
-  { id: 'hips-thighs', rect: [1593, 164, 136, 372] },
-  { id: 'knees', rect: [1571, 579, 129, 200] },
-];
+import { TOUR } from '@/lib/tour';
+export { TOUR };
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
@@ -92,7 +86,7 @@ export function RenderPlane({ ctl, vpRef, onShown }: { ctl: RenderCtl; vpRef: { 
       const f = tour - a;
       const e = f * f * (3 - 2 * f);
       const mk = (i: number) => { const r = TOUR[i].rect; const narrow = vp.width / vp.height < 0.85;
-      const pl = place(r, vp.width * (narrow ? 0.92 : 0.5), vp.height * (narrow ? 0.42 : 0.62)); return { ...pl, s: Math.min(pl.s, 2.6) }; };
+      const pl = place(r, vp.width * (narrow ? 0.92 : 0.5), vp.height * (narrow ? 0.3 : 0.62)); return { ...pl, s: Math.min(pl.s, 2.6) }; };
       const A = mk(a);
       const B = mk(b);
       target = { s: lerp(A.s, B.s, e) * (1 - 0.14 * Math.sin(Math.PI * e)), cx: lerp(A.cx, B.cx, e), cy: lerp(A.cy, B.cy, e) };

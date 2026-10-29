@@ -48,7 +48,7 @@ function Scene() {
     let prog = 0;
     for (const el of sections.current) {
       const r = el.getBoundingClientRect();
-      if (r.top <= vh * 0.5 && r.bottom >= vh * 0.5) { name = el.dataset.stage ?? 'none'; prog = clamp((vh * 0.5 - r.top) / r.height); break; }
+      if (r.top <= vh * 0.5 && r.bottom >= vh * 0.5) { name = el.dataset.stage ?? 'none'; prog = clamp(-r.top / Math.max(1, r.height - vh)); break; }
     }
 
     const P = POSES[name] ?? { x: 0, y: 0, s: 0 };
@@ -65,8 +65,10 @@ function Scene() {
     cur.current.y += (stage.mouse.y - cur.current.y) * 0.05;
 
     const inTour = name === 'padding';
-    const tour = inTour ? clamp((prog - 0.05) / 0.88) * (TOUR.length - 1) : null;
+    // prog is how far through the pinned scroll range we are (0 = just pinned, 1 = about to unpin), so every zone gets its own stretch of scroll
+    const tour = inTour ? clamp((prog - 0.03) / 0.94) * (TOUR.length - 1) : null;
     ctl.current.tour = tour;
+    stage.tour = tour;
     ctl.current.view = stage.view;
     const z = tour === null ? -1 : Math.round(tour);
     if (z !== zone.current) {

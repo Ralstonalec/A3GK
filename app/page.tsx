@@ -67,12 +67,12 @@ export default async function Home() {
       </section>
 
       {/* Scroll tour of the padded areas (the 3D stage moves across the garments). Only takes space when the stage is live. */}
-      <section data-stage="padding" className="stage-only relative h-[170svh]" aria-labelledby="padding">
+      <section data-stage="padding" className="stage-only relative h-[300svh]" aria-labelledby="padding">
         <div className="sticky top-0 flex h-[100svh] items-start px-4 pt-20 md:px-[4%] md:pt-28">
           <div className="max-w-sm">
             <p className="eyebrow">Padding and construction</p>
             <h2 id="padding" className="h2 text-4xl md:text-6xl">Where it is padded</h2>
-            <p className="mt-4 text-white/75"><span className="md:hidden">Scroll to move across the padded areas.</span><span className="hidden md:inline">Scroll to move across each padded area.</span></p>
+            <p className="mt-4 text-white/75">Scroll to move across each padded area.</p>
             <PaddingTour />
           </div>
         </div>

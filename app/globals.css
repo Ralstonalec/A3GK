@@ -45,3 +45,8 @@ html[data-stage-live] .stage-off { display: none; }
 
 /* with the 3D stage live, the static padded-areas card is replaced by the scroll tour, so the overview card stands alone */
 html[data-stage-live] .overview-grid { grid-template-columns: minmax(0, 40rem); }
+
+@keyframes tour-scan { 0% { top: 0; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+@keyframes tour-dash { to { stroke-dashoffset: -20; } }
+.tour-scan { animation: tour-scan 2.6s linear infinite; box-shadow: 0 0 12px rgb(var(--accent)); }
+.tour-dash { animation: tour-dash 1s linear infinite; }

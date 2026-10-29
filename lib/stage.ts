@@ -10,6 +10,7 @@ export const stage = {
   view: 'set' as View,
   fx: { blur: 0 },
   padZone: -1,
+  tour: null as number | null, // fractional tour position (0..zones-1) while the tour section is on screen
   live: false,
   el: null as HTMLElement | null,
   requestView: null as null | ((v: View) => void),
