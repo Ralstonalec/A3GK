@@ -1,12 +1,13 @@
 import { NextResponse } from 'next/server';
 import { allow, clientIp } from '@/lib/ratelimit';
-import { addToCart, getCart, shopifyConfigured, updateLine } from '@/lib/shopify';
+import { addLines, addToCart, getCart, shopifyConfigured, updateLine } from '@/lib/shopify';
 
 export const dynamic = 'force-dynamic';
 
 type Body =
   | { action: 'get'; cartId: string }
   | { action: 'add'; cartId: string | null; merchandiseId: string; quantity: number }
+  | { action: 'add_lines'; cartId: string | null; lines: { merchandiseId: string; quantity: number }[] }
   | { action: 'update'; cartId: string; lineId: string; quantity: number };
 
 const gid = (kind: string) => new RegExp(`^gid://shopify/${kind}/[A-Za-z0-9_-]+(\\?key=[A-Za-z0-9_-]+)?$`);
@@ -48,6 +49,12 @@ export async function POST(req: Request) {
     if (body.action === 'add') {
       if ((body.cartId !== null && !isStr(body.cartId, CART_ID)) || !isStr(body.merchandiseId, VARIANT_ID) || !isQty(body.quantity, 1)) return bad();
       return NextResponse.json({ cart: await addToCart(body.cartId, body.merchandiseId, body.quantity) });
+    }
+    if (body.action === 'add_lines') {
+      const lines = body.lines;
+      if ((body.cartId !== null && !isStr(body.cartId, CART_ID)) || !Array.isArray(lines) || lines.length < 1 || lines.length > 4) return bad();
+      for (const l of lines) if (!l || !isStr(l.merchandiseId, VARIANT_ID) || !isQty(l.quantity, 1)) return bad();
+      return NextResponse.json({ cart: await addLines(body.cartId, lines.map((l) => ({ merchandiseId: l.merchandiseId, quantity: l.quantity }))) });
     }
     if (body.action === 'update') {
       if (!isStr(body.cartId, CART_ID) || !isStr(body.lineId, LINE_ID) || !isQty(body.quantity, 0)) return bad();

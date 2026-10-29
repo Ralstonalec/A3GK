@@ -45,6 +45,9 @@ const normalise = (p: RawProduct): Product => ({
   images: p.images.nodes, variants: p.variants.nodes, connected: true,
 });
 
+/** A piece that is not (yet) available from Shopify, e.g. still a draft. Shown as unconnected, never as a 404. */
+export const unavailable = (handle: string): Product => placeholder(handle) ?? { handle, title: handle, descriptionHtml: '', options: [], variants: [], images: [], connected: false };
+
 function placeholder(handle: string): Product | null {
   const p = PLACEHOLDER_PRODUCTS[handle];
   if (!p) return null;
@@ -83,18 +86,20 @@ export async function getCart(id: string): Promise<Cart | null> {
   return d.cart ? toCart(d.cart) : null;
 }
 
-export async function addToCart(cartId: string | null, merchandiseId: string, quantity: number): Promise<Cart> {
+export async function addLines(cartId: string | null, lines: { merchandiseId: string; quantity: number }[]): Promise<Cart> {
   if (!cartId) {
     const d = await storefront<{ cartCreate: { cart: RawCart } }>(
       `mutation($lines: [CartLineInput!]) { cartCreate(input: { lines: $lines }) { cart { ${CART_FIELDS} } } }`,
-      { lines: [{ merchandiseId, quantity }] }, 0);
+      { lines }, 0);
     return toCart(d.cartCreate.cart);
   }
   const d = await storefront<{ cartLinesAdd: { cart: RawCart } }>(
     `mutation($cartId: ID!, $lines: [CartLineInput!]!) { cartLinesAdd(cartId: $cartId, lines: $lines) { cart { ${CART_FIELDS} } } }`,
-    { cartId, lines: [{ merchandiseId, quantity }] }, 0);
+    { cartId, lines }, 0);
   return toCart(d.cartLinesAdd.cart);
 }
+
+export const addToCart = (cartId: string | null, merchandiseId: string, quantity: number) => addLines(cartId, [{ merchandiseId, quantity }]);
 
 export async function updateLine(cartId: string, lineId: string, quantity: number): Promise<Cart> {
   if (quantity <= 0) {

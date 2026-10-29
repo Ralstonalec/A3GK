@@ -1,4 +1,6 @@
 import Image from 'next/image';
+import Link from 'next/link';
+import { HANDLES } from '@/lib/content';
 import { SHORT_SET, type ShortImage } from '@/lib/photos';
 import { Tbc } from './Tbc';
 
@@ -23,13 +25,13 @@ export function ShortSet({ compact = false }: { compact?: boolean }) {
   return (
     <div>
       <div className="relative overflow-hidden rounded-[2rem] border border-white/10">
-        <Image src={banner.src} alt={banner.alt} width={banner.w} height={banner.h} sizes="(min-width:1024px) 90vw, 100vw" className="aspect-[4/3] w-full object-cover object-left md:aspect-auto md:h-auto" />
+        <Image src={banner.src} alt={banner.alt} width={banner.w} height={banner.h} sizes="(min-width:1024px) 90vw, 100vw" className={`w-full object-cover object-left ${compact ? 'aspect-[21/9]' : 'aspect-[4/3] md:aspect-auto md:h-auto'}`} />
         <Tag />
-        <div className="flex flex-col gap-3 p-6 md:absolute md:inset-y-0 md:right-0 md:w-[42%] md:justify-center md:p-10">
+        <div className={`flex flex-col gap-3 p-6 ${compact ? '' : 'md:absolute md:inset-y-0 md:right-0 md:w-[42%] md:justify-center md:p-10'}`}>
           <p className="eyebrow">Short-sleeve version</p>
           <h3 className="font-display text-3xl font-extrabold uppercase leading-[0.95] md:text-5xl">Top and shorts</h3>
           <p className="max-w-sm text-white/80">The same padding as the long-sleeve set, without the elbow and knee panels: chest, ribs and a panel on each short sleeve, plus a joined hip-and-thigh panel on each leg.</p>
-          <p className="text-sm text-white/70">Availability and pricing: <Tbc label="Whether the short-sleeve top and shorts are sold, how, and at what price" /></p>
+          <p className="text-sm text-white/70">Each piece is sold on its own, or in any combination with the long-sleeve top and leggings. <Link href={`/products/${HANDLES.base}`} className="font-semibold text-white underline underline-offset-4">Build your kit</Link>. Prices: <Tbc label="Prices" /></p>
         </div>
       </div>
       {!compact && (

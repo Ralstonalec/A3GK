@@ -14,6 +14,10 @@ export function Footer() {
           <p className="mb-3 text-xs font-bold uppercase tracking-widest text-white">Shop</p>
           <ul className="space-y-2 text-sm">
             <li><Link href={`/products/${HANDLES.base}`}>Padded Base Layer</Link></li>
+            <li><Link href={`/products/${HANDLES.longTop}`}>Long-Sleeve Top</Link></li>
+            <li><Link href={`/products/${HANDLES.shortTop}`}>Short-Sleeve Top</Link></li>
+            <li><Link href={`/products/${HANDLES.leggings}`}>Leggings</Link></li>
+            <li><Link href={`/products/${HANDLES.shorts}`}>Shorts</Link></li>
             <li><Link href={`/products/${HANDLES.socks}`}>Grip Socks</Link></li>
             <li><Link href={`/products/${HANDLES.bandages}`}>Sports Bandages</Link></li>
           </ul>

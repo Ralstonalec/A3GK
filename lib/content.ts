@@ -13,9 +13,25 @@ export const SITE = {
 };
 
 export const HANDLES = {
-  base: 'padded-base-layer',
+  base: 'padded-base-layer', // the "build your kit" page; the pieces below are the products in Shopify
+  longTop: 'long-sleeve-top',
+  shortTop: 'short-sleeve-top',
+  leggings: 'leggings',
+  shorts: 'shorts',
   socks: 'grip-socks',
   bandages: 'sports-bandages',
+} as const;
+
+/** Each piece is sold on its own and in any combination: one top, one bottom, both or either. */
+export const PIECES = {
+  tops: [
+    { handle: HANDLES.longTop, label: 'Long-sleeve top', padding: 'Chest, ribs, upper arms, and elbows and forearms.' },
+    { handle: HANDLES.shortTop, label: 'Short-sleeve top', padding: 'Chest, ribs and a panel on each short sleeve. No elbow panels.' },
+  ],
+  bottoms: [
+    { handle: HANDLES.leggings, label: 'Leggings', padding: 'Joined hip-and-thigh panel and a knee panel on each leg.' },
+    { handle: HANDLES.shorts, label: 'Shorts', padding: 'Joined hip-and-thigh panel on each leg. No knee panels.' },
+  ],
 } as const;
 
 export const NAV = [
@@ -35,8 +51,8 @@ export const BASE_LAYER = {
   // including whether they are sold together or separately (piecesSoldTogether).
   garmentType: 'mock-neck long-sleeve top and full-length leggings' as string | null,
   productName: 'A3GK Padded Base Layer', // working name from brief; confirm exact name
-  included: null as string | null, // what is in each purchase
-  piecesSoldTogether: null as boolean | null,
+  included: 'Only the pieces you choose. Every top and bottom is sold on its own, so you can buy one piece or any combination.' as string | null,
+  piecesSoldTogether: false as boolean | null, // confirmed by the owner: pieces are sold individually and in any combination
   fabricComposition: null as string | null,
   paddingSpec: null as string | null, // only manufacturer-verified information
   intendedFit: null as string | null,
@@ -98,6 +114,10 @@ export const FAQ = [
 /** Unconnected fallback so the site renders before Shopify is wired. Price is deliberately absent. */
 export const PLACEHOLDER_PRODUCTS: Record<string, { title: string; blurb: string }> = {
   [HANDLES.base]: { title: BASE_LAYER.productName, blurb: 'Padded base layer for goalkeepers.' },
+  [HANDLES.longTop]: { title: 'Long-Sleeve Top', blurb: 'Padded long-sleeve top.' },
+  [HANDLES.shortTop]: { title: 'Short-Sleeve Top', blurb: 'Padded short-sleeve top.' },
+  [HANDLES.leggings]: { title: 'Leggings', blurb: 'Padded leggings.' },
+  [HANDLES.shorts]: { title: 'Shorts', blurb: 'Padded shorts.' },
   [HANDLES.socks]: { title: 'Grip Socks', blurb: 'Regular grip socks.' },
   [HANDLES.bandages]: { title: 'Self-Adhesive Sports Bandages', blurb: 'Self-adhesive sports bandages.' },
 };

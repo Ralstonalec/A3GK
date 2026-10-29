@@ -10,6 +10,7 @@ type Ctx = {
   error: string | null;
   setOpen: (v: boolean) => void;
   add: (merchandiseId: string, quantity: number) => Promise<void>;
+  addMany: (lines: { merchandiseId: string; quantity: number }[]) => Promise<void>;
   setQuantity: (lineId: string, quantity: number) => Promise<void>;
 };
 
@@ -53,11 +54,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     if (await run({ action: 'add', cartId: cart?.id ?? null, merchandiseId, quantity })) setOpen(true);
   }, [cart, run]);
 
+  const addMany = useCallback(async (lines: { merchandiseId: string; quantity: number }[]) => {
+    if (await run({ action: 'add_lines', cartId: cart?.id ?? null, lines })) setOpen(true);
+  }, [cart, run]);
+
   const setQuantity = useCallback(async (lineId: string, quantity: number) => {
     if (cart) await run({ action: 'update', cartId: cart.id, lineId, quantity: Math.max(0, Math.min(20, quantity)) });
   }, [cart, run]);
 
-  const value = useMemo(() => ({ cart, open, busy, error, setOpen, add, setQuantity }), [cart, open, busy, error, add, setQuantity]);
+  const value = useMemo(() => ({ cart, open, busy, error, setOpen, add, addMany, setQuantity }), [cart, open, busy, error, add, addMany, setQuantity]);
   return <CartCtx.Provider value={value}>{children}</CartCtx.Provider>;
 }
 

@@ -13,3 +13,11 @@ Every item is a `null`/empty value in `lib/content.ts` or a Shopify field, and s
 - [ ] Returns / exchange terms
 - [ ] Contact details; privacy policy; terms; genuine social links
 - [ ] Replace hero material study with real product model/photography
+
+## Pieces and combinations (Shopify setup)
+Every piece is its own Shopify product so customers can buy any combination (one top, one bottom, both, or either):
+`long-sleeve-top`, `short-sleeve-top`, `leggings`, `shorts` (plus `grip-socks`, `sports-bandages`).
+- Give each of the four pieces a **Size** option (same option name on all) with its sizes and a price; set Active and available to the Online Store channel.
+- The kit builder on `/products/padded-base-layer` adds the chosen top and bottom as separate cart lines, each with its own size. The old Shopify product with handle `padded-base-layer` is no longer used; archive it.
+- Combination pricing (for example a discount when both a top and a bottom are bought): create an automatic discount in Shopify. The site shows the Shopify prices and does not apply any bundle price itself.
+- Which pieces exist and their padding are in `PIECES` in `lib/content.ts`.
