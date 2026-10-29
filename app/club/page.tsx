@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ClubForm } from '@/components/ClubForm';
+import Image from 'next/image';
 import { RenderFigure } from '@/components/RenderFigure';
+import { SCENE } from '@/lib/photos';
 import { Reveal } from '@/components/Reveal';
 import { supabaseConfigured } from '@/lib/supabase/env';
 import { Tbc } from '@/components/Tbc';
@@ -20,7 +22,12 @@ const PERKS = [
 export default function Club() {
   return (
     <div className="relative overflow-hidden">
-      <div aria-hidden className="pointer-events-none absolute -top-40 left-1/2 h-[520px] w-[920px] -translate-x-1/2 rounded-full bg-accent/15 blur-[120px]" />
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-[900px] md:h-[1000px]">
+        <Image src={SCENE.pitchNight.src} alt="" width={SCENE.pitchNight.w} height={SCENE.pitchNight.h} priority sizes="100vw" className="h-full w-full object-cover object-[50%_60%] opacity-100" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#080a0e]/35 via-transparent to-[#080a0e]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#080a0e]/75 via-[#080a0e]/15 to-transparent" />
+      </div>
+      <div aria-hidden className="pointer-events-none absolute -top-40 left-1/2 h-[520px] w-[920px] -translate-x-1/2 rounded-full bg-accent/10 blur-[120px]" />
       <section className="section relative grid items-center gap-10 !pb-10 pt-36 md:grid-cols-[1.15fr_1fr] md:pt-44">
         <div>
         <p className="eyebrow">A3 Goalkeeping</p>
@@ -34,7 +41,7 @@ export default function Club() {
           {supabaseConfigured ? <ClubForm /> : <Tbc label="Club sign-up is not connected yet" />}
         </div>
         </div>
-        <div className="glass hidden rounded-3xl p-4 md:block"><RenderFigure sizes="40vw" /></div>
+        <div className="glass hidden rounded-3xl bg-black/40 p-4 md:block"><RenderFigure sizes="40vw" /></div>
       </section>
 
       <section className="section relative !py-10" aria-label="What members get">
@@ -59,7 +66,7 @@ export default function Club() {
           </div>
           <Link href="/membership" className="btn-primary">About accounts</Link>
         </div>
-        <p className="mt-6 max-w-2xl text-sm text-white/55">We only use your email to tell you about A3GK products. No spam, and every email will have an unsubscribe link.</p>
+        <p className="mt-6 max-w-2xl text-sm text-white/55">Background image is a rendering. We only use your email to tell you about A3GK products. No spam, and every email will have an unsubscribe link.</p>
       </section>
     </div>
   );
