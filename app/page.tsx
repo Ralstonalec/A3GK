@@ -14,6 +14,8 @@ import { Fact, Tbc } from '@/components/Tbc';
 import { BASE_LAYER, BRAND_INTRO, FAQ, HANDLES, POLICIES, SIZE_GUIDE } from '@/lib/content';
 import { getProduct, unavailable } from '@/lib/shopify';
 import { PaddingTour } from '@/components/PaddingTour';
+import { ClubForm } from '@/components/ClubForm';
+import { supabaseConfigured } from '@/lib/supabase/env';
 import { RenderFigure } from '@/components/RenderFigure';
 
 export default async function Home() {
@@ -144,6 +146,18 @@ export default async function Home() {
             {bandages && <ProductCard product={bandages} />}
           </div>
           <p className="mt-3 text-sm text-white/55">Optional extras. Nothing is added to your order automatically.</p>
+        </section>
+
+        {/* Club sign-up */}
+        <section className="section !py-12" aria-labelledby="club">
+          <Reveal className="glass grid items-center gap-8 rounded-[2rem] p-6 md:grid-cols-2 md:p-10">
+            <div>
+              <p className="eyebrow">A3 Goalkeepers Club</p>
+              <h2 id="club" className="h2 text-4xl md:text-5xl">Hear it first</h2>
+              <p className="mt-4 text-white/75">Join the club for an email when new gear drops, and first in line for early access to future products. <Link href="/club" className="font-semibold underline underline-offset-4">More about the club</Link></p>
+            </div>
+            {supabaseConfigured ? <ClubForm id="home-join" /> : <Link href="/club" className="btn-primary justify-self-start">Join the club</Link>}
+          </Reveal>
         </section>
 
         {/* 9 — Brand intro */}

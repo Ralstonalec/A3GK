@@ -38,6 +38,7 @@ export const NAV = [
   { label: 'Padded Base Layer', href: `/products/${HANDLES.base}` },
   { label: 'Size Guide', href: '/size-guide' },
   { label: 'Other Essentials', href: '/#complete-your-kit' },
+  { label: 'The Club', href: '/club' },
   { label: 'About A3GK', href: '/about' },
   { label: 'Help', href: '/help' },
 ];
