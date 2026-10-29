@@ -3,9 +3,11 @@ import { Accordion } from '@/components/Accordion';
 import { Hero } from '@/components/Hero';
 import { MacroGrid } from '@/components/MacroGrid';
 import { PhotoSlot } from '@/components/PhotoSlot';
-import { PromoBanner, PromoGallery } from '@/components/PromoGallery';
+import { PromoGallery } from '@/components/PromoGallery';
+import { FloatBanner } from '@/components/FloatBanner';
 import { ShortSet } from '@/components/ShortSet';
-import { PROMO } from '@/lib/photos';
+import { PROMO, SCENE } from '@/lib/photos';
+import { SceneBackdrop } from '@/components/SceneBackdrop';
 import { ProductCard } from '@/components/ProductCard';
 import { KitBuilder } from '@/components/KitBuilder';
 import { Reveal } from '@/components/Reveal';
@@ -13,7 +15,11 @@ import { StageHost } from '@/components/StageHost';
 import { Fact, Tbc } from '@/components/Tbc';
 import { BASE_LAYER, BRAND_INTRO, FAQ, HANDLES, POLICIES, SIZE_GUIDE } from '@/lib/content';
 import { getProduct, unavailable } from '@/lib/shopify';
+import { FactStrip } from '@/components/FactStrip';
+import { PricingBand } from '@/components/PricingBand';
 import { PaddingTour } from '@/components/PaddingTour';
+import { ClubForm } from '@/components/ClubForm';
+import { supabaseConfigured } from '@/lib/supabase/env';
 import { RenderFigure } from '@/components/RenderFigure';
 
 export default async function Home() {
@@ -25,6 +31,7 @@ export default async function Home() {
       <StageHost />
       <div className="relative z-10">
         <Hero />
+        <FactStrip />
 
         {/* 3 — Quick overview (3D garment slides to the right) */}
         <section data-stage="overview" className="flex min-h-[100svh] items-center" aria-labelledby="overview">
@@ -126,7 +133,9 @@ export default async function Home() {
           </Reveal>
         </section>
 
-        <PromoBanner />
+        <FloatBanner />
+
+        <PricingBand />
 
         {/* 7 — Purchase area */}
         <section id="buy" className="section" aria-label="Buy the padded base layer">
@@ -144,6 +153,19 @@ export default async function Home() {
             {bandages && <ProductCard product={bandages} />}
           </div>
           <p className="mt-3 text-sm text-white/55">Optional extras. Nothing is added to your order automatically.</p>
+        </section>
+
+        {/* Club sign-up */}
+        <section className="section !py-12" aria-labelledby="club">
+          <Reveal className="glass relative isolate grid items-center gap-8 overflow-hidden rounded-[2rem] p-6 md:grid-cols-2 md:p-10">
+            <SceneBackdrop scene={SCENE.grassLine} position="50% 70%" fade="bottom" />
+            <div>
+              <p className="eyebrow">A3 Goalkeepers Club</p>
+              <h2 id="club" className="h2 text-4xl md:text-5xl">Hear it first</h2>
+              <p className="mt-4 text-white/75">Join the club for an email when new gear drops, and first in line for early access to future products. <Link href="/club" className="font-semibold underline underline-offset-4">More about the club</Link></p>
+            </div>
+            {supabaseConfigured ? <ClubForm id="home-join" /> : <Link href="/club" className="btn-primary justify-self-start">Join the club</Link>}
+          </Reveal>
         </section>
 
         {/* 9 — Brand intro */}

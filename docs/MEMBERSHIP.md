@@ -6,6 +6,12 @@
 - **Purchases**: Shopify sends `orders/paid` and `orders/cancelled` webhooks to `/api/webhooks/shopify`. The signature is verified, then email, order number, items and total go into `purchases`. A member sees only purchases whose email matches their **confirmed** account email (row rule).
 - **Rewards**: not built. Orders are recorded so they can count once rules exist (earn rate, tiers, redemptions are still to decide).
 
+## A3 Goalkeepers Club (`/club`)
+- Email-only sign-up (no account needed) with a consent checkbox. Rows go into `email_signups` with `source = 'club'`. The same form sits on the homepage. Server action: `app/club/actions.ts` (honeypot, shape check, 5 attempts per 10 min per address).
+- Read the list in Supabase: `select email, created_at from public.email_signups where source = 'club' order by created_at desc;`
+- **Not yet applied:** `supabase/proposed/club-list-hardening.sql` adds a unique email index, consent time and a per-row unsubscribe token. Apply it before the first send. Until then duplicates can appear, and club-only sign-ups have no unsubscribe link, so send nothing to them yet.
+- "Early access" is only a promise to run it where you choose to; nothing in the code gates products.
+
 ## Setup you must do (secrets are yours to add)
 1. Vercel → Settings → Environment Variables (Production + Preview), then redeploy:
    - `SUPABASE_SERVICE_ROLE_KEY` (Supabase → Settings → API; server-only, keep it secret)

@@ -43,3 +43,15 @@ export const SHORT_SET: { banner: ShortImage; stance: ShortImage; closeup: Short
   stance: { src: '/photos/short-stance.webp', w: 1100, h: 1377, alt: 'Rendering of a goalkeeper in a ready stance wearing the A3GK short-sleeve padded top and padded shorts, with honeycomb panels on the chest, ribs, sleeves and hips and thighs', caption: 'Top and shorts worn together' },
   closeup: { src: '/photos/short-closeup.webp', w: 1600, h: 1195, alt: 'Rendering close-up of the A3GK short-sleeve top: chest panel, two rib panels and a panel on the short sleeve', caption: 'Chest, rib and sleeve panels' },
 };
+
+/** AI-generated scenery (no people, no products, no equipment). A rendering, labelled as such where it is shown. */
+export const SCENE = {
+  stadiumNight: { src: '/photos/scene-stadium-night.webp', w: 1800, h: 1004, alt: 'Rendering of an empty floodlit stadium stand at night' },
+  grassLine: { src: '/photos/scene-grass-line.webp', w: 1800, h: 1004, alt: 'Rendering of a white pitch line on wet grass at night with a goal in the mist' },
+  pitchNight: { src: '/photos/scene-pitch-night.webp', w: 1424, h: 1052, alt: 'Rendering of an empty floodlit football pitch at night with a goal in the mist' },
+};
+
+/** The long-sleeve set cut out of its studio background (transparent edges), so it can float over scenery. */
+export const CUT = {
+  longSet: { src: '/photos/cut-long-set.webp', w: 1533, h: 975, alt: 'Rendering of the A3GK padded long-sleeve top and leggings floating side by side: honeycomb panels on the chest, ribs, arms, hips, thighs and knees, and a printed waistband' },
+};
