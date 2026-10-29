@@ -39,7 +39,6 @@ export function Hero() {
             <Image src={CUT.longSet.src} alt={CUT.longSet.alt} width={CUT.longSet.w} height={CUT.longSet.h} priority sizes="(min-width:768px) 58vw, 100vw" className="float-product relative mx-auto h-auto w-full drop-shadow-[0_30px_40px_rgba(0,0,0,0.6)]" />
           </div>
           <div className="relative z-20 mt-3 flex justify-center md:justify-end"><HeroViews /></div>
-          <span className="absolute left-0 top-0 z-10 rounded-full border border-white/20 bg-black/55 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-white/80 backdrop-blur">Rendering</span>
         </div>
       </div>
     </section>
