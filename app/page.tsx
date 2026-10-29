@@ -3,7 +3,8 @@ import { Accordion } from '@/components/Accordion';
 import { Hero } from '@/components/Hero';
 import { MacroGrid } from '@/components/MacroGrid';
 import { PhotoSlot } from '@/components/PhotoSlot';
-import { PromoBanner, PromoGallery } from '@/components/PromoGallery';
+import { PromoGallery } from '@/components/PromoGallery';
+import { FloatBanner } from '@/components/FloatBanner';
 import { ShortSet } from '@/components/ShortSet';
 import { PROMO, SCENE } from '@/lib/photos';
 import { SceneBackdrop } from '@/components/SceneBackdrop';
@@ -132,7 +133,7 @@ export default async function Home() {
           </Reveal>
         </section>
 
-        <PromoBanner />
+        <FloatBanner />
 
         <PricingBand />
 

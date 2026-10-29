@@ -36,3 +36,9 @@ html[data-stage-live] .hero-poster { opacity: 0; }
 .hero-poster { transition: opacity .8s ease; }
 html:not([data-stage-live]) .stage-only { display: none; }
 html[data-stage-live] .stage-off { display: none; }
+
+@keyframes a3-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+@keyframes a3-shadow { 0%, 100% { transform: scale(1); opacity: .55; } 50% { transform: scale(.94); opacity: .4; } }
+.float-product { animation: a3-float 7s ease-in-out infinite; }
+.float-shadow { animation: a3-shadow 7s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .float-product, .float-shadow { animation: none; } }

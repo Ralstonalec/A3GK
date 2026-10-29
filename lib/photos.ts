@@ -50,3 +50,8 @@ export const SCENE = {
   grassLine: { src: '/photos/scene-grass-line.webp', w: 1800, h: 1004, alt: 'Rendering of a white pitch line on wet grass at night with a goal in the mist' },
   pitchNight: { src: '/photos/scene-pitch-night.webp', w: 1424, h: 1052, alt: 'Rendering of an empty floodlit football pitch at night with a goal in the mist' },
 };
+
+/** The long-sleeve set cut out of its studio background (transparent edges), so it can float over scenery. */
+export const CUT = {
+  longSet: { src: '/photos/cut-long-set.webp', w: 1533, h: 975, alt: 'Rendering of the A3GK padded long-sleeve top and leggings floating side by side: honeycomb panels on the chest, ribs, arms, hips, thighs and knees, and a printed waistband' },
+};
