@@ -10,13 +10,13 @@ import { HeroViews } from './HeroViews';
  */
 export function Hero() {
   return (
-    <section data-stage="hero" className="relative px-4 pb-10 pt-24 md:min-h-[92svh] md:px-[4%] md:pb-16 md:pt-32">
+    <section data-stage="hero" className="relative overflow-x-clip px-4 pb-10 pt-24 md:min-h-[92svh] md:px-[4%] md:pb-16 md:pt-32">
       <Image src={SCENE.grassLine.src} alt="" width={SCENE.grassLine.w} height={SCENE.grassLine.h} priority sizes="100vw" className="absolute inset-0 z-0 h-full w-full object-cover" />
       <div aria-hidden className="absolute inset-0 z-0 bg-gradient-to-r from-[#080a0e]/90 via-[#080a0e]/40 to-[#080a0e]/10" />
       <div aria-hidden className="absolute inset-x-0 bottom-0 z-0 h-40 bg-gradient-to-t from-[#080a0e] to-transparent" />
       <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-4 md:gap-8 md:min-h-[calc(92svh-12rem)] md:grid-cols-[0.9fr_1.4fr]">
-        <div className="flex flex-col gap-6">
-          <h1 className="font-display text-[clamp(2.7rem,7.6vw,8rem)] font-extrabold uppercase leading-[0.84] tracking-tight">
+        <div className="flex min-w-0 flex-col gap-6">
+          <h1 className="font-display text-[clamp(2.1rem,9.5vw,3.4rem)] md:text-[clamp(3.2rem,7.6vw,8rem)] font-extrabold uppercase leading-[0.84] tracking-tight">
             <span className="outline-text">Goalkeeper</span>
             <br />
             kit starts
@@ -33,7 +33,7 @@ export function Hero() {
           </div>
           <p className="hidden text-sm font-semibold text-white/80 md:block">From ${PRICING.piece} {PRICING.currency} a piece · top + bottom ${PRICING.bundle} {PRICING.currency}</p>
         </div>
-        <div className="relative">
+        <div className="relative min-w-0">
           <div className="hero-poster pointer-events-none relative">
             <div aria-hidden className="float-shadow absolute inset-x-[12%] bottom-0 h-8 rounded-[50%] bg-black/70 blur-xl" />
             <Image src={CUT.longSet.src} alt={CUT.longSet.alt} width={CUT.longSet.w} height={CUT.longSet.h} priority sizes="(min-width:768px) 58vw, 100vw" className="float-product relative mx-auto h-auto w-full drop-shadow-[0_30px_40px_rgba(0,0,0,0.6)]" />
