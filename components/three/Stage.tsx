@@ -13,7 +13,7 @@ const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 
 /** Where the render sits for each page section (x/y are fractions of half the viewport). */
 const POSES: Record<string, { x: number; y: number; s: number }> = {
-  hero: { x: 0.3, y: 0.02, s: 0.9 },
+  hero: { x: 0.14, y: 0, s: 1 },
   overview: { x: 0.52, y: 0, s: 0.8 },
   padding: { x: 0, y: 0, s: 1 },
   fit: { x: -0.52, y: 0, s: 0.74 },
@@ -53,7 +53,7 @@ function Scene() {
 
     const P = POSES[name] ?? { x: 0, y: 0, s: 0 };
     const tx = mobile ? 0 : P.x;
-    const ty = mobile ? (name === 'hero' ? -0.36 : name === 'padding' ? -0.04 : 0.5) : P.y;
+    const ty = mobile ? (name === 'hero' ? -0.72 : name === 'padding' ? -0.04 : 0.5) : P.y;
     const ts = mobile ? P.s * (name === 'hero' ? 1.25 : name === 'padding' ? 0.9 : 1.5) : P.s;
     const k = 1 - Math.exp(-dt * 3.5);
     const p = pose.current;
