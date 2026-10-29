@@ -19,5 +19,5 @@ Every piece is its own Shopify product so customers can buy any combination (one
 `long-sleeve-top`, `short-sleeve-top`, `leggings`, `shorts` (plus `grip-socks`, `sports-bandages`).
 - Give each of the four pieces a **Size** option (same option name on all) with its sizes and a price; set Active and available to the Online Store channel.
 - The kit builder on `/products/padded-base-layer` adds the chosen top and bottom as separate cart lines, each with its own size. The old Shopify product with handle `padded-base-layer` is no longer used; archive it.
-- Combination pricing (for example a discount when both a top and a bottom are bought): create an automatic discount in Shopify. The site shows the Shopify prices and does not apply any bundle price itself.
+- Pricing is set: $50 CAD per piece, $80 CAD for one top plus one bottom. In Shopify each piece is priced 50.00 CAD and an automatic discount ("Top and bottom bundle ($80)", Tops × Bottoms, $20 off) is active. The site's displayed bundle saving uses `PRICING` in `lib/content.ts`; keep both in sync. Test a top + bottom checkout to confirm the discount applies, and set the products Active.
 - Which pieces exist and their padding are in `PIECES` in `lib/content.ts`.

@@ -1,8 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { HANDLES } from '@/lib/content';
+import { HANDLES, PRICING } from '@/lib/content';
 import { SHORT_SET, type ShortImage } from '@/lib/photos';
-import { Tbc } from './Tbc';
 
 const Tag = () => (
   <span className="absolute left-3 top-3 rounded-full border border-white/20 bg-black/55 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-white/80 backdrop-blur">Rendering</span>
@@ -31,7 +30,7 @@ export function ShortSet({ compact = false }: { compact?: boolean }) {
           <p className="eyebrow">Short-sleeve version</p>
           <h3 className="font-display text-3xl font-extrabold uppercase leading-[0.95] md:text-5xl">Top and shorts</h3>
           <p className="max-w-sm text-white/80">The same padding as the long-sleeve set, without the elbow and knee panels: chest, ribs and a panel on each short sleeve, plus a joined hip-and-thigh panel on each leg.</p>
-          <p className="text-sm text-white/70">Each piece is sold on its own, or in any combination with the long-sleeve top and leggings. <Link href={`/products/${HANDLES.base}`} className="font-semibold text-white underline underline-offset-4">Build your kit</Link>. Prices: <Tbc label="Prices" /></p>
+          <p className="text-sm text-white/70">Each piece is sold on its own, or in any combination with the long-sleeve top and leggings. <Link href={`/products/${HANDLES.base}`} className="font-semibold text-white underline underline-offset-4">Build your kit</Link>. ${PRICING.piece} {PRICING.currency} per piece, or ${PRICING.bundle} {PRICING.currency} for a top and a bottom.</p>
         </div>
       </div>
       {!compact && (

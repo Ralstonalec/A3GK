@@ -3,10 +3,9 @@
 import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { useCart } from '@/lib/cart-context';
-import { PIECES } from '@/lib/content';
+import { PIECES, PRICING } from '@/lib/content';
 import { formatMoney } from '@/lib/format';
 import type { Product, Variant } from '@/lib/types';
-import { Tbc } from './Tbc';
 
 type Slot = 'top' | 'bottom';
 
@@ -35,7 +34,10 @@ export function KitBuilder({ products }: { products: Product[] }) {
   const picked = chosen.map((p) => ({ product: p, variant: pickVariant(p, sizes[p.handle] ?? {}) }));
   const allChosen = chosen.length > 0 && picked.every((x) => x.variant);
   const connected = picked.length > 0 && picked.every((x) => x.product.connected);
-  const total = picked.every((x) => x.variant) && picked.length ? picked.reduce((n, x) => n + Number(x.variant!.price.amount), 0) * qty : null;
+  const isBundle = chosen.length === 2;
+  const bundleSaving = isBundle ? Math.max(0, PRICING.piece * 2 - PRICING.bundle) * qty : 0;
+  const subtotal = picked.every((x) => x.variant) && picked.length ? picked.reduce((n, x) => n + Number(x.variant!.price.amount), 0) * qty : null;
+  const total = subtotal === null ? null : subtotal - bundleSaving;
   const currency = picked[0]?.variant?.price.currencyCode;
   const soldOut = picked.some((x) => x.variant && !x.variant.availableForSale);
 
@@ -89,6 +91,7 @@ export function KitBuilder({ products }: { products: Product[] }) {
       <div>
         <h2 className="font-display text-3xl font-bold uppercase">Build your kit</h2>
         <p className="mt-2 text-white/75">Every piece is sold on its own. Choose a top, a bottom, or both, in any combination, each in its own size.</p>
+        <p className="mt-2 text-sm font-semibold">${PRICING.piece} {PRICING.currency} per piece · top + bottom ${PRICING.bundle} {PRICING.currency}</p>
       </div>
       {group('top', 'Top', PIECES.tops)}
       {group('bottom', 'Bottom', PIECES.bottoms)}
@@ -111,8 +114,9 @@ export function KitBuilder({ products }: { products: Product[] }) {
             <span>{x.variant ? formatMoney(x.variant.price.amount, x.variant.price.currencyCode) : '…'}</span>
           </p>
         ))}
+        {bundleSaving > 0 && total !== null && currency && <p className="flex justify-between gap-4 text-accent"><span>Top + bottom bundle</span><span>−{formatMoney(String(bundleSaving), currency)}</span></p>}
         {total !== null && currency && <p className="flex justify-between gap-4 border-t border-white/15 pt-2 text-base font-semibold"><span>Total</span><span>{formatMoney(String(total), currency)} <span className="text-sm font-normal text-white/55">{currency}</span></span></p>}
-        {picked.length > 0 && !connected && <p><Tbc label="Prices, stock and combination pricing" /></p>}
+        {picked.length > 0 && !connected && <p className="text-white/70">{isBundle ? `Top + bottom: $${PRICING.bundle} ${PRICING.currency} per kit${qty > 1 ? ` ($${PRICING.bundle * qty} for ${qty})` : ''}.` : `$${PRICING.piece} ${PRICING.currency} per piece.`}</p>}
         {soldOut && <p className="text-red-300">One of these pieces is sold out in that size.</p>}
       </div>
 

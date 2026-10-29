@@ -121,3 +121,6 @@ export const PLACEHOLDER_PRODUCTS: Record<string, { title: string; blurb: string
   [HANDLES.socks]: { title: 'Grip Socks', blurb: 'Regular grip socks.' },
   [HANDLES.bandages]: { title: 'Self-Adhesive Sports Bandages', blurb: 'Self-adhesive sports bandages.' },
 };
+
+/** Set by the owner: $50 CAD per piece, $80 CAD for one top plus one bottom. Mirrors the Shopify automatic discount. */
+export const PRICING = { currency: 'CAD', piece: 50, bundle: 80 } as const;
