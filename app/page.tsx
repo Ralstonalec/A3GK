@@ -13,6 +13,8 @@ import { StageHost } from '@/components/StageHost';
 import { Fact, Tbc } from '@/components/Tbc';
 import { BASE_LAYER, BRAND_INTRO, FAQ, HANDLES, POLICIES, SIZE_GUIDE } from '@/lib/content';
 import { getProduct, unavailable } from '@/lib/shopify';
+import { FactStrip } from '@/components/FactStrip';
+import { PricingBand } from '@/components/PricingBand';
 import { PaddingTour } from '@/components/PaddingTour';
 import { ClubForm } from '@/components/ClubForm';
 import { supabaseConfigured } from '@/lib/supabase/env';
@@ -27,6 +29,7 @@ export default async function Home() {
       <StageHost />
       <div className="relative z-10">
         <Hero />
+        <FactStrip />
 
         {/* 3 — Quick overview (3D garment slides to the right) */}
         <section data-stage="overview" className="flex min-h-[100svh] items-center" aria-labelledby="overview">
@@ -129,6 +132,8 @@ export default async function Home() {
         </section>
 
         <PromoBanner />
+
+        <PricingBand />
 
         {/* 7 — Purchase area */}
         <section id="buy" className="section" aria-label="Buy the padded base layer">

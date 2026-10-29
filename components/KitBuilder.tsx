@@ -9,7 +9,7 @@ import type { Product, Variant } from '@/lib/types';
 
 type Slot = 'top' | 'bottom';
 
-const chip = (on: boolean) => `relative flex min-h-[48px] cursor-pointer items-center justify-center border px-4 text-sm font-semibold ${on ? 'border-accent bg-accent text-ink' : 'border-white/25 bg-white/[0.06]'}`;
+const chip = (on: boolean, none = false) => `relative flex min-h-[48px] cursor-pointer items-center justify-center rounded-xl border px-4 text-sm font-semibold transition focus-within:ring-2 focus-within:ring-accent ${on ? (none ? 'border-white/60 bg-white/15' : 'border-accent bg-accent text-ink') : 'border-white/20 bg-white/[0.05] hover:border-white/45'}`;
 
 /** Pick the variant of one piece matching its chosen options (a piece with no options has one variant). */
 function pickVariant(p: Product, sel: Record<string, string>): Variant | undefined {
@@ -51,7 +51,7 @@ export function KitBuilder({ products }: { products: Product[] }) {
     <fieldset>
       <legend className="mb-2 text-sm font-bold uppercase tracking-wider">{title}</legend>
       <div className="grid gap-2 sm:grid-cols-3">
-        <label className={chip(choice[slot] === null)}>
+        <label className={chip(choice[slot] === null, true)}>
           <input type="radio" name={slot} className="sr-only" checked={choice[slot] === null} onChange={() => setChoice((c) => ({ ...c, [slot]: null }))} />
           None
         </label>
