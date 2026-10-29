@@ -3,18 +3,22 @@ import { Accordion } from '@/components/Accordion';
 import { Hero } from '@/components/Hero';
 import { MacroGrid } from '@/components/MacroGrid';
 import { PhotoSlot } from '@/components/PhotoSlot';
+import { PromoBanner, PromoGallery } from '@/components/PromoGallery';
+import { ShortSet } from '@/components/ShortSet';
+import { PROMO } from '@/lib/photos';
 import { ProductCard } from '@/components/ProductCard';
-import { PurchasePanel } from '@/components/PurchasePanel';
+import { KitBuilder } from '@/components/KitBuilder';
 import { Reveal } from '@/components/Reveal';
 import { StageHost } from '@/components/StageHost';
 import { Fact, Tbc } from '@/components/Tbc';
 import { BASE_LAYER, BRAND_INTRO, FAQ, HANDLES, POLICIES, SIZE_GUIDE } from '@/lib/content';
-import { getProduct } from '@/lib/shopify';
+import { getProduct, unavailable } from '@/lib/shopify';
 import { PaddingTour } from '@/components/PaddingTour';
 import { RenderFigure } from '@/components/RenderFigure';
 
 export default async function Home() {
-  const [base, socks, bandages] = await Promise.all([getProduct(HANDLES.base), getProduct(HANDLES.socks), getProduct(HANDLES.bandages)]);
+  const [socks, bandages] = await Promise.all([getProduct(HANDLES.socks), getProduct(HANDLES.bandages)]);
+  const kit = await Promise.all([HANDLES.longTop, HANDLES.shortTop, HANDLES.leggings, HANDLES.shorts].map(async (h) => (await getProduct(h)) ?? unavailable(h)));
 
   return (
     <>
@@ -35,7 +39,7 @@ export default async function Home() {
               <dl className="mt-6 divide-y divide-white/10 border-y border-white/10">
                 {[
                   ['What you receive', BASE_LAYER.included, 'What is included in each purchase'],
-                  ['Sold together or separately', BASE_LAYER.piecesSoldTogether === null ? null : BASE_LAYER.piecesSoldTogether ? 'Together' : 'Separately', 'Whether pieces are sold together'],
+                  ['Sold together or separately', BASE_LAYER.piecesSoldTogether === null ? null : BASE_LAYER.piecesSoldTogether ? 'Together' : 'Each piece on its own, or any combination', 'Whether pieces are sold together'],
                   ['Fabric', BASE_LAYER.fabricComposition, 'Fabric composition'],
                   ['Padding', BASE_LAYER.paddingSpec, 'Verified padding specification'],
                 ].map(([k, v, l]) => (
@@ -100,19 +104,35 @@ export default async function Home() {
           <Reveal>
             <p className="eyebrow">In use</p>
             <h2 id="in-use" className="h2">How it sits under your kit</h2>
-            <div className="mt-8 grid gap-4 md:grid-cols-2">
-              <PhotoSlot label="Real photo: worn alone, showing fit" className="min-h-[300px] rounded-3xl" />
-              <PhotoSlot label="Real photo: worn under goalkeeper kit" className="min-h-[300px] rounded-3xl" />
+            <div className="mt-8">
+              {PROMO.length ? <PromoGallery /> : (
+                <>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <PhotoSlot label="Real photo: worn alone, showing fit" className="min-h-[300px] rounded-3xl" />
+                    <PhotoSlot label="Real photo: worn under goalkeeper kit" className="min-h-[300px] rounded-3xl" />
+                  </div>
+                  <p className="mt-4 text-sm text-white/55">Only authentic photography of the real product will be used here. Outer kit shown is not included unless stated.</p>
+                </>
+              )}
             </div>
-            <p className="mt-4 text-sm text-white/55">Only authentic photography of the real product will be used here. Outer kit shown is not included unless stated.</p>
           </Reveal>
         </section>
+
+        {/* Short-sleeve top and shorts version */}
+        <section className="section" aria-labelledby="short-set">
+          <Reveal>
+            <h2 id="short-set" className="sr-only">Short-sleeve top and shorts</h2>
+            <ShortSet />
+          </Reveal>
+        </section>
+
+        <PromoBanner />
 
         {/* 7 — Purchase area */}
         <section id="buy" className="section" aria-label="Buy the padded base layer">
           <div className="grid items-center gap-10 md:grid-cols-2">
             <div className="glass rounded-3xl p-4"><RenderFigure sizes="(min-width:768px) 45vw, 100vw" /></div>
-            <div className="glass rounded-[2rem] p-6 md:p-10">{base && <PurchasePanel product={base} preorderNote={null} />}</div>
+            <div className="glass rounded-[2rem] p-6 md:p-10"><KitBuilder products={kit} /></div>
           </div>
         </section>
 

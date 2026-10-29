@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { ContactForm } from '@/components/ContactForm';
 import { Fact } from '@/components/Tbc';
 import { BASE_LAYER, POLICIES } from '@/lib/content';
 
@@ -15,7 +16,7 @@ export default function Help() {
   return (
     <div className="section max-w-3xl space-y-10">
       <h1 className="h2">Help</h1>
-      <Block id="contact" title="Contact"><p><Fact value={POLICIES.contactEmail} label="Customer-service contact details" /></p></Block>
+      <Block id="contact" title="Contact"><p><Fact value={POLICIES.contactEmail} label="Customer-service contact details" /></p><ContactForm /></Block>
       <Block id="shipping" title="Shipping">
         <p>Processing: <Fact value={POLICIES.processingTime} label="Order processing time" /></p>
         <p>Production: <Fact value={POLICIES.productionTime} label="Production time (if made to order)" /></p>

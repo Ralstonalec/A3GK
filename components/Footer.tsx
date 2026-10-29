@@ -14,6 +14,10 @@ export function Footer() {
           <p className="mb-3 text-xs font-bold uppercase tracking-widest text-white">Shop</p>
           <ul className="space-y-2 text-sm">
             <li><Link href={`/products/${HANDLES.base}`}>Padded Base Layer</Link></li>
+            <li><Link href={`/products/${HANDLES.longTop}`}>Long-Sleeve Top</Link></li>
+            <li><Link href={`/products/${HANDLES.shortTop}`}>Short-Sleeve Top</Link></li>
+            <li><Link href={`/products/${HANDLES.leggings}`}>Leggings</Link></li>
+            <li><Link href={`/products/${HANDLES.shorts}`}>Shorts</Link></li>
             <li><Link href={`/products/${HANDLES.socks}`}>Grip Socks</Link></li>
             <li><Link href={`/products/${HANDLES.bandages}`}>Sports Bandages</Link></li>
           </ul>
@@ -25,6 +29,7 @@ export function Footer() {
             <li><Link href="/help#shipping">Shipping information</Link></li>
             <li><Link href="/help#returns">Returns policy</Link></li>
             <li><Link href="/size-guide">Size guide</Link></li>
+            <li><Link href="/membership">Membership</Link></li>
             <li><Link href="/help#care">Product care</Link></li>
             <li>{POLICIES.privacyUrl ? <a href={POLICIES.privacyUrl}>Privacy policy</a> : <Tbc label="Privacy policy" />}</li>
             <li>{POLICIES.termsUrl ? <a href={POLICIES.termsUrl}>Terms of service</a> : <Tbc label="Terms of service" />}</li>

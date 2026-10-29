@@ -5,17 +5,24 @@ import Image from 'next/image';
 import { Accordion } from '@/components/Accordion';
 import { MacroGrid } from '@/components/MacroGrid';
 import { RenderFigure } from '@/components/RenderFigure';
+import { ShortSet } from '@/components/ShortSet';
 import { PhotoSlot } from '@/components/PhotoSlot';
 import { ProductCard } from '@/components/ProductCard';
 import { PurchasePanel } from '@/components/PurchasePanel';
 import { Fact, Tbc } from '@/components/Tbc';
-import { BASE_LAYER, FAQ, HANDLES, POLICIES, SIZE_GUIDE } from '@/lib/content';
-import { getProduct } from '@/lib/shopify';
+import { BASE_LAYER, FAQ, HANDLES, PIECES, POLICIES, SIZE_GUIDE } from '@/lib/content';
+import { getProduct, unavailable } from '@/lib/shopify';
+import { KitBuilder } from '@/components/KitBuilder';
+import { ShortSet as ShortSetFigure } from '@/components/ShortSet';
+import { SaveButton } from '@/components/SaveButton';
+import { createClient } from '@/lib/supabase/server';
+import { supabaseConfigured } from '@/lib/supabase/env';
 
 export const generateStaticParams = () => Object.values(HANDLES).map((handle) => ({ handle }));
 export const dynamicParams = false;
 
 export async function generateMetadata({ params }: { params: { handle: string } }): Promise<Metadata> {
+  if (params.handle === HANDLES.base) return { title: 'Build your kit' };
   const p = await getProduct(params.handle);
   return p ? { title: p.title } : {};
 }
@@ -23,9 +30,21 @@ export async function generateMetadata({ params }: { params: { handle: string } 
 const GALLERY_SLOTS = ['Back view', 'Side view', 'Worn on a person', 'Colour options', 'Short product video'];
 
 export default async function ProductPage({ params }: { params: { handle: string } }) {
-  const product = await getProduct(params.handle);
+  const isBase = params.handle === HANDLES.base;
+  // The base-layer page is the kit builder; it has no single Shopify product behind it.
+  const product = isBase
+    ? { handle: HANDLES.base, title: BASE_LAYER.productName, descriptionHtml: '', options: [], variants: [], images: [], connected: false }
+    : await getProduct(params.handle);
   if (!product) notFound();
-  const isBase = product.handle === HANDLES.base;
+  const pieceInfo = [...PIECES.tops, ...PIECES.bottoms].find((x) => x.handle === product.handle);
+  const isShortPiece = product.handle === HANDLES.shortTop || product.handle === HANDLES.shorts;
+  const kit = isBase ? await Promise.all([HANDLES.longTop, HANDLES.shortTop, HANDLES.leggings, HANDLES.shorts].map(async (h) => (await getProduct(h)) ?? unavailable(h))) : [];
+  let savedAlready = false;
+  if (supabaseConfigured) {
+    const sb = createClient();
+    const { data: { user } } = await sb.auth.getUser();
+    if (user) savedAlready = Boolean((await sb.from('saved_items').select('id').eq('user_id', user.id).eq('product_handle', product.handle).maybeSingle()).data);
+  }
   const [socks, bandages] = isBase ? await Promise.all([getProduct(HANDLES.socks), getProduct(HANDLES.bandages)]) : [null, null];
 
   const info = isBase
@@ -60,14 +79,22 @@ export default async function ProductPage({ params }: { params: { handle: string
             <div className="space-y-3">
               <div className="glass rounded-3xl p-4"><RenderFigure priority sizes="(min-width:768px) 55vw, 100vw" /></div>
               <MacroGrid />
+              <ShortSet compact />
               <ul className="grid grid-cols-2 gap-3">{GALLERY_SLOTS.map((s) => <li key={s}><PhotoSlot label={s} className="min-h-[160px]" /></li>)}</ul>
+            </div>
+          ) : pieceInfo ? (
+            <div className="space-y-3">
+              {isShortPiece ? <ShortSetFigure compact /> : <div className="glass rounded-3xl p-4"><RenderFigure priority sizes="(min-width:768px) 55vw, 100vw" /></div>}
+              <p className="text-sm text-white/75"><strong className="text-white">Padding.</strong> {pieceInfo.padding}</p>
             </div>
           ) : <PhotoSlot label="Product photographs" className="min-h-[360px]" />}
           {isBase && <p className="mt-3 text-sm text-white/55">Outer kit shown in photos is not included unless stated under “What you receive”.</p>}
         </div>
 
         <div className="md:sticky md:top-24 md:self-start">
-          <PurchasePanel product={product} sizeGuide={isBase} />
+          {isBase ? <KitBuilder products={kit} /> : <PurchasePanel product={product} sizeGuide />}
+          {pieceInfo && <p className="mt-4 text-sm text-white/75">Sold on its own. <Link href={`/products/${HANDLES.base}`} className="underline underline-offset-4">Build a kit</Link> to combine it with another piece.</p>}
+          {supabaseConfigured && <div className="mt-3"><SaveButton handle={product.handle} initialSaved={savedAlready} /></div>}
           {isBase && (
             <div className="mt-6 border-l-4 border-white/60 bg-white/[0.06] p-4 text-sm">
               <p className="font-bold">Before you buy</p>

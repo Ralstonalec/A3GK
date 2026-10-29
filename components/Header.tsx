@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { NAV } from '@/lib/content';
 import { useCart } from '@/lib/cart-context';
+import { supabaseConfigured } from '@/lib/supabase/env';
 
 export function Header() {
   const { cart, setOpen } = useCart();
@@ -23,6 +24,11 @@ export function Header() {
           ))}
         </nav>
         <div className="flex items-center gap-2">
+          {supabaseConfigured && (
+            <Link href="/login" className="glass flex h-12 w-12 items-center justify-center rounded-full" aria-label="Account">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden><circle cx="12" cy="8" r="4" /><path d="M4 21a8 8 0 0116 0" /></svg>
+            </Link>
+          )}
           <button onClick={() => setOpen(true)} className="glass relative flex h-12 items-center gap-2 rounded-full px-5 text-sm font-bold" aria-label={`Open cart, ${count} item${count === 1 ? '' : 's'}`}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden><path d="M6 7h12l-1 13H7L6 7z" /><path d="M9 7a3 3 0 016 0" /></svg>
             <span aria-hidden>{count}</span>
