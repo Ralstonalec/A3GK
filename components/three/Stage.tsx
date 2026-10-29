@@ -53,7 +53,7 @@ function Scene() {
 
     const P = POSES[name] ?? { x: 0, y: 0, s: 0 };
     const tx = mobile ? 0 : P.x;
-    const ty = mobile ? (name === 'hero' ? -0.72 : name === 'padding' ? -0.04 : 0.5) : P.y;
+    const ty = mobile ? (name === 'hero' ? -0.36 : name === 'padding' ? -0.04 : 0.5) : P.y;
     const ts = mobile ? P.s * (name === 'hero' ? 1.25 : name === 'padding' ? 0.9 : 1.5) : P.s;
     const k = 1 - Math.exp(-dt * 3.5);
     const p = pose.current;

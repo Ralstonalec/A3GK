@@ -3,6 +3,8 @@ import { Accordion } from '@/components/Accordion';
 import { ClubForm } from '@/components/ClubForm';
 import { FactStrip } from '@/components/FactStrip';
 import { Hero } from '@/components/Hero';
+import { PaddingTour } from '@/components/PaddingTour';
+import { StageHost } from '@/components/StageHost';
 import { KitBuilder } from '@/components/KitBuilder';
 import { MacroGrid } from '@/components/MacroGrid';
 import { PhotoSlot } from '@/components/PhotoSlot';
@@ -23,7 +25,9 @@ export default async function Home() {
 
   return (
     <>
+      <StageHost />
       <Hero />
+      <div className="relative z-10">
       <FactStrip />
 
       {/* What it is and where it is padded, side by side */}
@@ -50,7 +54,7 @@ export default async function Home() {
             </dl>
             <Link href="/size-guide" className="mt-5 inline-block font-semibold underline underline-offset-4">Find your size</Link>
           </Reveal>
-          <Reveal className="glass rounded-[2rem] p-6 md:p-8" delay={0.08}>
+          <Reveal className="stage-off glass rounded-[2rem] p-6 md:p-8" delay={0.08}>
             <p className="eyebrow">Padding</p>
             <h2 className="h2 text-4xl md:text-5xl">Where it is padded</h2>
             <ul className="mt-5 space-y-2 text-sm">
@@ -59,7 +63,23 @@ export default async function Home() {
             <p className="mt-4 text-sm text-white/70"><Fact value={BASE_LAYER.paddingSpec} label="Padding material, thickness and how it is built in" /></p>
           </Reveal>
         </div>
-        <div className="mt-8"><MacroGrid /></div>
+      </section>
+
+      {/* Scroll tour of the padded areas (the 3D stage moves across the garments). Only takes space when the stage is live. */}
+      <section data-stage="padding" className="stage-only relative h-[170svh]" aria-labelledby="padding">
+        <div className="sticky top-0 flex h-[100svh] items-start px-4 pt-20 md:px-[4%] md:pt-28">
+          <div className="max-w-sm">
+            <p className="eyebrow">Padding and construction</p>
+            <h2 id="padding" className="h2 text-4xl md:text-6xl">Where it is padded</h2>
+            <p className="mt-4 text-white/75"><span className="md:hidden">Scroll to move across the padded areas.</span><span className="hidden md:inline">Scroll to move across each padded area.</span></p>
+            <PaddingTour />
+          </div>
+        </div>
+      </section>
+
+      <section className="section !py-10" aria-labelledby="closeups">
+        <h2 id="closeups" className="sr-only">Close-ups</h2>
+        <MacroGrid />
         <p className="mt-3 text-sm text-white/55">Photographs of the real garments. Swipe or scroll for more.</p>
       </section>
 
@@ -118,6 +138,7 @@ export default async function Home() {
           {POLICIES.contactEmail ? <> — {POLICIES.contactEmail}</> : <> <Tbc label="Customer-service contact details" /></>}
         </p>
       </section>
+      </div>
     </>
   );
 }
