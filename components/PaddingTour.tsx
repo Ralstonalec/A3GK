@@ -29,6 +29,7 @@ export function PaddingTour() {
   const card = useRef<HTMLDivElement>(null);
   const line = useRef<SVGLineElement>(null);
   const fills = useRef<(HTMLSpanElement | null)[]>([]);
+  const anchor = useRef({ x: 0, y: 0 }); // where the connector starts (card's right edge), measured on resize, not per frame
 
   useEffect(() => {
     if (stage.live) setLive(true);
@@ -41,6 +42,12 @@ export function PaddingTour() {
 
   useEffect(() => {
     if (!live) return;
+    const measure = () => {
+      const c = card.current;
+      if (c) anchor.current = { x: c.offsetLeft + c.offsetWidth, y: c.offsetTop + 52 };
+    };
+    measure();
+    window.addEventListener('resize', measure);
     let raf = 0;
     const tick = () => {
       raf = requestAnimationFrame(tick);
@@ -67,13 +74,11 @@ export function PaddingTour() {
       f.style.transform = `translate(${cx - w / 2}px, ${cy - h / 2}px)`;
       f.style.opacity = String(clamp(Math.min(t + 0.35, N - 1 - t + 0.35)));
       fills.current.forEach((s, i) => { if (s) s.style.transform = `scaleX(${clamp(t - i + 0.5)})`; });
-      const c = card.current;
       const l = line.current;
       if (l) {
-        if (narrow || !c) { l.style.opacity = '0'; } else {
-          const r = c.getBoundingClientRect();
-          l.setAttribute('x1', String(r.right));
-          l.setAttribute('y1', String(r.top + 52));
+        if (narrow) { l.style.opacity = '0'; } else {
+          l.setAttribute('x1', String(anchor.current.x));
+          l.setAttribute('y1', String(anchor.current.y));
           l.setAttribute('x2', String(cx - w / 2));
           l.setAttribute('y2', String(cy));
           l.style.opacity = f.style.opacity;
@@ -81,7 +86,7 @@ export function PaddingTour() {
       }
     };
     raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
+    return () => { cancelAnimationFrame(raf); window.removeEventListener('resize', measure); };
   }, [live]);
 
   if (!live) return null;
@@ -93,22 +98,22 @@ export function PaddingTour() {
       <div className="mt-5 flex max-w-sm gap-1.5" aria-hidden>
         {BASE_LAYER.paddedAreas.map((p, i) => (
           <span key={p.id} className="h-1 flex-1 overflow-hidden rounded-full bg-white/15">
-            <span ref={(el) => { fills.current[i] = el; }} className="block h-full origin-left rounded-full bg-accent shadow-[0_0_10px_rgb(var(--accent))]" style={{ transform: 'scaleX(0)' }} />
+            <span ref={(el) => { fills.current[i] = el; }} className="block h-full origin-left rounded-full bg-accent " style={{ transform: 'scaleX(0)' }} />
           </span>
         ))}
       </div>
 
       {/* viewfinder frame locked onto the zone the camera is zoomed to */}
       <div ref={frame} aria-hidden className="pointer-events-none absolute left-0 top-0 opacity-0 will-change-transform">
-        <span className="absolute -left-1 -top-1 h-6 w-6 rounded-tl-md border-l-2 border-t-2 border-accent drop-shadow-[0_0_8px_rgb(var(--accent))]" />
-        <span className="absolute -right-1 -top-1 h-6 w-6 rounded-tr-md border-r-2 border-t-2 border-accent drop-shadow-[0_0_8px_rgb(var(--accent))]" />
-        <span className="absolute -bottom-1 -left-1 h-6 w-6 rounded-bl-md border-b-2 border-l-2 border-accent drop-shadow-[0_0_8px_rgb(var(--accent))]" />
-        <span className="absolute -bottom-1 -right-1 h-6 w-6 rounded-br-md border-b-2 border-r-2 border-accent drop-shadow-[0_0_8px_rgb(var(--accent))]" />
+        <span className="absolute -left-1 -top-1 h-6 w-6 rounded-tl-md border-l-2 border-t-2 border-accent" />
+        <span className="absolute -right-1 -top-1 h-6 w-6 rounded-tr-md border-r-2 border-t-2 border-accent" />
+        <span className="absolute -bottom-1 -left-1 h-6 w-6 rounded-bl-md border-b-2 border-l-2 border-accent" />
+        <span className="absolute -bottom-1 -right-1 h-6 w-6 rounded-br-md border-b-2 border-r-2 border-accent" />
         <span className="absolute inset-0 rounded-md border border-white/10" />
-        <span className="tour-scan absolute inset-x-0 h-px bg-gradient-to-r from-transparent via-accent to-transparent" />
+        <span className="absolute inset-0 overflow-hidden rounded-md"><span className="tour-scan block h-full w-full" /></span>
         <AnimatePresence mode="wait">
           {area && (
-            <motion.span key={area.id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }} className="absolute left-0 top-full mt-2 hidden whitespace-nowrap rounded-full md:top-auto md:-top-8 md:mt-0 md:block border border-accent/50 bg-black/60 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-accent backdrop-blur">
+            <motion.span key={area.id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }} className="absolute left-0 top-full mt-2 hidden whitespace-nowrap rounded-full md:top-auto md:-top-8 md:mt-0 md:block border border-accent/50 bg-black/75 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-accent">
               Zone {two(zone + 1)} · {area.label}
             </motion.span>
           )}
@@ -126,13 +131,12 @@ export function PaddingTour() {
           {area && d && (
             <motion.div
               key={area.id}
-              initial={{ opacity: 0, y: 28, scale: 0.94, filter: 'blur(6px)' }}
-              animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
-              exit={{ opacity: 0, y: -16, scale: 0.97, filter: 'blur(4px)' }}
+              initial={{ opacity: 0, y: 28, scale: 0.94 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -16, scale: 0.97 }}
               transition={{ type: 'spring', stiffness: 380, damping: 28 }}
-              className="glass relative overflow-hidden rounded-3xl p-5 shadow-[0_0_40px_-12px_rgb(var(--accent)/0.5)]"
+              className="glass relative overflow-hidden rounded-3xl p-5 "
             >
-              <div aria-hidden className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-accent/20 blur-2xl" />
               <div className="flex items-baseline gap-2">
                 <span className="outline-text font-display text-6xl font-extrabold leading-none">{two(zone + 1)}</span>
                 <span className="font-display text-lg font-bold text-white/50">/ {two(N)}</span>
