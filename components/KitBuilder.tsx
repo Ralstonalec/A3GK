@@ -22,7 +22,8 @@ function pickVariant(p: Product, sel: Record<string, string>): Variant | undefin
  * Every piece is its own Shopify product, so any combination works: one top, one bottom, both, or either.
  * Each chosen piece goes to the cart as its own line, with its own size.
  */
-export function KitBuilder({ products }: { products: Product[] }) {
+export function KitBuilder({ products, h1 = false }: { products: Product[]; h1?: boolean }) {
+  const Heading = h1 ? 'h1' : 'h2';
   const { addMany, busy, error } = useCart();
   const byHandle = useMemo(() => Object.fromEntries(products.map((p) => [p.handle, p])), [products]);
   const [choice, setChoice] = useState<Record<Slot, string | null>>({ top: null, bottom: null });
@@ -89,7 +90,7 @@ export function KitBuilder({ products }: { products: Product[] }) {
   return (
     <div className="space-y-6" id="purchase">
       <div>
-        <h2 className="font-display text-3xl font-bold uppercase">Build your kit</h2>
+        <Heading className="font-display text-3xl font-bold uppercase">Build your kit</Heading>
         <p className="mt-2 text-white/75">Every piece is sold on its own. Choose a top, a bottom, or both, in any combination, each in its own size.</p>
         <p className="mt-2 text-sm font-semibold">${PRICING.piece} {PRICING.currency} per piece · top + bottom ${PRICING.bundle} {PRICING.currency}</p>
       </div>

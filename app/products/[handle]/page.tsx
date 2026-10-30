@@ -65,8 +65,8 @@ export default async function ProductPage({ params }: { params: { handle: string
   return (
     <div className="section">
       <nav aria-label="Breadcrumb" className="mb-6 text-sm text-white/55"><Link href="/">Home</Link> / {product.title}</nav>
-      <div className="grid gap-10 md:grid-cols-[1.2fr_1fr]">
-        <div>
+      <div className="grid gap-10 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
+        <div className="min-w-0">
           {product.images.length ? (
             <ul className="grid grid-cols-2 gap-3">
               {product.images.map((img, i) => (
@@ -91,8 +91,8 @@ export default async function ProductPage({ params }: { params: { handle: string
           {isBase && <p className="mt-3 text-sm text-white/55">Outer kit shown in photos is not included unless stated under “What you receive”.</p>}
         </div>
 
-        <div className="md:sticky md:top-24 md:self-start">
-          {isBase ? <KitBuilder products={kit} /> : <PurchasePanel product={product} sizeGuide />}
+        <div className="min-w-0 md:sticky md:top-24 md:self-start">
+          {isBase ? <KitBuilder products={kit} h1 /> : <PurchasePanel product={product} sizeGuide />}
           {pieceInfo && <p className="mt-4 text-sm text-white/75">Sold on its own. <Link href={`/products/${HANDLES.base}`} className="underline underline-offset-4">Build a kit</Link> to combine it with another piece.</p>}
           {supabaseConfigured && <div className="mt-3"><SaveButton handle={product.handle} initialSaved={savedAlready} /></div>}
           {isBase && (

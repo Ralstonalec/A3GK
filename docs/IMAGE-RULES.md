@@ -11,3 +11,6 @@ Confirmed by the owner. Apply to every render, AI image, mock-up and 3D model.
 
 ## Scenery renderings (no product)
 Night-pitch scenes in `lib/photos.ts` (`SCENE`) are AI renderings used as backdrops. No people, no ball, no gloves, no logos or text. They sit behind sections via `SceneBackdrop`, are decorative (empty alt) and are called renderings wherever a caption is shown.
+
+## Labelling
+The owner asked for the "Rendering" pill overlays to be removed because they covered the photos. Images are still described as renderings in the small caption lines beneath them (hero, in-use gallery, short-sleeve set) and in alt text.

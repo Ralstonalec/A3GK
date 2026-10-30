@@ -30,7 +30,7 @@ export function HeroViews() {
             role="radio"
             aria-checked={active === v.id}
             onClick={() => { setActive(v.id); stage.requestView?.(v.id); }}
-            className={`glass group relative flex w-[104px] flex-col items-center gap-2 rounded-3xl p-2 pb-3 text-center transition hover:bg-white/10 md:w-[118px] ${active === v.id ? '!border-accent' : ''}`}
+            className={`glass group relative flex w-[84px] min-[360px]:w-[104px] flex-col items-center gap-2 rounded-3xl p-2 pb-3 text-center transition hover:bg-white/10 md:w-[118px] ${active === v.id ? '!border-accent' : ''}`}
           >
             <span className="relative flex h-24 w-full items-center justify-center gap-1 overflow-hidden rounded-2xl bg-black/30 p-1.5">
               <span

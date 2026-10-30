@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useFormState, useFormStatus } from 'react-dom';
 import { joinClub, type JoinState } from '@/app/club/actions';
 
@@ -30,7 +31,7 @@ export function ClubForm({ id = 'join' }: { id?: string }) {
       </div>
       <label className="flex min-h-[44px] items-start gap-3 text-sm text-white/75">
         <input name="consent" type="checkbox" required className="mt-0.5 h-5 w-5 shrink-0 accent-[rgb(var(--accent))]" />
-        <span>Email me when new A3GK products drop. Free to join, unsubscribe any time.</span>
+        <span>Email me when new A3GK products drop. Free to join, unsubscribe any time. See our <Link href="/privacy" className="underline underline-offset-4">privacy policy</Link>.</span>
       </label>
       {state.error && <p role="alert" className="text-sm text-red-300">{state.error}</p>}
     </form>

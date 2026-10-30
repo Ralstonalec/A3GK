@@ -25,7 +25,7 @@ function Scene() {
   const vpRef = useRef({ width: 1, height: 1 });
   const pose = useRef({ x: 0, y: 0, s: 1 });
   const cur = useRef({ x: 0, y: 0 });
-  const sections = useRef<HTMLElement[]>([]);
+  const sections = useRef<{ el: HTMLElement; top: number; height: number }[]>([]);
   const announced = useRef(false);
   const onShown = () => {
     if (announced.current) return;
@@ -36,19 +36,36 @@ function Scene() {
   };
   const zone = useRef(-1);
 
+  // Section positions are measured only when the page changes size, never per frame (reading layout every frame
+  // forces the browser to recalculate it and makes scrolling stutter).
+  useEffect(() => {
+    const measure = () => {
+      sections.current = Array.from(document.querySelectorAll<HTMLElement>('[data-stage]')).map((el) => {
+        const r = el.getBoundingClientRect();
+        return { el, top: r.top + window.scrollY, height: r.height };
+      });
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(document.body);
+    window.addEventListener('resize', measure);
+    window.addEventListener('load', measure);
+    return () => { ro.disconnect(); window.removeEventListener('resize', measure); window.removeEventListener('load', measure); };
+  }, []);
+
   useFrame((state, dtRaw) => {
     const dt = Math.min(dtRaw, 0.05);
     const t = state.clock.elapsedTime;
     const vp = state.viewport.getCurrentViewport(state.camera, [0, 0, 0]);
     vpRef.current = { width: vp.width, height: vp.height };
     const mobile = vp.width / vp.height < 0.85;
-    if (!sections.current.length) sections.current = Array.from(document.querySelectorAll<HTMLElement>('[data-stage]'));
     const vh = window.innerHeight;
     let name = 'none';
     let prog = 0;
-    for (const el of sections.current) {
-      const r = el.getBoundingClientRect();
-      if (r.top <= vh * 0.5 && r.bottom >= vh * 0.5) { name = el.dataset.stage ?? 'none'; prog = clamp((vh * 0.5 - r.top) / r.height); break; }
+    const sy = window.scrollY;
+    for (const sec of sections.current) {
+      const top = sec.top - sy;
+      if (top <= vh * 0.5 && top + sec.height >= vh * 0.5) { name = sec.el.dataset.stage ?? 'none'; prog = clamp(-top / Math.max(1, sec.height - vh)); break; }
     }
 
     const P = POSES[name] ?? { x: 0, y: 0, s: 0 };
@@ -65,8 +82,10 @@ function Scene() {
     cur.current.y += (stage.mouse.y - cur.current.y) * 0.05;
 
     const inTour = name === 'padding';
-    const tour = inTour ? clamp((prog - 0.05) / 0.88) * (TOUR.length - 1) : null;
+    // prog is how far through the pinned scroll range we are (0 = just pinned, 1 = about to unpin), so every zone gets its own stretch of scroll
+    const tour = inTour ? clamp((prog - 0.03) / 0.94) * (TOUR.length - 1) : null;
     ctl.current.tour = tour;
+    stage.tour = tour;
     ctl.current.view = stage.view;
     const z = tour === null ? -1 : Math.round(tour);
     if (z !== zone.current) {
@@ -91,12 +110,12 @@ function Scene() {
           <RenderPlane ctl={ctl.current} vpRef={vpRef} onShown={onShown} />
         </Suspense>
       </group>
-      <Bubbles count={coarseNow() ? 28 : 70} />
+      <Bubbles count={coarseNow() ? 16 : 40} />
     </>
   );
 }
 
-export default function Stage() {
+export default function Stage({ active = true }: { active?: boolean }) {
   const coarse = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
   useEffect(() => {
     installActions();
@@ -111,7 +130,7 @@ export default function Stage() {
     return () => window.removeEventListener('pointermove', onMove);
   }, []);
   return (
-    <Canvas dpr={[1, coarse ? 1.5 : 1.75]} resize={{ debounce: 250, scroll: false }} camera={{ position: [0, 0, 6.5], fov: 30 }} onCreated={({ gl }) => gl.domElement.addEventListener('webglcontextlost', () => { delete document.documentElement.dataset.stageLive; stage.live = false; window.dispatchEvent(new Event('stage-lost')); })} gl={{ antialias: !coarse, alpha: true, powerPreference: 'high-performance' }} style={{ background: 'transparent' }}>
+    <Canvas frameloop={active ? 'always' : 'never'} dpr={[1, coarse ? 1.25 : 1.5]} resize={{ debounce: 250, scroll: false }} camera={{ position: [0, 0, 6.5], fov: 30 }} onCreated={({ gl }) => gl.domElement.addEventListener('webglcontextlost', () => { delete document.documentElement.dataset.stageLive; stage.live = false; window.dispatchEvent(new Event('stage-lost')); })} gl={{ antialias: !coarse, alpha: true, powerPreference: 'high-performance' }} style={{ background: 'transparent' }}>
       <Scene />
     </Canvas>
   );

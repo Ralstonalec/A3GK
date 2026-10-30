@@ -32,8 +32,8 @@ export function Footer() {
             <li><Link href="/club">A3 Goalkeepers Club</Link></li>
             <li><Link href="/membership">Membership</Link></li>
             <li><Link href="/help#care">Product care</Link></li>
-            <li>{POLICIES.privacyUrl ? <a href={POLICIES.privacyUrl}>Privacy policy</a> : <Tbc label="Privacy policy" />}</li>
-            <li>{POLICIES.termsUrl ? <a href={POLICIES.termsUrl}>Terms of service</a> : <Tbc label="Terms of service" />}</li>
+            <li>{POLICIES.privacyUrl ? <Link href={POLICIES.privacyUrl}>Privacy policy</Link> : <Tbc label="Privacy policy" />}</li>
+            <li>{POLICIES.termsUrl ? <Link href={POLICIES.termsUrl}>Terms of sale</Link> : <Tbc label="Terms of sale" />}</li>
           </ul>
         </div>
         <div>

@@ -6,7 +6,8 @@ import { RenderFigure } from '@/components/RenderFigure';
 import { SCENE } from '@/lib/photos';
 import { Reveal } from '@/components/Reveal';
 import { supabaseConfigured } from '@/lib/supabase/env';
-import { Tbc } from '@/components/Tbc';
+import { Fact, Tbc } from '@/components/Tbc';
+import { BUSINESS } from '@/lib/content';
 
 export const metadata: Metadata = {
   title: 'A3 Goalkeepers Club',
@@ -67,6 +68,7 @@ export default function Club() {
           <Link href="/membership" className="btn-primary">About accounts</Link>
         </div>
         <p className="mt-6 max-w-2xl text-sm text-white/55">Background image is a rendering. We only use your email to tell you about A3GK products. No spam, and every email will have an unsubscribe link.</p>
+        <p className="mt-2 max-w-2xl text-sm text-white/55">Emails are sent by <Fact value={BUSINESS.legalName} label="Legal business name" />, <Fact value={BUSINESS.mailingAddress} label="Mailing address" />. See our <Link href="/privacy" className="underline underline-offset-4">privacy policy</Link>.</p>
       </section>
     </div>
   );

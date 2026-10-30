@@ -1,10 +1,21 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import { useCart } from '@/lib/cart-context';
 import { formatMoney } from '@/lib/format';
 
 export function CartDrawer() {
   const { cart, open, setOpen, setQuantity, busy, error } = useCart();
+  const closeRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
+    document.addEventListener('keydown', onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    closeRef.current?.focus();
+    return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = prev; };
+  }, [open, setOpen]);
   if (!open) return null;
   const empty = !cart || cart.lines.length === 0;
   return (
@@ -13,7 +24,7 @@ export function CartDrawer() {
       <aside className="absolute right-0 top-0 flex h-full w-full max-w-md flex-col bg-charcoal-900 text-white p-5 shadow-xl">
         <div className="flex items-center justify-between">
           <h2 className="font-display text-2xl font-bold uppercase">Cart</h2>
-          <button className="btn min-w-[48px]" onClick={() => setOpen(false)} aria-label="Close">✕</button>
+          <button ref={closeRef} className="btn min-w-[48px]" onClick={() => setOpen(false)} aria-label="Close">✕</button>
         </div>
         <div className="mt-4 flex-1 overflow-y-auto">
           {empty ? <p className="text-white/75">Your cart is empty.</p> : (
