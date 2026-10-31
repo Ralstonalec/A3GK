@@ -8,7 +8,7 @@ export function Footer() {
     <footer className="bg-charcoal-900 text-white/80">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 md:grid-cols-4">
         <div>
-          <Image src="/brand/a3-lockup-white.png" alt="A3 Sports Solutions" width={751} height={551} className="h-24 w-auto" />
+          <Image src="/brand/a3-lockup-white.png" alt="A3 Sports Solutions" width={751} height={551} className="h-36 w-auto drop-shadow-[0_0_24px_rgba(255,255,255,0.18)] md:h-40" />
           <p className="mt-3 font-display text-2xl font-extrabold text-white">A3GK</p>
           <p className="mt-1 text-sm">A3 Goalkeeping</p>
         </div>
