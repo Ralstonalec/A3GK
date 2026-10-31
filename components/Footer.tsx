@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { HANDLES, POLICIES } from '@/lib/content';
 import { Tbc } from './Tbc';
@@ -7,8 +8,9 @@ export function Footer() {
     <footer className="bg-charcoal-900 text-white/80">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 md:grid-cols-4">
         <div>
-          <p className="font-display text-2xl font-extrabold text-white">A3GK</p>
-          <p className="mt-2 text-sm">A3 Goalkeeping</p>
+          <Image src="/brand/a3-lockup-white.png" alt="A3 Sports Solutions" width={751} height={551} className="h-24 w-auto" />
+          <p className="mt-3 font-display text-2xl font-extrabold text-white">A3GK</p>
+          <p className="mt-1 text-sm">A3 Goalkeeping</p>
         </div>
         <div>
           <p className="mb-3 text-xs font-bold uppercase tracking-widest text-white">Shop</p>
