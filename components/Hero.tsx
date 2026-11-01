@@ -13,8 +13,9 @@ export function Hero() {
       </div>
 
       <div className="relative z-10 grid flex-1 items-stretch gap-8 md:grid-cols-[1fr_auto]">
-        <div className="flex flex-col gap-6 md:py-6">
-          <h1 className="font-display text-[clamp(2.2rem,11vw,3.6rem)] md:text-[clamp(3.4rem,8.4vw,9rem)] font-extrabold uppercase leading-[0.82] tracking-tight">
+        <div className="flex flex-col gap-5 md:py-2">
+          <Image src="/brand/a3gk-logo-white.png" alt="A3GK, A3 Goalkeeping" width={738} height={757} priority sizes="(min-width:768px) 360px, 200px" className="h-auto w-[clamp(150px,44vw,200px)] drop-shadow-[0_0_40px_rgba(255,255,255,0.28)] md:w-[clamp(260px,26vw,400px)]" />
+          <h1 className="font-display text-[clamp(1.9rem,8.5vw,2.8rem)] md:text-[clamp(2.8rem,5.4vw,5.6rem)] font-extrabold uppercase leading-[0.86] tracking-tight">
             <span className="outline-text">Goalkeeper</span>
             <br />
             kit starts
@@ -22,7 +23,7 @@ export function Hero() {
             underneath.
           </h1>
           <p className="max-w-md text-lg text-white/75">
-            Meet the A3GK padded base layer. Explore the design, see the padding details, and find your size.
+            Hexagonal padding designed to spread the impact of a dive, and still flex with you. Meet the A3GK padded base layer.
           </p>
           <div className="flex flex-wrap items-center gap-5">
             <Link href={`/products/${HANDLES.base}`} className="group flex items-center gap-5 rounded-full bg-black/50 py-1.5 pl-6 pr-1.5 text-sm font-bold uppercase tracking-wider backdrop-blur transition hover:-translate-y-0.5 hover:bg-black/70">

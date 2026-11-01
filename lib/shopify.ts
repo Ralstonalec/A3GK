@@ -1,4 +1,4 @@
-import { PLACEHOLDER_PRODUCTS } from './content';
+import { PLACEHOLDER_PRODUCTS, PRODUCT_METAFIELDS } from './content';
 import type { Cart, Product } from './types';
 
 const domain = process.env.SHOPIFY_STORE_DOMAIN;
@@ -21,8 +21,11 @@ async function storefront<T>(query: string, variables: Record<string, unknown> =
   return json.data as T;
 }
 
+const metafieldIds = PRODUCT_METAFIELDS.map((m) => `{ namespace: "${m.namespace}", key: "${m.key}" }`).join(', ');
+
 const PRODUCT_FIELDS = `
-  handle title descriptionHtml
+  handle title descriptionHtml${metafieldIds ? `
+  metafields(identifiers: [${metafieldIds}]) { namespace key value }` : ''}
   options { name values }
   images(first: 12) { nodes { url altText } }
   variants(first: 100) { nodes {
@@ -37,12 +40,14 @@ type RawProduct = {
   options: Product['options'];
   images: { nodes: Product['images'] };
   variants: { nodes: Product['variants'] };
+  metafields?: ({ namespace: string; key: string; value: string } | null)[];
 };
 
 const normalise = (p: RawProduct): Product => ({
   handle: p.handle, title: p.title, descriptionHtml: p.descriptionHtml,
   options: p.options.filter((o) => o.name !== 'Title'),
   images: p.images.nodes, variants: p.variants.nodes, connected: true,
+  metafields: Object.fromEntries((p.metafields ?? []).filter((m): m is NonNullable<typeof m> => Boolean(m)).map((m) => [`${m.namespace}.${m.key}`, m.value])),
 });
 
 /** A piece that is not (yet) available from Shopify, e.g. still a draft. Shown as unconnected, never as a 404. */
@@ -63,6 +68,20 @@ export async function getProduct(handle: string): Promise<Product | null> {
   } catch (e) {
     console.error('[shopify] getProduct failed', e);
     return placeholder(handle);
+  }
+}
+
+/** A collection and its products (Storefront API). Returns null when Shopify is not connected or the collection does not exist. */
+export async function getCollection(handle: string, first = 24): Promise<{ handle: string; title: string; description: string; products: Product[] } | null> {
+  if (!shopifyConfigured) return null;
+  try {
+    const d = await storefront<{ collection: { handle: string; title: string; description: string; products: { nodes: RawProduct[] } } | null }>(
+      `query($handle: String!, $first: Int!) { collection(handle: $handle) { handle title description products(first: $first) { nodes { ${PRODUCT_FIELDS} } } } }`,
+      { handle, first });
+    return d.collection ? { handle: d.collection.handle, title: d.collection.title, description: d.collection.description, products: d.collection.products.nodes.map(normalise) } : null;
+  } catch (e) {
+    console.error('[shopify] getCollection failed', e);
+    return null;
   }
 }
 

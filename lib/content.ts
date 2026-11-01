@@ -44,7 +44,13 @@ export const NAV = [
 ];
 
 /** Owner-supplied guidance: wearing it with short sleeves or shorts is possible but not recommended. */
-export const WEAR_NOTE = 'You can wear the base layer under a short-sleeve jersey and shorts, but we do not recommend it. Leaving the sleeves and legs exposed can reduce its durability. It is designed to sit fully under a long-sleeve jersey and long pants.';
+/** The two points the hexagonal padding is sold on. Worded as design intent: there is no test data behind these, so no numbers and no injury claims. */
+export const PADDING_DESIGN = {
+  spread: { title: 'Spreads the impact', body: 'The hexagonal cells are designed to spread the force of a landing across the panel instead of leaving it on one spot.' },
+  flex: { title: 'Stays flexible', body: 'The panels bend and move with the fabric, so you keep your range of movement through the dive, the roll and the recovery.' },
+} as const;
+
+export const WEAR_NOTE = 'You can wear the base layer under a short-sleeve jersey and shorts, but we do not recommend it. It is designed to sit fully under a long-sleeve jersey and long pants.';
 
 /** Facts about the base layer. `null` = not yet confirmed. */
 export const BASE_LAYER = {
@@ -57,7 +63,7 @@ export const BASE_LAYER = {
   fabricComposition: '100% premium polyester' as string | null, // owner-confirmed
   paddingSpec: 'EVA foam padding that moves with your body' as string | null, // owner-confirmed; thickness and weight are still unconfirmed, so do not state them
   intendedFit: 'Designed to fit tight to your body.' as string | null, // owner-confirmed
-  care: null as string | null,
+  care: 'Hand wash only.' as string | null,
   origin: null as string | null,
   fulfilment: null as string | null,
   /** Only padded areas that really exist. Empty until confirmed — hotspots/labels render nothing. */
@@ -136,3 +142,10 @@ export const PLACEHOLDER_PRODUCTS: Record<string, { title: string; blurb: string
 
 /** Set by the owner: $50 CAD per piece, $80 CAD for one top plus one bottom. Mirrors the Shopify automatic discount. */
 export const PRICING = { currency: 'CAD', piece: 50, bundle: 80 } as const;
+
+/**
+ * Storefront API metafields to read on each product, e.g. { namespace: 'custom', key: 'care' }.
+ * Each one must be created in Shopify admin and exposed to the Storefront API first (Settings > Custom data > Storefront access).
+ * Empty by default, so no metafield is requested until the owner defines them.
+ */
+export const PRODUCT_METAFIELDS: { namespace: string; key: string }[] = [];

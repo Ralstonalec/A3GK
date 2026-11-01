@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { supabaseConfigured } from '@/lib/supabase/env';
 import { removeSaved, signOut } from './actions';
+import { customerAccountConfigured } from '@/lib/customer-account';
 import { PasswordForm, ProfileForm, SizeForm } from '@/components/AccountForms';
 
 export const metadata: Metadata = { title: 'Your account' };
@@ -57,6 +58,9 @@ export default async function Account() {
         ) : <p className="text-white/70">Nothing saved yet. Use “Save for later” on a product page.</p>}
       </Card>
       <Card title="Password"><PasswordForm /></Card>
+      {customerAccountConfigured && (
+        <Card title="Store account"><p className="text-white/75">Order status, tracking and receipts come from your store account.</p><a href="/customer/orders" className="btn-primary mt-4 inline-flex">View store orders</a></Card>
+      )}
       <Card title="Orders">
         {purchases && purchases.length ? (
           <ul className="divide-y divide-white/10">

@@ -17,6 +17,8 @@ export type Product = {
   images: { url: string; altText: string | null }[];
   /** True when the data came from the Shopify Storefront API. False = unconnected placeholder. */
   connected: boolean;
+  /** Storefront API metafields requested via PRODUCT_METAFIELDS, keyed "namespace.key". */
+  metafields?: Record<string, string>;
 };
 
 export type CartLine = {

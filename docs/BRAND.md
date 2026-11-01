@@ -4,10 +4,10 @@
 A3GK is a goalkeeper-focused brand from A3 Goalkeeping. The first product is a padded base layer worn underneath goalkeeper kit: front-only honeycomb padding where keepers take impact, smooth fabric everywhere else.
 
 ## Logos (white versions for dark backgrounds)
-- Mark: `public/brand/a3-mark-white.png` (the A with the swoosh and the small 3).
-- Lockup: `public/brand/a3-lockup-white.png` ("A3 Sports Solutions").
-- Originals are black on white; use the black originals on light backgrounds. Do not redraw, recolour, stretch or add effects.
-- Keep clear space around the mark of at least half the height of the "3".
+- **Primary logo (A3GK):** `public/brand/a3gk-logo-white.png` (A with swoosh, small 3, and "GK" beneath). Used in the site header, footer, browser tab icon, phone icon and the link-preview image.
+- Earlier logos, kept for reference and not used on the site now: `public/brand/a3-mark-white.png` (A³ mark) and `public/brand/a3-lockup-white.png` ("A3 Sports Solutions").
+- The originals are black on white; use black versions on light backgrounds. Do not redraw, recolour, stretch or add effects.
+- Keep clear space around the logo of at least half the height of the "3".
 
 ## Colours
 | Role | Value |
@@ -34,7 +34,7 @@ Examples of the tone: "Goalkeeper kit starts underneath." / "Padded where it cou
 - Padding is on the **front only**. The back is plain fabric.
 - Long-sleeve top: chest, ribs, upper arms, elbows and forearms. Leggings: joined hip-and-thigh panel and a knee panel. Short-sleeve top: chest, ribs, a panel on each short sleeve (no elbow panels). Shorts: joined hip-and-thigh panel (no knee panels).
 - Sold individually and in any combination: **$50 CAD per piece, $80 CAD for one top plus one bottom** (save $20).
-- Designed to sit under a long-sleeve jersey and long pants. It can be worn under short sleeves and shorts, but that is not recommended because it can reduce durability.
+- Designed to sit under a long-sleeve jersey and long pants. It can be worn under short sleeves and shorts, but that is not recommended.
 - Images of the products and people are computer-made renderings based on the real garments, not photographs. Say so when it matters.
 
 ## Never say (not verified)

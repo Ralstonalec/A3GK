@@ -12,6 +12,7 @@ import { PurchasePanel } from '@/components/PurchasePanel';
 import { Fact, Tbc } from '@/components/Tbc';
 import { BASE_LAYER, FAQ, HANDLES, PIECES, POLICIES, SIZE_GUIDE } from '@/lib/content';
 import { getProduct, unavailable } from '@/lib/shopify';
+import { PRODUCT_PHOTOS } from '@/lib/photos';
 import { KitBuilder } from '@/components/KitBuilder';
 import { ShortSet as ShortSetFigure } from '@/components/ShortSet';
 import { SaveButton } from '@/components/SaveButton';
@@ -87,6 +88,10 @@ export default async function ProductPage({ params }: { params: { handle: string
               {isShortPiece ? <ShortSetFigure compact /> : <div className="glass rounded-3xl p-4"><RenderFigure priority sizes="(min-width:768px) 55vw, 100vw" /></div>}
               <p className="text-sm text-white/75"><strong className="text-white">Padding.</strong> {pieceInfo.padding}</p>
             </div>
+          ) : PRODUCT_PHOTOS[product.handle] ? (
+            <figure className="glass overflow-hidden rounded-3xl">
+              <Image src={PRODUCT_PHOTOS[product.handle].src} alt={PRODUCT_PHOTOS[product.handle].alt} width={PRODUCT_PHOTOS[product.handle].w} height={PRODUCT_PHOTOS[product.handle].h} priority sizes="(min-width:768px) 55vw, 100vw" className="h-auto w-full" />
+            </figure>
           ) : <PhotoSlot label="Product photographs" className="min-h-[360px]" />}
           {isBase && <p className="mt-3 text-sm text-white/55">Outer kit shown in photos is not included unless stated under “What you receive”.</p>}
         </div>

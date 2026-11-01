@@ -2,22 +2,34 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { NAV } from '@/lib/content';
 import { useCart } from '@/lib/cart-context';
 import { supabaseConfigured } from '@/lib/supabase/env';
+import { customerAccountEnabled } from '@/lib/flags';
 
 export function Header() {
   const { cart, setOpen } = useCart();
   const [menu, setMenu] = useState(false);
   const count = cart?.totalQuantity ?? 0;
+  const home = usePathname() === '/';
+  const [past, setPast] = useState(false);
+  useEffect(() => {
+    if (!home) return;
+    const on = () => setPast(window.scrollY > window.innerHeight * 0.7);
+    on();
+    window.addEventListener('scroll', on, { passive: true });
+    return () => window.removeEventListener('scroll', on);
+  }, [home]);
+  const showLogo = !home || past;
   return (
     <header className="fixed inset-x-0 top-0 z-50">
       <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#080a0e] via-[#080a0e]/85 to-transparent md:hidden" />
       <div className="relative mx-auto flex h-20 max-w-7xl items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-2.5 font-display text-3xl font-extrabold tracking-tight sm:gap-3 sm:text-4xl" aria-label="A3GK home">
-          <Image src="/brand/a3-mark-white.png" alt="" width={511} height={535} priority className="h-11 w-auto drop-shadow-[0_0_14px_rgba(255,255,255,0.35)] sm:h-14" />
-          <span className="max-[359px]:hidden">A3GK</span>
+        <Link href="/" className={`flex items-center gap-2.5 font-display text-3xl font-extrabold tracking-tight transition-opacity duration-300 sm:gap-3 sm:text-4xl ${showLogo ? 'opacity-100' : 'invisible opacity-0'}`} aria-label="A3GK home">
+          <Image src="/brand/a3gk-logo-white.png" alt="" width={738} height={757} priority className="h-14 w-auto drop-shadow-[0_0_14px_rgba(255,255,255,0.3)] sm:h-16" />
+          <span className="sr-only">A3GK</span>
         </Link>
         <nav aria-label="Main" className="glass hidden items-center gap-1 rounded-full p-1.5 md:flex">
           {NAV.map((n) => (
@@ -25,8 +37,8 @@ export function Header() {
           ))}
         </nav>
         <div className="flex items-center gap-2">
-          {supabaseConfigured && (
-            <Link href="/login" className="glass flex h-12 w-12 items-center justify-center rounded-full" aria-label="Account">
+          {(supabaseConfigured || customerAccountEnabled) && (
+            <Link href={supabaseConfigured ? '/login' : '/customer/login'} className="glass flex h-12 w-12 items-center justify-center rounded-full" aria-label="Account">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden><circle cx="12" cy="8" r="4" /><path d="M4 21a8 8 0 0116 0" /></svg>
             </Link>
           )}

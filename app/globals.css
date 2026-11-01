@@ -43,8 +43,6 @@ html[data-stage-live] .stage-off { display: none; }
 .float-shadow { animation: a3-shadow 7s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) { .float-product, .float-shadow { animation: none; } }
 
-/* with the 3D stage live, the static padded-areas card is replaced by the scroll tour, so the overview card stands alone */
-html[data-stage-live] .overview-grid { grid-template-columns: minmax(0, 40rem); }
 
 @keyframes tour-scan { 0% { transform: translateY(-100%); } 100% { transform: translateY(100%); } }
 @keyframes tour-dash { to { stroke-dashoffset: -20; } }
