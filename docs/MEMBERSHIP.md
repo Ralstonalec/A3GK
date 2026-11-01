@@ -9,7 +9,7 @@
 ## A3 Goalkeepers Club (`/club`)
 - Email-only sign-up (no account needed) with a consent checkbox. Rows go into `email_signups` with `source = 'club'`. The same form sits on the homepage. Server action: `app/club/actions.ts` (honeypot, shape check, 5 attempts per 10 min per address).
 - Read the list in Supabase: `select email, created_at from public.email_signups where source = 'club' and unsubscribed_at is null order by created_at desc; -- after applying supabase/proposed/club-list-hardening.sql`
-- **Not yet applied:** `supabase/proposed/club-list-hardening.sql` adds a unique email index, consent time and a per-row unsubscribe token. Apply it before the first send. Until then duplicates can appear, and club-only sign-ups have no unsubscribe link, so send nothing to them yet.
+- **Applied 2026-11-01:** `supabase/migrations/20261101_club_list_hardening.sql` added a unique email index, `consented_at`, `unsubscribed_at` and a per-row `unsubscribe_token`. Club sign-ups can now unsubscribe at `/unsubscribe?token=...`. When sending, skip rows where `unsubscribed_at` is set, and include the business name, mailing address and unsubscribe link in every email.
 - "Early access" is only a promise to run it where you choose to; nothing in the code gates products.
 
 ## Setup you must do (secrets are yours to add)

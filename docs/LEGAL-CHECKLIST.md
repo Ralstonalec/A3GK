@@ -8,7 +8,7 @@ General information, not legal advice. Confirm the important items with an accou
 - [x] Footer links to both; privacy link next to every email-consent checkbox (club form, sign-up).
 - [x] Email consent is opt-in, unticked by default, with the time consent was given stored for members (CASL).
 - [x] Sender identity placeholder on the club page and in the privacy policy (`BUSINESS` in `lib/content.ts`).
-- [x] Unsubscribe page works for members and, once the SQL below is applied, for club-only sign-ups.
+- [x] Unsubscribe page works for members and for club-only sign-ups.
 - [x] No advertising or analytics cookies, so no consent banner is needed today. If analytics or ads are added, add a consent banner first.
 - [x] Card numbers never touch the site (hosted checkout).
 
@@ -20,7 +20,7 @@ General information, not legal advice. Confirm the important items with an accou
 - [ ] Limits-of-liability wording in the terms: have a lawyer review.
 
 ## Needs a decision or approval before launch
-- [ ] Apply `supabase/proposed/club-list-hardening.sql` (unique email, consent time, unsubscribe token). Required before the first marketing email.
+- [x] Applied 2026-11-01: `supabase/migrations/20261101_club_list_hardening.sql` (unique email, consent time, unsubscribe token).
 - [ ] Every marketing email must contain: business name, mailing address, working unsubscribe link (`/unsubscribe?token=...`). Skip anyone with `unsubscribed_at` set.
 
 ## Business and tax (outside the site)
@@ -41,3 +41,6 @@ General information, not legal advice. Confirm the important items with an accou
 ## Privacy operations
 - [ ] Decide how deletion/access requests are handled (currently: by email or the contact form).
 - [ ] Breach plan: report serious breaches to the Privacy Commissioner and notify affected people.
+
+## Known database follow-up (not applied)
+Supabase's security advisor warns that `public.unsubscribe_marketing(token uuid)` and `public.email_confirmed()` are SECURITY DEFINER functions callable through the public API. The site does not use `unsubscribe_marketing` (it unsubscribes through the server). Moving both into a private schema was proposed earlier and needs the owner's approval before it is applied.

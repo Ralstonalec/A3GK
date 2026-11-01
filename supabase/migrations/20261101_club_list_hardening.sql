@@ -1,4 +1,4 @@
--- PROPOSED, NOT APPLIED. Review, then apply in the Supabase SQL editor (or ask Claude to apply it).
+-- APPLIED to the production database on 2026-11-01 (migration name: club_list_hardening), with the owner's approval. The table was empty at the time.
 -- Makes the email_signups list safe to send from: no duplicate rows, consent time recorded, an unsubscribe token per row.
 alter table public.email_signups
   add column if not exists consented_at timestamptz not null default now(),
