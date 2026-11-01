@@ -35,7 +35,7 @@ export function PurchasePanel({ product, sizeGuide = true, preorderNote }: { pro
 
   return (
     <div className="space-y-5" id="purchase">
-      <h2 className="font-display text-3xl font-bold uppercase">{product.title}</h2>
+      <h1 className="font-display text-3xl font-bold uppercase">{product.title}</h1>
       <p className="text-2xl font-semibold" aria-live="polite">
         {price ? <>{formatMoney(price.amount, price.currencyCode)} <span className="text-sm font-normal text-white/55">{price.currencyCode}</span></> : <Tbc label="Retail price and currency" />}
       </p>

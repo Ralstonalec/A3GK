@@ -42,3 +42,14 @@ html[data-stage-live] .stage-off { display: none; }
 .float-product { animation: a3-float 7s ease-in-out infinite; }
 .float-shadow { animation: a3-shadow 7s ease-in-out infinite; }
 @media (prefers-reduced-motion: reduce) { .float-product, .float-shadow { animation: none; } }
+
+/* with the 3D stage live, the static padded-areas card is replaced by the scroll tour, so the overview card stands alone */
+html[data-stage-live] .overview-grid { grid-template-columns: minmax(0, 40rem); }
+
+@keyframes tour-scan { 0% { transform: translateY(-100%); } 100% { transform: translateY(100%); } }
+@keyframes tour-dash { to { stroke-dashoffset: -20; } }
+.tour-scan { animation: tour-scan 2.6s linear infinite; background: linear-gradient(to bottom, transparent 0, transparent 72%, rgb(var(--accent) / .14) 97%, rgb(var(--accent) / .9) 100%); will-change: transform; }
+.tour-dash { animation: tour-dash 1s linear infinite; }
+
+/* while the 3D canvas redraws behind the page, blurring what is behind glass every frame is the main cost: use a flat tint instead */
+html[data-stage-live] .glass { -webkit-backdrop-filter: none; backdrop-filter: none; background-color: rgba(20, 24, 31, 0.78); }

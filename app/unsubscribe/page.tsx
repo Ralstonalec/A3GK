@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-/** Link target for the unsubscribe line in every marketing email. The token is an unguessable id on the member's profile. */
+/** Link target for the unsubscribe line in every marketing email. The token is an unguessable id on the member's profile or club sign-up. */
 export default async function Unsubscribe({ searchParams }: { searchParams: { token?: string } }) {
   const token = searchParams.token ?? '';
   let done = false;
@@ -16,6 +16,11 @@ export default async function Unsubscribe({ searchParams }: { searchParams: { to
   if (!limited && adminConfigured && UUID.test(token)) {
     const { data } = await adminClient().from('profiles').update({ marketing_opt_in: false }).eq('unsubscribe_token', token).select('id');
     done = Boolean(data && data.length);
+    if (!done) {
+      // Club-only sign-ups (no account) keep their own token. This needs the columns in supabase/proposed/club-list-hardening.sql; until that is applied the update simply matches nothing.
+      const club = await adminClient().from('email_signups').update({ unsubscribed_at: new Date().toISOString() }).eq('unsubscribe_token', token).select('id');
+      done = Boolean(club.data && club.data.length);
+    }
   }
   return (
     <div className="section max-w-xl">

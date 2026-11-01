@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { NAV } from '@/lib/content';
@@ -14,9 +15,9 @@ export function Header() {
     <header className="fixed inset-x-0 top-0 z-50">
       <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#080a0e] via-[#080a0e]/85 to-transparent md:hidden" />
       <div className="relative mx-auto flex h-20 max-w-7xl items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-2 font-display text-3xl font-extrabold tracking-tight" aria-label="A3GK home">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M12 2l8.66 5v10L12 22 3.34 17V7L12 2z" stroke="rgb(var(--accent))" strokeWidth="2" /><path d="M12 8v8M8 12h8" stroke="#fff" strokeWidth="2" strokeLinecap="round" /></svg>
-          A3GK
+        <Link href="/" className="flex items-center gap-2.5 font-display text-3xl font-extrabold tracking-tight sm:gap-3 sm:text-4xl" aria-label="A3GK home">
+          <Image src="/brand/a3-mark-white.png" alt="" width={511} height={535} priority className="h-11 w-auto drop-shadow-[0_0_14px_rgba(255,255,255,0.35)] sm:h-14" />
+          <span className="max-[359px]:hidden">A3GK</span>
         </Link>
         <nav aria-label="Main" className="glass hidden items-center gap-1 rounded-full p-1.5 md:flex">
           {NAV.map((n) => (

@@ -14,7 +14,7 @@ export function Hero() {
 
       <div className="relative z-10 grid flex-1 items-stretch gap-8 md:grid-cols-[1fr_auto]">
         <div className="flex flex-col gap-6 md:py-6">
-          <h1 className="font-display text-[clamp(3.4rem,8.4vw,9rem)] font-extrabold uppercase leading-[0.82] tracking-tight">
+          <h1 className="font-display text-[clamp(2.2rem,11vw,3.6rem)] md:text-[clamp(3.4rem,8.4vw,9rem)] font-extrabold uppercase leading-[0.82] tracking-tight">
             <span className="outline-text">Goalkeeper</span>
             <br />
             kit starts

@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
@@ -74,7 +75,7 @@ export function AuthForm({ initialError }: { initialError?: string }) {
         {mode === 'signup' && (
           <label className="flex min-h-[44px] items-start gap-3 text-sm text-white/80">
             <input name="marketing_opt_in" type="checkbox" className="mt-0.5 h-5 w-5 shrink-0 accent-[rgb(var(--accent))]" />
-            <span>Email me about new products and member rewards. You can unsubscribe at any time.</span>
+            <span>Email me about new products and member rewards. You can unsubscribe at any time. See our <Link href="/privacy" className="underline underline-offset-4">privacy policy</Link>.</span>
           </label>
         )}
         {error && <p role="alert" className="rounded-xl border border-red-400/40 bg-red-500/10 p-3 text-sm text-red-200">{error}</p>}

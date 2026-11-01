@@ -54,9 +54,9 @@ export const BASE_LAYER = {
   productName: 'A3GK Padded Base Layer', // working name from brief; confirm exact name
   included: 'Only the pieces you choose. Every top and bottom is sold on its own, so you can buy one piece or any combination.' as string | null,
   piecesSoldTogether: false as boolean | null, // confirmed by the owner: pieces are sold individually and in any combination
-  fabricComposition: null as string | null,
-  paddingSpec: null as string | null, // only manufacturer-verified information
-  intendedFit: null as string | null,
+  fabricComposition: '100% premium polyester' as string | null, // owner-confirmed
+  paddingSpec: 'EVA foam padding that moves with your body' as string | null, // owner-confirmed; thickness and weight are still unconfirmed, so do not state them
+  intendedFit: 'Designed to fit tight to your body.' as string | null, // owner-confirmed
   care: null as string | null,
   origin: null as string | null,
   fulfilment: null as string | null,
@@ -92,10 +92,21 @@ export const POLICIES = {
   sizeExchanges: null as string | null,
   returnProcess: null as string | null,
   returnCosts: null as string | null,
-  privacyUrl: null as string | null,
-  termsUrl: null as string | null,
+  privacyUrl: '/privacy' as string | null,
+  termsUrl: '/terms' as string | null,
   social: [] as { label: string; href: string }[],
 };
+
+/** Who is legally selling. Fill these in before launch: they appear on the privacy policy, the terms of sale and in marketing emails (CASL). */
+export const BUSINESS = {
+  legalName: null as string | null,
+  mailingAddress: null as string | null,
+  privacyContactEmail: null as string | null,
+  governingLaw: null as string | null, // e.g. "the laws of the Province of Ontario and the federal laws of Canada"
+};
+
+/** Date the privacy policy and terms were last reviewed. */
+export const LEGAL_UPDATED = '2026-10-30';
 
 export const BRAND_INTRO =
   'A3 Goalkeeping is building a focused collection of goalkeeper apparel and essentials, with our padded base layer at the centre of the range. Our aim is straightforward: clear product information, purposeful choices, and a shopping experience built around keepers.';
