@@ -11,11 +11,11 @@ export const RENDER = {
 };
 
 export const MACRO = [
-  { id: 'chest', src: '/photos/pad-chest.webp', w: 450, h: 360, label: 'Chest panel' },
+  { id: 'chest', src: '/photos/sup-chest.webp', w: 822, h: 522, label: 'Chest panel' },
   { id: 'ribs', src: '/photos/pad-ribs.webp', w: 500, h: 310, label: 'Rib panel' },
-  { id: 'upper-arm', src: '/photos/pad-upper-arm.webp', w: 350, h: 340, label: 'Upper-arm panel' },
-  { id: 'forearm', src: '/photos/pad-forearm.webp', w: 290, h: 460, label: 'Elbow and forearm panel' },
-  { id: 'hip-thigh', src: '/photos/pad-hip-thigh.webp', w: 610, h: 510, label: 'Hip and thigh panels' },
+  { id: 'upper-arm', src: '/photos/sup-upper-arm.webp', w: 250, h: 630, label: 'Upper-arm panel' },
+  { id: 'forearm', src: '/photos/sup-forearm.webp', w: 424, h: 522, label: 'Elbow and forearm panel' },
+  { id: 'hip-thigh', src: '/photos/sup-hip-thigh.webp', w: 433, h: 590, label: 'Hip and thigh panels (shorts)' },
   { id: 'knee', src: '/photos/pad-knee.webp', w: 590, h: 430, label: 'Knee panel' },
   { id: 'waistband', src: '/photos/waistband.webp', w: 150, h: 590, label: 'Printed waistband' },
 ] as const;
