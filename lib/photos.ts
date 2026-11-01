@@ -12,12 +12,11 @@ export const RENDER = {
 
 export const MACRO = [
   { id: 'chest', src: '/photos/sup-chest.webp', w: 822, h: 522, label: 'Chest panel' },
-  { id: 'ribs', src: '/photos/pad-ribs.webp', w: 500, h: 310, label: 'Rib panel' },
+  { id: 'ribs', src: '/photos/sup-ribs.webp', w: 236, h: 208, label: 'Rib panel' },
   { id: 'upper-arm', src: '/photos/sup-upper-arm.webp', w: 250, h: 630, label: 'Upper-arm panel' },
   { id: 'forearm', src: '/photos/sup-forearm.webp', w: 424, h: 522, label: 'Elbow and forearm panel' },
   { id: 'hip-thigh', src: '/photos/sup-hip-thigh.webp', w: 433, h: 590, label: 'Hip and thigh panels (shorts)' },
-  { id: 'knee', src: '/photos/pad-knee.webp', w: 590, h: 430, label: 'Knee panel' },
-  { id: 'waistband', src: '/photos/waistband.webp', w: 150, h: 590, label: 'Printed waistband' },
+  { id: 'knee', src: '/photos/sup-knee.webp', w: 85, h: 210, label: 'Knee panel' },
 ] as const;
 
 export type Promo = { id: 'dive' | 'stance' | 'closeup' | 'banner'; src: string; w: number; h: number; alt: string; caption?: string };

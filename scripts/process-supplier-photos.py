@@ -27,14 +27,20 @@ def fill_background(im, dark=(14, 17, 23), thresh=40):
             ImageDraw.floodfill(im, (x, y), dark, thresh=thresh)
     return im
 
+SCALE = {'sup-ribs.webp': 2}
+
 jobs = [
     ('26.png', (478, 30, 1300, 552), 'sup-chest.webp'),       # chest panel macro (drops the caption text below)
     ('27.png', (172, 30, 596, 552), 'sup-forearm.webp'),      # elbow and forearm panel macro
     ('28.png', (0, 150, 433, 740), 'sup-hip-thigh.webp'),     # shorts: joined hip and thigh panels
+    ('31.webp', (240, 458, 362, 566), 'sup-ribs.webp'),        # rib panel (small source, upscaled 2x)
+    ('32.png', (132, 448, 232, 662), 'sup-knee.webp'),         # knee panel
     ('30.png', (20, 140, 270, 770), 'sup-upper-arm.webp'),    # upper-arm and elbow panels from behind
 ]
 for name, box, dest in jobs:
     im = Image.open(f'{src}/{name}').convert('RGB').crop(box)
     im = trim_white(im)
+    k = SCALE.get(dest, 1)
+    if k > 1: im = im.resize((im.width * k, im.height * k), Image.LANCZOS)
     im.save(f'{out}/{dest}', 'WEBP', quality=92, method=6)
     print(dest, im.size)
