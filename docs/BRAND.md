@@ -34,7 +34,7 @@ Examples of the tone: "Goalkeeper kit starts underneath." / "Padded where it cou
 - Padding is on the **front only**. The back is plain fabric.
 - Long-sleeve top: chest, ribs, upper arms, elbows and forearms. Leggings: joined hip-and-thigh panel and a knee panel. Short-sleeve top: chest, ribs, a panel on each short sleeve (no elbow panels). Shorts: joined hip-and-thigh panel (no knee panels).
 - Sold individually and in any combination: **$50 CAD per piece, $80 CAD for one top plus one bottom** (save $20).
-- Designed to sit under a long-sleeve jersey and long pants. It can be worn under short sleeves and shorts, but that is not recommended because it can reduce durability.
+- Designed to sit under a long-sleeve jersey and long pants. It can be worn under short sleeves and shorts, but that is not recommended.
 - Images of the products and people are computer-made renderings based on the real garments, not photographs. Say so when it matters.
 
 ## Never say (not verified)

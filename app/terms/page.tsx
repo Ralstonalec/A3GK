@@ -31,7 +31,7 @@ export default function Terms() {
           <li>{WEAR_NOTE}</li>
           <li>The padding is not a guarantee against injury. Use the product at your own judgment and follow the care instructions.</li>
           <li>Fabric: {BASE_LAYER.fabricComposition}. Padding: {BASE_LAYER.paddingSpec}.</li>
-          <li>Sizing and care details: <Fact value={null} label="Confirmed size chart and care instructions" /></li>
+          <li>Care: {BASE_LAYER.care} Sizing: <Fact value={null} label="Confirmed size chart" /></li>
         </ul>
       </LegalSection>
 

@@ -44,7 +44,7 @@ export const NAV = [
 ];
 
 /** Owner-supplied guidance: wearing it with short sleeves or shorts is possible but not recommended. */
-export const WEAR_NOTE = 'You can wear the base layer under a short-sleeve jersey and shorts, but we do not recommend it. Leaving the sleeves and legs exposed can reduce its durability. It is designed to sit fully under a long-sleeve jersey and long pants.';
+export const WEAR_NOTE = 'You can wear the base layer under a short-sleeve jersey and shorts, but we do not recommend it. It is designed to sit fully under a long-sleeve jersey and long pants.';
 
 /** Facts about the base layer. `null` = not yet confirmed. */
 export const BASE_LAYER = {
@@ -57,7 +57,7 @@ export const BASE_LAYER = {
   fabricComposition: '100% premium polyester' as string | null, // owner-confirmed
   paddingSpec: 'EVA foam padding that moves with your body' as string | null, // owner-confirmed; thickness and weight are still unconfirmed, so do not state them
   intendedFit: 'Designed to fit tight to your body.' as string | null, // owner-confirmed
-  care: null as string | null,
+  care: 'Hand wash only.' as string | null,
   origin: null as string | null,
   fulfilment: null as string | null,
   /** Only padded areas that really exist. Empty until confirmed — hotspots/labels render nothing. */
