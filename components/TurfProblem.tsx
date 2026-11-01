@@ -1,5 +1,5 @@
 import { Reveal } from './Reveal';
-import { TurfScene } from './TurfScene';
+import { DiveDemo } from './DiveDemo';
 import { SceneBackdrop } from './SceneBackdrop';
 import { BASE_LAYER, PADDING_DESIGN, PRICING } from '@/lib/content';
 import { SCENE } from '@/lib/photos';
@@ -31,16 +31,19 @@ export function TurfProblem() {
         </p>
       </Reveal>
 
-      <TurfScene />
-
-      <ol className="mt-4 grid gap-px overflow-hidden rounded-2xl border border-white/15 bg-white/15 md:grid-cols-3">
-        {STEPS.map((s) => (
-          <li key={s.n} className="bg-[#0c0f14]/90 p-4">
-            <p className="text-xs font-bold uppercase tracking-widest text-accent">{s.n} · {s.t}</p>
-            <p className="mt-1 text-sm text-white/75">{s.d}</p>
-          </li>
-        ))}
-      </ol>
+      <div className="mt-8 grid items-center gap-6 md:grid-cols-[340px_1fr] md:gap-10">
+        <Reveal><DiveDemo /><p className="mt-2 text-center text-xs text-white/50">Illustrative demonstration.</p></Reveal>
+        <ol className="grid gap-3">
+          {STEPS.map((s, i) => (
+            <li key={s.n}>
+              <Reveal delay={i * 0.08} className="glass rounded-3xl p-5">
+                <p className="text-xs font-bold uppercase tracking-widest text-accent">{s.n} · {s.t}</p>
+                <p className="mt-1 text-lg text-white/85">{s.d}</p>
+              </Reveal>
+            </li>
+          ))}
+        </ol>
+      </div>
 
       <Reveal className="mt-8 rounded-[2rem] border border-accent/40 bg-accent/[0.07] p-6 md:p-8">
         <div className="grid items-start gap-6 md:grid-cols-[1.1fr_1fr]">
