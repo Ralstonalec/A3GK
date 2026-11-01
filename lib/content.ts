@@ -64,6 +64,9 @@ export const BASE_LAYER = {
   fabricComposition: '100% premium polyester' as string | null, // owner-confirmed
   paddingSpec: 'EVA foam padding that moves with your body' as string | null, // owner-confirmed; thickness and weight are still unconfirmed, so do not state them
   intendedFit: 'Designed to fit tight to your body.' as string | null, // owner-confirmed
+  trueToSize: 'True to size.' as string | null, // supplier listing
+  ageGroup: 'Adult sizing, designed for goalkeepers aged 18 and over.' as string | null, // supplier listing
+  useCase: 'For training and matches.' as string | null, // supplier listing
   care: 'Hand wash only.' as string | null,
   origin: 'Mainland China' as string | null, // from the supplier listing
   fabricWeight: '180 gsm' as string | null, // supplier listing says "180 Grams"; confirm this is grams per square metre
