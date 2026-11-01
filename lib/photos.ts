@@ -55,3 +55,8 @@ export const SCENE = {
 export const CUT = {
   longSet: { src: '/photos/cut-long-set.webp', w: 1533, h: 975, alt: 'Rendering of the A3GK padded long-sleeve top and leggings floating side by side: honeycomb panels on the chest, ribs, arms, hips, thighs and knees, and a printed waistband' },
 };
+
+/** Product photographs for the extras, by product handle. Only add a photo once it is cleared for use: no other company's name or logo visible, and the right to publish it confirmed. */
+export const PRODUCT_PHOTOS: Record<string, { src: string; w: number; h: number; alt: string }> = {
+  'sports-bandages': { src: '/photos/product-bandages.webp', w: 1536, h: 1024, alt: 'Two rolls of black self-adhesive sports bandage standing on a dark surface, one upright and one on its side' },
+};
