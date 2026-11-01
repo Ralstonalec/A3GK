@@ -33,7 +33,7 @@ General information, not legal advice. Confirm the important items with an accou
 
 ## Product and advertising
 - [ ] Do not state fabric, padding spec or protection claims until the supplier has proven them (Competition Act).
-- [ ] Textile labelling: fibre content, dealer name or CA number, care instructions, French/English where required.
+- [ ] Textile labelling: fibre content (confirmed: polyester; the label itself should read "100% polyester" and match the supplier's garment label), dealer name or CA number, care instructions, French/English where required.
 - [ ] Check whether protective sports gear has safety requirements that affect what you may claim.
 - [ ] Written supplier terms: lead times, returns, defects, product liability.
 - [ ] Confirm you may use the supplier's photos; renderings must not mislead about the real product.

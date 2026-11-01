@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { LegalPage, LegalSection } from '@/components/LegalPage';
 import { Fact } from '@/components/Tbc';
-import { BUSINESS, PRICING, POLICIES, WEAR_NOTE } from '@/lib/content';
+import { BASE_LAYER, BUSINESS, PRICING, POLICIES, WEAR_NOTE } from '@/lib/content';
 
 export const metadata: Metadata = { title: 'Terms of sale' };
 
@@ -30,7 +30,8 @@ export default function Terms() {
           <li>The padding is on the front of the garment; the back is plain fabric.</li>
           <li>{WEAR_NOTE}</li>
           <li>The padding is not a guarantee against injury. Use the product at your own judgment and follow the care instructions.</li>
-          <li>Fabric, sizing and care details: <Fact value={null} label="Confirmed fabric composition, size chart and care instructions" /></li>
+          <li>Fabric: {BASE_LAYER.fabricComposition}. Padding: {BASE_LAYER.paddingSpec}.</li>
+          <li>Sizing and care details: <Fact value={null} label="Confirmed size chart and care instructions" /></li>
         </ul>
       </LegalSection>
 

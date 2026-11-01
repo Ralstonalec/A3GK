@@ -54,9 +54,9 @@ export const BASE_LAYER = {
   productName: 'A3GK Padded Base Layer', // working name from brief; confirm exact name
   included: 'Only the pieces you choose. Every top and bottom is sold on its own, so you can buy one piece or any combination.' as string | null,
   piecesSoldTogether: false as boolean | null, // confirmed by the owner: pieces are sold individually and in any combination
-  fabricComposition: null as string | null,
-  paddingSpec: null as string | null, // only manufacturer-verified information
-  intendedFit: null as string | null,
+  fabricComposition: '100% premium polyester' as string | null, // owner-confirmed
+  paddingSpec: 'EVA foam padding that moves with your body' as string | null, // owner-confirmed; thickness and weight are still unconfirmed, so do not state them
+  intendedFit: 'Designed to fit tight to your body.' as string | null, // owner-confirmed
   care: null as string | null,
   origin: null as string | null,
   fulfilment: null as string | null,

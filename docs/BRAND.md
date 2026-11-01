@@ -29,6 +29,8 @@ Focused, practical, plain. Short sentences. Talk like a coach: say what it is, w
 Examples of the tone: "Goalkeeper kit starts underneath." / "Padded where it counts." / "Pick a piece. Or pair it."
 
 ## Facts you may state
+- Fabric: **100% premium polyester**. Padding: **EVA foam padding that moves with your body**.
+- Fit: **designed to fit tight to your body**.
 - Padding is on the **front only**. The back is plain fabric.
 - Long-sleeve top: chest, ribs, upper arms, elbows and forearms. Leggings: joined hip-and-thigh panel and a knee panel. Short-sleeve top: chest, ribs, a panel on each short sleeve (no elbow panels). Shorts: joined hip-and-thigh panel (no knee panels).
 - Sold individually and in any combination: **$50 CAD per piece, $80 CAD for one top plus one bottom** (save $20).
@@ -36,7 +38,8 @@ Examples of the tone: "Goalkeeper kit starts underneath." / "Padded where it cou
 - Images of the products and people are computer-made renderings based on the real garments, not photographs. Say so when it matters.
 
 ## Never say (not verified)
-- Fabric composition, padding material or thickness, or any weight, size or measurement figure.
+- Padding thickness, density, weight or any size or measurement figure (fabric and padding material are confirmed above; nothing else about them is).
+- Performance claims such as "moisture-wicking", "breathable", "anti-odour", "compression level" or "stretch" amounts unless confirmed.
 - That it prevents, reduces or protects against injury, or is "impact-tested", "certified" or "approved".
 - Delivery times, shipping costs, return terms, stock levels, "limited" or "selling fast", reviews, or numbers of customers.
 - Any other brand's name, logo or player.
