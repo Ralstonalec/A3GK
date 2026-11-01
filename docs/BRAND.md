@@ -4,10 +4,10 @@
 A3GK is a goalkeeper-focused brand from A3 Goalkeeping. The first product is a padded base layer worn underneath goalkeeper kit: front-only honeycomb padding where keepers take impact, smooth fabric everywhere else.
 
 ## Logos (white versions for dark backgrounds)
-- Mark: `public/brand/a3-mark-white.png` (the A with the swoosh and the small 3).
-- Lockup: `public/brand/a3-lockup-white.png` ("A3 Sports Solutions").
-- Originals are black on white; use the black originals on light backgrounds. Do not redraw, recolour, stretch or add effects.
-- Keep clear space around the mark of at least half the height of the "3".
+- **Primary logo (A3GK):** `public/brand/a3gk-logo-white.png` (A with swoosh, small 3, and "GK" beneath). Used in the site header, footer, browser tab icon, phone icon and the link-preview image.
+- Earlier logos, kept for reference and not used on the site now: `public/brand/a3-mark-white.png` (A³ mark) and `public/brand/a3-lockup-white.png` ("A3 Sports Solutions").
+- The originals are black on white; use black versions on light backgrounds. Do not redraw, recolour, stretch or add effects.
+- Keep clear space around the logo of at least half the height of the "3".
 
 ## Colours
 | Role | Value |
