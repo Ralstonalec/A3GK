@@ -6,6 +6,7 @@
  * Needs SHOPIFY_STORE_DOMAIN and SHOPIFY_CUSTOMER_ACCOUNT_CLIENT_ID. Setup steps: docs/SHOPIFY-ACCOUNTS.md.
  */
 import { cookies } from 'next/headers';
+import { siteOriginFrom } from './site-url';
 
 const domain = process.env.SHOPIFY_STORE_DOMAIN;
 const clientId = process.env.SHOPIFY_CUSTOMER_ACCOUNT_CLIENT_ID;
@@ -37,9 +38,7 @@ export async function challengeFor(verifier: string) {
   return b64url(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(verifier)));
 }
 
-export const siteOrigin = (fallback: string) => {
-  try { return new URL(process.env.NEXT_PUBLIC_SITE_URL ?? fallback).origin; } catch { return fallback; }
-};
+export const siteOrigin = (fallback: string) => siteOriginFrom(process.env.NEXT_PUBLIC_SITE_URL, fallback);
 export const redirectUri = (fallbackOrigin: string) => `${siteOrigin(fallbackOrigin)}/customer/callback`;
 
 /** Only same-site relative paths are accepted as a return target. */

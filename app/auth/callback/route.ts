@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
+import { siteOriginFrom } from '@/lib/site-url';
 import { allow, clientIp } from '@/lib/ratelimit';
 import { createClient } from '@/lib/supabase/server';
 import { supabaseConfigured } from '@/lib/supabase/env';
@@ -7,11 +8,7 @@ const ALLOWED_NEXT = new Set(['/account']);
 
 /** Base for redirects: the configured site URL when set, otherwise the request's own origin. */
 function baseUrl(request: NextRequest) {
-  const configured = process.env.NEXT_PUBLIC_SITE_URL;
-  if (configured) {
-    try { return new URL(configured).origin; } catch { /* fall through */ }
-  }
-  return new URL(request.url).origin;
+  return siteOriginFrom(process.env.NEXT_PUBLIC_SITE_URL, new URL(request.url).origin);
 }
 
 /** Email confirmation, magic-link and password-reset links land here. */

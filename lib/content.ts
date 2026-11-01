@@ -1,3 +1,4 @@
+import { siteOriginFrom } from './site-url';
 /**
  * Single source of truth for launch copy and the list of facts still to be confirmed.
  *
@@ -9,7 +10,7 @@
 export const SITE = {
   name: 'A3GK',
   legalName: 'A3 Goalkeeping',
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
+  url: siteOriginFrom(process.env.NEXT_PUBLIC_SITE_URL, 'http://localhost:3000'),
 };
 
 export const HANDLES = {
