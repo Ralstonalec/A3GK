@@ -44,6 +44,12 @@ export const NAV = [
 ];
 
 /** Owner-supplied guidance: wearing it with short sleeves or shorts is possible but not recommended. */
+/** The two points the hexagonal padding is sold on. Worded as design intent: there is no test data behind these, so no numbers and no injury claims. */
+export const PADDING_DESIGN = {
+  spread: { title: 'Spreads the impact', body: 'The hexagonal cells are designed to spread the force of a landing across the panel instead of leaving it on one spot.' },
+  flex: { title: 'Stays flexible', body: 'The panels bend and move with the fabric, so you keep your range of movement through the dive, the roll and the recovery.' },
+} as const;
+
 export const WEAR_NOTE = 'You can wear the base layer under a short-sleeve jersey and shorts, but we do not recommend it. It is designed to sit fully under a long-sleeve jersey and long pants.';
 
 /** Facts about the base layer. `null` = not yet confirmed. */

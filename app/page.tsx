@@ -38,7 +38,7 @@ export default async function Home() {
           <div className="max-w-sm">
             <p className="eyebrow">The solution</p>
             <h2 id="padding" className="h2 text-4xl md:text-6xl">Built into the layer</h2>
-            <p className="mt-4 text-white/75">Front-only honeycomb panels, smooth fabric on the back. Scroll to move across each padded area.</p>
+            <p className="mt-4 text-white/75">Hexagonal panels designed to spread the impact and still flex with you. Padding on the front only, smooth fabric on the back. Scroll to move across each padded area.</p>
             <PaddingTour />
           </div>
         </div>
