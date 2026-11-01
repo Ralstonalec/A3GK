@@ -1,4 +1,5 @@
 import { Reveal } from './Reveal';
+import { TurfScene } from './TurfScene';
 import { SceneBackdrop } from './SceneBackdrop';
 import { BASE_LAYER, PRICING } from '@/lib/content';
 import { SCENE } from '@/lib/photos';
@@ -30,14 +31,13 @@ export function TurfProblem() {
         </p>
       </Reveal>
 
-      <ol className="mt-8 grid gap-3 md:grid-cols-3">
-        {STEPS.map((s, i) => (
-          <li key={s.n}>
-            <Reveal delay={i * 0.08} className="glass h-full rounded-3xl p-5">
-              <p className="font-display text-5xl font-extrabold text-accent">{s.n}</p>
-              <h3 className="mt-3 font-display text-2xl font-extrabold uppercase">{s.t}</h3>
-              <p className="mt-1 text-white/75">{s.d}</p>
-            </Reveal>
+      <TurfScene />
+
+      <ol className="mt-4 grid gap-px overflow-hidden rounded-2xl border border-white/15 bg-white/15 md:grid-cols-3">
+        {STEPS.map((s) => (
+          <li key={s.n} className="bg-[#0c0f14]/90 p-4">
+            <p className="text-xs font-bold uppercase tracking-widest text-accent">{s.n} · {s.t}</p>
+            <p className="mt-1 text-sm text-white/75">{s.d}</p>
           </li>
         ))}
       </ol>
