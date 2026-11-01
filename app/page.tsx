@@ -12,6 +12,7 @@ import { PhotoSlot } from '@/components/PhotoSlot';
 import { ProductCard } from '@/components/ProductCard';
 import { PromoGallery } from '@/components/PromoGallery';
 import { Reveal } from '@/components/Reveal';
+import { TurfProblem } from '@/components/TurfProblem';
 import { SceneBackdrop } from '@/components/SceneBackdrop';
 import { ShortSet } from '@/components/ShortSet';
 import { Fact, Tbc } from '@/components/Tbc';
@@ -30,6 +31,8 @@ export default async function Home() {
       <div className="relative z-10">
       <Hero />
       <FactStrip />
+
+      <TurfProblem />
 
       {/* What it is and where it is padded, side by side */}
       <section className="section !py-14 md:!py-20" aria-labelledby="overview">
