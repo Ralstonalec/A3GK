@@ -52,7 +52,7 @@ export default async function ProductPage({ params }: { params: { handle: string
     ? [
         { title: 'Product details', body: <ul className="space-y-1"><li>Garment: <Fact value={BASE_LAYER.garmentType} label="Garment type" /></li><li>Included: <Fact value={BASE_LAYER.included} label="What is included" /></li><li>Padding: <Fact value={BASE_LAYER.paddingSpec} label="Padding specification" /></li><li>Origin: <Fact value={BASE_LAYER.origin} label="Origin (only if verified)" /></li></ul> },
         { title: 'Size and fit', body: <><p><Fact value={BASE_LAYER.intendedFit} label="Intended fit" /></p><Link href="/size-guide" className="mt-2 inline-block font-semibold underline underline-offset-4">Full size guide</Link></> },
-        { title: 'Materials and care', body: <ul className="space-y-1"><li>Fabric: <Fact value={BASE_LAYER.fabricComposition} label="Fabric composition" /></li><li>Care: <Fact value={BASE_LAYER.care} label="Care instructions" /></li></ul> },
+        { title: 'Materials and care', body: <ul className="space-y-1"><li>Fabric: <Fact value={BASE_LAYER.fabricComposition} label="Fabric composition" /></li><li>Fabric weight: <Fact value={BASE_LAYER.fabricWeight} label="Fabric weight" /></li><li>Care: <Fact value={BASE_LAYER.care} label="Care instructions" /></li></ul> },
         { title: 'Shipping', body: <Fact value={POLICIES.deliveryEstimate} label="Delivery estimates by destination" /> },
         { title: 'Returns', body: <Fact value={POLICIES.sizeExchanges} label="Returns and exchange terms" /> },
         { title: 'Frequently asked questions', body: <dl className="space-y-3">{FAQ.map((f) => <div key={f.q}><dt className="font-semibold">{f.q}</dt><dd>{f.a ?? <Tbc label={f.tbc} />}</dd></div>)}</dl> },

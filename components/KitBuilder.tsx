@@ -6,6 +6,7 @@ import { useCart } from '@/lib/cart-context';
 import { PIECES, PRICING } from '@/lib/content';
 import { formatMoney } from '@/lib/format';
 import type { Product, Variant } from '@/lib/types';
+import { ShippingCalculator } from './ShippingCalculator';
 
 type Slot = 'top' | 'bottom';
 
@@ -128,6 +129,8 @@ export function KitBuilder({ products, h1 = false }: { products: Product[]; h1?:
         {tried && picked.length > 0 && !allChosen && <p role="alert" className="mt-2 text-sm text-red-300">Please choose a size for each piece.</p>}
         {error && <p role="alert" className="mt-2 text-sm text-red-300">{error}</p>}
       </div>
+
+      <ShippingCalculator />
 
       <p className="text-sm text-white/75">
         <Link className="underline underline-offset-4" href="/help#shipping">Shipping information</Link>

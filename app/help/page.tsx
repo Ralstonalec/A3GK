@@ -1,3 +1,4 @@
+import { ShippingCalculator } from '@/components/ShippingCalculator';
 import type { Metadata } from 'next';
 import { ContactForm } from '@/components/ContactForm';
 import { Fact } from '@/components/Tbc';
@@ -23,6 +24,7 @@ export default function Help() {
         <p>Transit: <Fact value={POLICIES.transitTime} label="Shipping transit time" /></p>
         <p>Overall estimate: <Fact value={POLICIES.deliveryEstimate} label="Delivery estimate by destination" /></p>
         <p>Items arriving separately: <Fact value={POLICIES.separateShipments} label="Whether products may ship separately" /></p>
+        <ShippingCalculator />
       </Block>
       <Block id="returns" title="Returns and exchanges">
         <p>Return window: <Fact value={POLICIES.returnsWindow} label="Return eligibility window" /></p>

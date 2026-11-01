@@ -65,7 +65,10 @@ export const BASE_LAYER = {
   paddingSpec: 'EVA foam padding that moves with your body' as string | null, // owner-confirmed; thickness and weight are still unconfirmed, so do not state them
   intendedFit: 'Designed to fit tight to your body.' as string | null, // owner-confirmed
   care: 'Hand wash only.' as string | null,
-  origin: null as string | null,
+  origin: 'Mainland China' as string | null, // from the supplier listing
+  fabricWeight: '180 gsm' as string | null, // supplier listing says "180 Grams"; confirm this is grams per square metre
+  shippingWeightKg: 0.4, // supplier listing: single gross weight per piece
+  packageSizeCm: '30 × 20 × 5' as string,
   fulfilment: null as string | null,
   /** Only padded areas that really exist. Empty until confirmed — hotspots/labels render nothing. */
   paddedAreas: [
@@ -150,3 +153,17 @@ export const PRICING = { currency: 'CAD', piece: 50, bundle: 80 } as const;
  * Empty by default, so no metafield is requested until the owner defines them.
  */
 export const PRODUCT_METAFIELDS: { namespace: string; key: string }[] = [];
+
+/**
+ * Shipping rates for the calculator. Every number is owner-confirmed only: leave rate/freeOver/eta null until set,
+ * and the calculator shows "To confirm" instead of guessing. Checkout (Shopify) charges whatever its own shipping profile says,
+ * so keep the two in step.
+ */
+export const SHIPPING: { currency: string; regions: { id: string; label: string; rate: number | null; freeOver: number | null; eta: string | null }[] } = {
+  currency: 'CAD',
+  regions: [
+    { id: 'CA', label: 'Canada', rate: null, freeOver: null, eta: null },
+    { id: 'US', label: 'United States', rate: null, freeOver: null, eta: null },
+    { id: 'INTL', label: 'Rest of world', rate: null, freeOver: null, eta: null },
+  ],
+};
