@@ -142,3 +142,10 @@ export const PLACEHOLDER_PRODUCTS: Record<string, { title: string; blurb: string
 
 /** Set by the owner: $50 CAD per piece, $80 CAD for one top plus one bottom. Mirrors the Shopify automatic discount. */
 export const PRICING = { currency: 'CAD', piece: 50, bundle: 80 } as const;
+
+/**
+ * Storefront API metafields to read on each product, e.g. { namespace: 'custom', key: 'care' }.
+ * Each one must be created in Shopify admin and exposed to the Storefront API first (Settings > Custom data > Storefront access).
+ * Empty by default, so no metafield is requested until the owner defines them.
+ */
+export const PRODUCT_METAFIELDS: { namespace: string; key: string }[] = [];
