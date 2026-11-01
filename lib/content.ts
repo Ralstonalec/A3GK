@@ -83,11 +83,31 @@ export const BASE_LAYER = {
 };
 
 export const SIZE_GUIDE = {
-  /** 'body' | 'garment' — must be stated before launch. */
+  /** 'body' | 'garment' — must be stated before launch. The supplier chart does not say which, so this stays unconfirmed. */
   measurementType: null as 'body' | 'garment' | null,
   unit: 'cm',
-  columns: [] as string[], // e.g. ['Size','Chest','Waist','Height']
-  rows: [] as string[][],
+  /** From the supplier size chart. Allow 1-3 cm either way. Leggings L and XL, and the shorts chart, are still to be added. */
+  tolerance: 'Allow a deviation of 1 to 3 cm.',
+  tables: [
+    {
+      title: 'Tops',
+      columns: ['Size', 'Bust', 'Length', 'Weight (kg)', 'Height (cm)'],
+      rows: [
+        ['S', '87 cm / 34.2 in', '64 cm / 25.2 in', '50-65', '155-160'],
+        ['M', '93 cm / 36.6 in', '68 cm / 26.8 in', '60-75', '165-175'],
+        ['L', '99 cm / 38.9 in', '72 cm / 28.3 in', '70-80', '175-180'],
+        ['XL', '107 cm / 42.1 in', '76 cm / 29.9 in', '80-90', '180-185'],
+      ],
+    },
+    {
+      title: 'Leggings',
+      columns: ['Size', 'Length', 'Waist', 'Weight (kg)', 'Height (cm)'],
+      rows: [
+        ['S', '97 cm / 38.2 in', '50-80 cm / 19.7-31.5 in', '50-65', '155-160'],
+        ['M', '100 cm / 39.4 in', '70-90 cm / 27.5-35.4 in', '60-75', '165-175'],
+      ],
+    },
+  ] as { title: string; columns: string[]; rows: string[][] }[],
   howToMeasure: null as string | null,
 };
 
@@ -127,7 +147,7 @@ export const FAQ = [
   { q: 'Can I wear it under a short-sleeve jersey or shorts?', a: WEAR_NOTE, tbc: '' },
   { q: 'How is it meant to be worn?', a: BASE_LAYER.intendedFit, tbc: 'Intended fit and how it sits under kit' },
   { q: 'What is it made from?', a: BASE_LAYER.fabricComposition, tbc: 'Fabric composition' },
-  { q: 'Which size should I choose?', a: SIZE_GUIDE.rows.length ? 'See the size guide for measurements and how to measure.' : null, tbc: 'Sizes and measurement chart' },
+  { q: 'Which size should I choose?', a: SIZE_GUIDE.tables.length ? 'See the size guide for measurements and how to measure.' : null, tbc: 'Sizes and measurement chart' },
   { q: 'When will it arrive?', a: POLICIES.deliveryEstimate, tbc: 'Delivery estimates by destination' },
   { q: 'What if the fit is wrong?', a: POLICIES.sizeExchanges, tbc: 'Returns and exchange terms' },
   { q: 'How do I look after it?', a: BASE_LAYER.care, tbc: 'Care instructions' },
