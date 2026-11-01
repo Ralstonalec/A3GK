@@ -1,8 +1,6 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { Accordion } from '@/components/Accordion';
 import { ClubForm } from '@/components/ClubForm';
-import { FactStrip } from '@/components/FactStrip';
 import { Hero } from '@/components/Hero';
 import { PaddingTour } from '@/components/PaddingTour';
 import { StageHost } from '@/components/StageHost';
@@ -15,8 +13,8 @@ import { Reveal } from '@/components/Reveal';
 import { TurfProblem } from '@/components/TurfProblem';
 import { SceneBackdrop } from '@/components/SceneBackdrop';
 import { ShortSet } from '@/components/ShortSet';
-import { Fact, Tbc } from '@/components/Tbc';
-import { BASE_LAYER, BRAND_INTRO, FAQ, HANDLES, POLICIES } from '@/lib/content';
+import { Tbc } from '@/components/Tbc';
+import { BRAND_INTRO, FAQ, HANDLES, POLICIES } from '@/lib/content';
 import { PROMO, SCENE } from '@/lib/photos';
 import { getProduct, unavailable } from '@/lib/shopify';
 import { supabaseConfigured } from '@/lib/supabase/env';
@@ -30,59 +28,24 @@ export default async function Home() {
       <StageHost />
       <div className="relative z-10">
       <Hero />
-      <FactStrip />
 
       <TurfProblem />
 
-      {/* What it is and where it is padded, side by side */}
-      <section className="section !py-14 md:!py-20" aria-labelledby="overview">
-        <div className="overview-grid grid gap-8 md:grid-cols-2">
-          <Reveal className="glass rounded-[2rem] p-6 md:p-8">
-            <p className="eyebrow">Overview</p>
-            <h2 id="overview" className="h2 text-4xl md:text-5xl">What it is</h2>
-            <p className="mt-4 text-white/85">
-              The A3GK padded base layer is a <strong className="text-white"><Fact value={BASE_LAYER.garmentType} label="Garment type: top, bottom or set" /></strong>, made to be worn underneath goalkeeper kit.
-            </p>
-            <dl className="mt-5 divide-y divide-white/10 border-y border-white/10 text-sm">
-              {[
-                ['Sold', BASE_LAYER.piecesSoldTogether === null ? null : BASE_LAYER.piecesSoldTogether ? 'Together' : 'Each piece on its own, or any combination', 'Whether pieces are sold together'],
-                ['Fabric', BASE_LAYER.fabricComposition, 'Fabric composition'],
-                ['Padding', BASE_LAYER.paddingSpec, 'Verified padding specification'],
-                ['Fit', BASE_LAYER.intendedFit, 'Intended fit'],
-              ].map(([k, v, l]) => (
-                <div key={k as string} className="flex flex-col gap-1 py-3 sm:flex-row sm:justify-between sm:gap-6">
-                  <dt className="text-xs font-bold uppercase tracking-widest text-white/55">{k}</dt>
-                  <dd className="sm:text-right"><Fact value={v as string | null} label={l as string} /></dd>
-                </div>
-              ))}
-            </dl>
-            <Link href="/size-guide" className="mt-5 inline-block font-semibold underline underline-offset-4">Find your size</Link>
-          </Reveal>
-          <Reveal className="stage-off glass rounded-[2rem] p-6 md:p-8" delay={0.08}>
-            <p className="eyebrow">Padding</p>
-            <h2 className="h2 text-4xl md:text-5xl">Where it is padded</h2>
-            <ul className="mt-5 space-y-2 text-sm">
-              {BASE_LAYER.paddedAreas.map((p) => <li key={p.id}><strong>{p.label}.</strong> <span className="text-white/70">{p.description}</span></li>)}
-            </ul>
-            <p className="mt-4 text-sm text-white/70"><Fact value={BASE_LAYER.paddingSpec} label="Padding material, thickness and how it is built in" /></p>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* Scroll tour of the padded areas (the 3D stage moves across the garments). Only takes space when the stage is live. */}
+            {/* Scroll tour of the padded areas (the 3D stage moves across the garments). Only takes space when the stage is live. */}
+      <div id="tour" />
       <section data-stage="padding" className="stage-only relative h-[300svh]" aria-labelledby="padding">
         <div className="sticky top-0 flex h-[100svh] items-start px-4 pt-20 md:px-[4%] md:pt-28">
           <div className="max-w-sm">
-            <p className="eyebrow">Padding and construction</p>
-            <h2 id="padding" className="h2 text-4xl md:text-6xl">Where it is padded</h2>
-            <p className="mt-4 text-white/75">Scroll to move across each padded area.</p>
+            <p className="eyebrow">The solution</p>
+            <h2 id="padding" className="h2 text-4xl md:text-6xl">Built into the layer</h2>
+            <p className="mt-4 text-white/75">Front-only honeycomb panels, smooth fabric on the back. Scroll to move across each padded area.</p>
             <PaddingTour />
           </div>
         </div>
       </section>
 
-      <section className="section !py-10" aria-labelledby="closeups">
-        <h2 id="closeups" className="sr-only">Close-ups</h2>
+      <section id="closeups" className="section scroll-mt-24 !py-10" aria-labelledby="closeups-h">
+        <h2 id="closeups-h" className="sr-only">Close-ups</h2>
         <MacroGrid />
         <p className="mt-3 text-sm text-white/55">Photographs of the real garments. Swipe or scroll for more.</p>
       </section>
