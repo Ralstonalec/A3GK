@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { useCart } from '@/lib/cart-context';
 import { formatMoney } from '@/lib/format';
+import { salesOpen } from '@/lib/flags';
 import type { Product } from '@/lib/types';
 import { Tbc } from './Tbc';
 
@@ -81,9 +82,10 @@ export function PurchasePanel({ product, sizeGuide = true, preorderNote }: { pro
       </div>
 
       <div>
-        <button className="btn-primary w-full" disabled={busy || (product.connected && variant ? !variant.availableForSale : false) || !product.connected} onClick={onAdd}>
-          {!product.connected ? 'Store not connected yet' : busy ? 'Adding…' : 'Add to cart'}
+        <button className="btn-primary w-full" disabled={!salesOpen || busy || (product.connected && variant ? !variant.availableForSale : false) || !product.connected} onClick={onAdd}>
+          {!salesOpen ? 'Coming soon' : !product.connected ? 'Store not connected yet' : busy ? 'Adding…' : 'Add to cart'}
         </button>
+        {!salesOpen && <p className="mt-2 text-sm text-white/75">Ordering opens soon. <Link href="/club" className="font-semibold underline underline-offset-4">Join the A3 Goalkeepers Club</Link> to hear first.</p>}
         {tried && !variant && missing.length > 0 && <p role="alert" className="mt-2 text-sm text-red-300">Please choose {missing.join(' and ')} first.</p>}
         {error && <p role="alert" className="mt-2 text-sm text-red-300">{error}</p>}
       </div>
