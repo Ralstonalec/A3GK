@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { allow, clientIp } from '@/lib/ratelimit';
+import { salesOpen } from '@/lib/flags';
 import { addLines, addToCart, getCart, shopifyConfigured, updateLine } from '@/lib/shopify';
 
 export const dynamic = 'force-dynamic';
@@ -41,6 +42,7 @@ export async function POST(req: Request) {
     return bad();
   }
   if (!body || typeof body !== 'object') return bad();
+  if (!salesOpen && body.action !== 'get') return NextResponse.json({ error: 'Ordering is coming soon.' }, { status: 503 });
   try {
     if (body.action === 'get') {
       if (!isStr(body.cartId, CART_ID)) return bad();

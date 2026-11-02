@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { useCart } from '@/lib/cart-context';
 import { PIECES, PRICING } from '@/lib/content';
+import { salesOpen } from '@/lib/flags';
 import { formatMoney } from '@/lib/format';
 import type { Product, Variant } from '@/lib/types';
 import { ShippingCalculator } from './ShippingCalculator';
@@ -123,9 +124,10 @@ export function KitBuilder({ products, h1 = false }: { products: Product[]; h1?:
       </div>
 
       <div>
-        <button className="btn-primary w-full" disabled={busy || picked.length === 0 || !connected || soldOut} onClick={onAdd}>
-          {picked.length > 0 && !connected ? 'Store not connected yet' : busy ? 'Adding…' : picked.length > 1 ? 'Add both pieces to cart' : 'Add to cart'}
+        <button className="btn-primary w-full" disabled={!salesOpen || busy || picked.length === 0 || !connected || soldOut} onClick={onAdd}>
+          {!salesOpen ? 'Coming soon' : picked.length > 0 && !connected ? 'Store not connected yet' : busy ? 'Adding…' : picked.length > 1 ? 'Add both pieces to cart' : 'Add to cart'}
         </button>
+        {!salesOpen && <p className="mt-2 text-sm text-white/75">Ordering opens soon. <Link href="/club" className="font-semibold underline underline-offset-4">Join the A3 Goalkeepers Club</Link> to hear first.</p>}
         {tried && picked.length > 0 && !allChosen && <p role="alert" className="mt-2 text-sm text-red-300">Please choose a size for each piece.</p>}
         {error && <p role="alert" className="mt-2 text-sm text-red-300">{error}</p>}
       </div>
