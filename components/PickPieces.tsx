@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { HANDLES, PIECES, PRICING } from '@/lib/content';
+import { CurrencyNote, Money } from './Money';
 
 type Card = { handle: string; src: string; w: number; h: number; alt: string; fit: 'cover' | 'contain'; pos?: string; rendering?: boolean };
 
@@ -33,7 +34,7 @@ function Tile({ c }: { c: Card }) {
         <div className="flex flex-1 flex-col gap-1 p-4">
           <p className="font-display text-lg font-extrabold uppercase leading-none md:text-xl">{piece?.label ?? c.handle}</p>
           <p className="text-xs text-white/65 md:text-sm">{piece?.padding}</p>
-          <p className="mt-auto pt-2 text-xs font-semibold md:text-sm">${PRICING.piece} {PRICING.currency} <span className="text-accent underline-offset-4 group-hover:underline">See details →</span></p>
+          <p className="mt-auto pt-2 text-xs font-semibold md:text-sm"><Money cad={PRICING.piece} /> <span className="text-accent underline-offset-4 group-hover:underline">See details →</span></p>
         </div>
       </Link>
     </li>
@@ -50,7 +51,7 @@ export function PickPieces() {
           <h2 className="h2 text-4xl md:text-5xl">One layer, your length.</h2>
           <p className="mt-3 max-w-xl text-white/75">Pick a top and a bottom. Long sleeves and leggings add padding at the elbows, forearms and knees. Short sleeves and shorts keep the chest, ribs, hips and thighs covered.</p>
         </div>
-        <p className="text-sm font-semibold">${PRICING.piece} {PRICING.currency} per piece · top + bottom ${PRICING.bundle} {PRICING.currency}</p>
+        <div className="text-sm font-semibold"><p><Money cad={PRICING.piece} showCode /> per piece · top + bottom <Money cad={PRICING.bundle} showCode /></p><CurrencyNote className="mt-1 font-normal" /></div>
       </div>
       <ul className="mt-6 grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">{CARDS.map((c) => <Tile key={c.handle} c={c} />)}</ul>
       <div className="mt-6 flex flex-wrap items-center gap-4">

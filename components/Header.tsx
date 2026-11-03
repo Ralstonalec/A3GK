@@ -8,6 +8,7 @@ import { NAV } from '@/lib/content';
 import { useCart } from '@/lib/cart-context';
 import { supabaseConfigured } from '@/lib/supabase/env';
 import { customerAccountEnabled } from '@/lib/flags';
+import { CurrencySwitch } from './CurrencySwitch';
 
 export function Header() {
   const { cart, setOpen } = useCart();
@@ -37,6 +38,7 @@ export function Header() {
           ))}
         </nav>
         <div className="flex items-center gap-2">
+          <div className="hidden md:block"><CurrencySwitch /></div>
           {(supabaseConfigured || customerAccountEnabled) && (
             <Link href={supabaseConfigured ? '/login' : '/customer/login'} className="glass flex h-12 w-12 items-center justify-center rounded-full" aria-label="Account">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden><circle cx="12" cy="8" r="4" /><path d="M4 21a8 8 0 0116 0" /></svg>
@@ -53,6 +55,7 @@ export function Header() {
       </div>
       {menu && (
         <nav id="mobile-nav" aria-label="Mobile" className="glass mx-4 rounded-3xl px-4 py-2 md:hidden">
+          <div className="py-2"><CurrencySwitch /></div>
           {NAV.map((n) => <Link key={n.href} href={n.href} onClick={() => setMenu(false)} className="block py-3 font-semibold">{n.label}</Link>)}
         </nav>
       )}
