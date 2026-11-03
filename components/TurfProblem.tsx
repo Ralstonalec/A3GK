@@ -13,9 +13,9 @@ const STEPS = [
 /** The facts that used to sit in "What it is" and the fact strip, each pointing at the part of the page it belongs to. */
 const FACTS = [
   { k: 'Padding', v: 'Hexagonal EVA foam, front only', cta: 'See the tour', href: '#tour' },
-  { k: 'Fabric', v: BASE_LAYER.fabricComposition ?? '', cta: 'Close-ups', href: '#closeups' },
+  { k: 'Fabric', v: BASE_LAYER.fabricComposition ?? '', cta: 'Close-ups', href: '/products/padded-base-layer' },
   { k: 'Fit', v: 'Tight to your body', cta: 'Size guide', href: '/size-guide' },
-  { k: 'Sold', v: `Each piece alone, or any combination. $${PRICING.piece} each, $${PRICING.bundle} for a top and bottom (CAD)`, cta: 'Build your kit', href: '#buy' },
+  { k: 'Sold', v: `Each piece alone, or any combination. $${PRICING.piece} each, $${PRICING.bundle} for a top and bottom (CAD)`, cta: 'Choose pieces', href: '#pieces' },
 ];
 
 /** The reason the product exists. Claims are limited to what is true: where the padding is, what it is made of, how it fits. No injury-prevention claims. */

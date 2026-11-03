@@ -5,7 +5,6 @@ import Image from 'next/image';
 import { Accordion } from '@/components/Accordion';
 import { MacroGrid } from '@/components/MacroGrid';
 import { RenderFigure } from '@/components/RenderFigure';
-import { ShortSet } from '@/components/ShortSet';
 import { PhotoSlot } from '@/components/PhotoSlot';
 import { ProductCard } from '@/components/ProductCard';
 import { PurchasePanel } from '@/components/PurchasePanel';
@@ -27,8 +26,6 @@ export async function generateMetadata({ params }: { params: { handle: string } 
   const p = await getProduct(params.handle);
   return p ? { title: p.title } : {};
 }
-
-const GALLERY_SLOTS = ['Back view', 'Side view', 'Worn on a person', 'Colour options', 'Short product video'];
 
 export default async function ProductPage({ params }: { params: { handle: string } }) {
   const isBase = params.handle === HANDLES.base;
@@ -80,8 +77,6 @@ export default async function ProductPage({ params }: { params: { handle: string
             <div className="space-y-3">
               <div className="glass rounded-3xl p-4"><RenderFigure priority sizes="(min-width:768px) 55vw, 100vw" /></div>
               <MacroGrid />
-              <ShortSet compact />
-              <ul className="grid grid-cols-2 gap-3">{GALLERY_SLOTS.map((s) => <li key={s}><PhotoSlot label={s} className="min-h-[160px]" /></li>)}</ul>
             </div>
           ) : pieceInfo ? (
             <div className="space-y-3">
