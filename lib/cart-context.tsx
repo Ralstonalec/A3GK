@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import type { Cart } from './types';
+import { useCurrency } from './currency-context';
 
 type Ctx = {
   cart: Cart | null;
@@ -32,23 +33,30 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { market } = useCurrency();
+  const country = market.country;
 
+  // Load the saved cart, and move it to the visitor's market (so its prices and checkout use the local currency).
   useEffect(() => {
     const id = safeGet();
     if (!id) return;
-    call({ action: 'get', cartId: id }).then(({ cart }) => {
-      if (cart) setCart(cart); else safeSet(null);
+    call({ action: 'get', cartId: id, country }).then(({ cart }) => {
+      if (!cart) { safeSet(null); return; }
+      setCart(cart);
+      if (country !== 'CA' || cart.cost.subtotalAmount.currencyCode !== 'CAD') {
+        call({ action: 'set_country', cartId: id, country }).then(({ cart: moved }) => { if (moved) setCart(moved); });
+      }
     });
-  }, []);
+  }, [country]);
 
   const run = useCallback(async (body: object) => {
     setBusy(true); setError(null);
-    const { cart: next, error } = await call(body);
+    const { cart: next, error } = await call({ ...body, country });
     setBusy(false);
     if (error || !next) { setError(error ?? 'Could not update your cart.'); return false; }
     setCart(next); safeSet(next.id);
     return true;
-  }, []);
+  }, [country]);
 
   const add = useCallback(async (merchandiseId: string, quantity: number) => {
     if (await run({ action: 'add', cartId: cart?.id ?? null, merchandiseId, quantity })) setOpen(true);

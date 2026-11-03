@@ -7,6 +7,9 @@ const version = process.env.SHOPIFY_API_VERSION ?? '2025-01';
 
 export const shopifyConfigured = Boolean(domain && token);
 
+/** Prices and carts in a visitor's market: adds Shopify's @inContext(country) to an operation that takes parameters. */
+const inCountry = (q: string) => q.replace(/^(query|mutation)\s*\(([^)]*)\)\s*\{/, '$1($2, $country: CountryCode) @inContext(country: $country) {');
+
 async function storefront<T>(query: string, variables: Record<string, unknown> = {}, revalidate = 60): Promise<T> {
   if (!domain || !token) throw new Error('Shopify is not configured');
   const res = await fetch(`https://${domain}/api/${version}/graphql.json`, {
@@ -59,15 +62,29 @@ function placeholder(handle: string): Product | null {
   return { handle, title: p.title, descriptionHtml: '', options: [], variants: [], images: [], connected: false };
 }
 
-export async function getProduct(handle: string): Promise<Product | null> {
+export async function getProduct(handle: string, country?: string): Promise<Product | null> {
   if (!shopifyConfigured) return placeholder(handle);
   try {
     const data = await storefront<{ product: RawProduct | null }>(
-      `query($handle: String!) { product(handle: $handle) { ${PRODUCT_FIELDS} } }`, { handle });
+      inCountry(`query($handle: String!) { product(handle: $handle) { ${PRODUCT_FIELDS} } }`), { handle, country });
     return data.product ? normalise(data.product) : null;
   } catch (e) {
     console.error('[shopify] getProduct failed', e);
     return placeholder(handle);
+  }
+}
+
+/** The first variant's price of a product in a market, as Shopify prices it there. Null when Shopify is not connected or has no price. */
+export async function getLocalPrice(handle: string, country: string): Promise<{ amount: number; currency: string } | null> {
+  if (!shopifyConfigured) return null;
+  try {
+    const d = await storefront<{ product: { variants: { nodes: { price: { amount: string; currencyCode: string } }[] } } | null }>(
+      inCountry('query($handle: String!) { product(handle: $handle) { variants(first: 1) { nodes { price { amount currencyCode } } } } }'), { handle, country }, 600);
+    const v = d.product?.variants.nodes[0]?.price;
+    return v ? { amount: Number(v.amount), currency: v.currencyCode } : null;
+  } catch (e) {
+    console.error('[shopify] getLocalPrice failed', e);
+    return null;
   }
 }
 
@@ -100,35 +117,43 @@ const CART_FIELDS = `
 type RawCart = Omit<Cart, 'lines'> & { lines: { nodes: Cart['lines'] } };
 const toCart = (c: RawCart): Cart => ({ ...c, lines: c.lines.nodes });
 
-export async function getCart(id: string): Promise<Cart | null> {
-  const d = await storefront<{ cart: RawCart | null }>(`query($id: ID!) { cart(id: $id) { ${CART_FIELDS} } }`, { id }, 0);
+export async function getCart(id: string, country?: string): Promise<Cart | null> {
+  const d = await storefront<{ cart: RawCart | null }>(inCountry(`query($id: ID!) { cart(id: $id) { ${CART_FIELDS} } }`), { id, country }, 0);
   return d.cart ? toCart(d.cart) : null;
 }
 
-export async function addLines(cartId: string | null, lines: { merchandiseId: string; quantity: number }[]): Promise<Cart> {
+export async function addLines(cartId: string | null, lines: { merchandiseId: string; quantity: number }[], country?: string): Promise<Cart> {
   if (!cartId) {
     const d = await storefront<{ cartCreate: { cart: RawCart } }>(
-      `mutation($lines: [CartLineInput!]) { cartCreate(input: { lines: $lines }) { cart { ${CART_FIELDS} } } }`,
-      { lines }, 0);
+      inCountry(`mutation($lines: [CartLineInput!], $buyer: CartBuyerIdentityInput) { cartCreate(input: { lines: $lines, buyerIdentity: $buyer }) { cart { ${CART_FIELDS} } } }`),
+      { lines, buyer: country ? { countryCode: country } : undefined, country }, 0);
     return toCart(d.cartCreate.cart);
   }
   const d = await storefront<{ cartLinesAdd: { cart: RawCart } }>(
-    `mutation($cartId: ID!, $lines: [CartLineInput!]!) { cartLinesAdd(cartId: $cartId, lines: $lines) { cart { ${CART_FIELDS} } } }`,
-    { cartId, lines }, 0);
+    inCountry(`mutation($cartId: ID!, $lines: [CartLineInput!]!) { cartLinesAdd(cartId: $cartId, lines: $lines) { cart { ${CART_FIELDS} } } }`),
+    { cartId, lines, country }, 0);
   return toCart(d.cartLinesAdd.cart);
 }
 
-export const addToCart = (cartId: string | null, merchandiseId: string, quantity: number) => addLines(cartId, [{ merchandiseId, quantity }]);
+export const addToCart = (cartId: string | null, merchandiseId: string, quantity: number, country?: string) => addLines(cartId, [{ merchandiseId, quantity }], country);
 
-export async function updateLine(cartId: string, lineId: string, quantity: number): Promise<Cart> {
+/** Moves an existing cart to another market, so its prices and checkout switch currency. */
+export async function setCartCountry(cartId: string, country: string): Promise<Cart> {
+  const d = await storefront<{ cartBuyerIdentityUpdate: { cart: RawCart } }>(
+    inCountry(`mutation($cartId: ID!, $buyer: CartBuyerIdentityInput!) { cartBuyerIdentityUpdate(cartId: $cartId, buyerIdentity: $buyer) { cart { ${CART_FIELDS} } } }`),
+    { cartId, buyer: { countryCode: country }, country }, 0);
+  return toCart(d.cartBuyerIdentityUpdate.cart);
+}
+
+export async function updateLine(cartId: string, lineId: string, quantity: number, country?: string): Promise<Cart> {
   if (quantity <= 0) {
     const d = await storefront<{ cartLinesRemove: { cart: RawCart } }>(
-      `mutation($cartId: ID!, $lineIds: [ID!]!) { cartLinesRemove(cartId: $cartId, lineIds: $lineIds) { cart { ${CART_FIELDS} } } }`,
-      { cartId, lineIds: [lineId] }, 0);
+      inCountry(`mutation($cartId: ID!, $lineIds: [ID!]!) { cartLinesRemove(cartId: $cartId, lineIds: $lineIds) { cart { ${CART_FIELDS} } } }`),
+      { cartId, lineIds: [lineId], country }, 0);
     return toCart(d.cartLinesRemove.cart);
   }
   const d = await storefront<{ cartLinesUpdate: { cart: RawCart } }>(
-    `mutation($cartId: ID!, $lines: [CartLineUpdateInput!]!) { cartLinesUpdate(cartId: $cartId, lines: $lines) { cart { ${CART_FIELDS} } } }`,
-    { cartId, lines: [{ id: lineId, quantity }] }, 0);
+    inCountry(`mutation($cartId: ID!, $lines: [CartLineUpdateInput!]!) { cartLinesUpdate(cartId: $cartId, lines: $lines) { cart { ${CART_FIELDS} } } }`),
+    { cartId, lines: [{ id: lineId, quantity }], country }, 0);
   return toCart(d.cartLinesUpdate.cart);
 }
