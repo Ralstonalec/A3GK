@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { formatMoney } from '@/lib/format';
+import { Money } from './Money';
 import type { Product } from '@/lib/types';
 import { PRODUCT_PHOTOS } from '@/lib/photos';
 import { Tbc } from './Tbc';
@@ -18,7 +19,7 @@ export function ProductCard({ product }: { product: Product }) {
       </div>
       <div className="flex flex-col justify-center">
         <p className="font-semibold">{product.title}</p>
-        <p className="text-sm">{price ? formatMoney(price.amount, price.currencyCode) : <Tbc label="Price" />}</p>
+        <p className="text-sm">{price ? (price.currencyCode === 'CAD' ? <Money cad={Number(price.amount)} /> : formatMoney(price.amount, price.currencyCode)) : <Tbc label="Price" />}</p>
         <p className="mt-1 text-sm font-semibold underline underline-offset-4 group-hover:no-underline">View details</p>
       </div>
     </Link>

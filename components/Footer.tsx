@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { CurrencySwitch } from './CurrencySwitch';
 import { HANDLES, POLICIES } from '@/lib/content';
 import { Tbc } from './Tbc';
 
@@ -30,6 +31,7 @@ export function Footer() {
             <li><Link href="/help#shipping">Shipping information</Link></li>
             <li><Link href="/help#returns">Returns policy</Link></li>
             <li><Link href="/size-guide">Size guide</Link></li>
+            <li><Link href="/team">Team orders</Link></li>
             <li><Link href="/club">A3 Goalkeepers Club</Link></li>
             <li><Link href="/membership">Membership</Link></li>
             <li><Link href="/help#care">Product care</Link></li>
@@ -44,7 +46,7 @@ export function Footer() {
           ) : <Tbc label="Social media links (genuine accounts only)" />}
         </div>
       </div>
-      <p className="border-t border-white/10 py-5 text-center text-xs">© {new Date().getFullYear()} A3 Goalkeeping</p>
+      <div className="flex flex-wrap items-center justify-center gap-4 border-t border-white/10 py-5 text-xs"><p>© {new Date().getFullYear()} A3 Goalkeeping</p><div className="lg:hidden"><CurrencySwitch /></div></div>
     </footer>
   );
 }

@@ -8,6 +8,7 @@ import { salesOpen } from '@/lib/flags';
 import { formatMoney } from '@/lib/format';
 import type { Product, Variant } from '@/lib/types';
 import { ShippingCalculator } from './ShippingCalculator';
+import { CurrencyNote, Money } from './Money';
 
 type Slot = 'top' | 'bottom';
 
@@ -94,7 +95,7 @@ export function KitBuilder({ products, h1 = false }: { products: Product[]; h1?:
       <div>
         <Heading className="font-display text-3xl font-bold uppercase">Build your kit</Heading>
         <p className="mt-2 text-white/75">Every piece is sold on its own. Choose a top, a bottom, or both, in any combination, each in its own size.</p>
-        <p className="mt-2 text-sm font-semibold">${PRICING.piece} {PRICING.currency} per piece · top + bottom ${PRICING.bundle} {PRICING.currency}</p>
+        <p className="mt-2 text-sm font-semibold"><Money cad={PRICING.piece} showCode /> per piece · top + bottom <Money cad={PRICING.bundle} showCode /></p>
       </div>
       {group('top', 'Top', PIECES.tops)}
       {group('bottom', 'Bottom', PIECES.bottoms)}
@@ -114,12 +115,13 @@ export function KitBuilder({ products, h1 = false }: { products: Product[]; h1?:
         {picked.map((x) => (
           <p key={x.product.handle} className="flex justify-between gap-4">
             <span>{x.product.title}{x.variant && x.variant.title !== 'Default Title' && x.variant.title !== 'Default' ? ` (${x.variant.title})` : ''}</span>
-            <span>{x.variant ? formatMoney(x.variant.price.amount, x.variant.price.currencyCode) : '…'}</span>
+            <span>{x.variant ? (x.variant.price.currencyCode === 'CAD' ? <Money cad={Number(x.variant.price.amount)} /> : formatMoney(x.variant.price.amount, x.variant.price.currencyCode)) : '…'}</span>
           </p>
         ))}
-        {bundleSaving > 0 && total !== null && currency && <p className="flex justify-between gap-4 text-accent"><span>Top + bottom bundle</span><span>−{formatMoney(String(bundleSaving), currency)}</span></p>}
-        {total !== null && currency && <p className="flex justify-between gap-4 border-t border-white/15 pt-2 text-base font-semibold"><span>Total</span><span>{formatMoney(String(total), currency)} <span className="text-sm font-normal text-white/55">{currency}</span></span></p>}
-        {picked.length > 0 && !connected && <p className="text-white/70">{isBundle ? `Top + bottom: $${PRICING.bundle} ${PRICING.currency} per kit${qty > 1 ? ` ($${PRICING.bundle * qty} for ${qty})` : ''}.` : `$${PRICING.piece} ${PRICING.currency} per piece.`}</p>}
+        {bundleSaving > 0 && total !== null && currency && <p className="flex justify-between gap-4 text-accent"><span>Top + bottom bundle</span><span>−{currency === 'CAD' ? <Money cad={bundleSaving} /> : formatMoney(String(bundleSaving), currency)}</span></p>}
+        {total !== null && currency && <p className="flex justify-between gap-4 border-t border-white/15 pt-2 text-base font-semibold"><span>Total</span><span>{currency === 'CAD' ? <Money cad={total} showCode /> : <>{formatMoney(String(total), currency)} <span className="text-sm font-normal text-white/55">{currency}</span></>}</span></p>}
+        {picked.length > 0 && !connected && <p className="text-white/70">{isBundle ? <>Top + bottom: <Money cad={PRICING.bundle} showCode /> per kit{qty > 1 && <> (<Money cad={PRICING.bundle * qty} showCode /> for {qty})</>}.</> : <><Money cad={PRICING.piece} showCode /> per piece.</>}</p>}
+        <CurrencyNote />
         {soldOut && <p className="text-red-300">One of these pieces is sold out in that size.</p>}
       </div>
 

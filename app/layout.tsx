@@ -5,6 +5,7 @@ import './globals.css';
 const display = Barlow_Condensed({ subsets: ['latin'], weight: ['700', '800'], variable: '--font-display', display: 'swap' });
 const body = Inter({ subsets: ['latin'], variable: '--font-body', display: 'swap' });
 import { CartProvider } from '@/lib/cart-context';
+import { CurrencyProvider } from '@/lib/currency-context';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { CartDrawer } from '@/components/CartDrawer';
@@ -21,6 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${display.variable} ${body.variable}`}>
       <body>
+        <CurrencyProvider>
         <CartProvider>
           <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:bg-white focus:p-3">Skip to content</a>
           <Header />
@@ -28,6 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Footer />
           <CartDrawer />
         </CartProvider>
+        </CurrencyProvider>
       </body>
     </html>
   );

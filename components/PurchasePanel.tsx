@@ -7,6 +7,7 @@ import { formatMoney } from '@/lib/format';
 import { salesOpen } from '@/lib/flags';
 import type { Product } from '@/lib/types';
 import { Tbc } from './Tbc';
+import { CurrencyNote, Money } from './Money';
 
 export function PurchasePanel({ product, sizeGuide = true, preorderNote }: { product: Product; sizeGuide?: boolean; preorderNote?: string | null }) {
   const { add, busy, error } = useCart();
@@ -38,7 +39,7 @@ export function PurchasePanel({ product, sizeGuide = true, preorderNote }: { pro
     <div className="space-y-5" id="purchase">
       <h1 className="font-display text-3xl font-bold uppercase">{product.title}</h1>
       <p className="text-2xl font-semibold" aria-live="polite">
-        {price ? <>{formatMoney(price.amount, price.currencyCode)} <span className="text-sm font-normal text-white/55">{price.currencyCode}</span></> : <Tbc label="Retail price and currency" />}
+        {price ? (price.currencyCode === 'CAD' ? <><Money cad={Number(price.amount)} showCode /><CurrencyNote className="mt-1 font-normal" /></> : <>{formatMoney(price.amount, price.currencyCode)} <span className="text-sm font-normal text-white/55">{price.currencyCode}</span></>) : <Tbc label="Retail price and currency" />}
       </p>
 
       {product.options.map((o) => (
