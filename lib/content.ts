@@ -35,11 +35,21 @@ export const PIECES = {
   ],
 } as const;
 
+/** Team and club orders: enquiries go to this email. Do not state a minimum, a bulk price, a turnaround or printing options until they are confirmed. */
+export const TEAM_ORDERS = {
+  email: 'a3sportsolutions@gmail.com',
+  minimumOrder: null as string | null,
+  bulkPricing: null as string | null,
+  leadTime: null as string | null,
+  customisation: null as string | null,
+};
+
 export const NAV = [
   { label: 'Padded Base Layer', href: `/products/${HANDLES.base}` },
   { label: 'Size Guide', href: '/size-guide' },
   { label: 'Other Essentials', href: '/#complete-your-kit' },
   { label: 'The Club', href: '/club' },
+  { label: 'Team Orders', href: '/team' },
   { label: 'About A3GK', href: '/about' },
   { label: 'Help', href: '/help' },
 ];

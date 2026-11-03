@@ -30,6 +30,7 @@ export function Footer() {
             <li><Link href="/help#shipping">Shipping information</Link></li>
             <li><Link href="/help#returns">Returns policy</Link></li>
             <li><Link href="/size-guide">Size guide</Link></li>
+            <li><Link href="/team">Team orders</Link></li>
             <li><Link href="/club">A3 Goalkeepers Club</Link></li>
             <li><Link href="/membership">Membership</Link></li>
             <li><Link href="/help#care">Product care</Link></li>
