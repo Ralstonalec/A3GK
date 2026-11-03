@@ -3,14 +3,16 @@ import Link from 'next/link';
 import { HANDLES, PIECES, PRICING } from '@/lib/content';
 import { CurrencyNote, Money } from './Money';
 
-type Card = { handle: string; src: string; w: number; h: number; alt: string; fit: 'cover' | 'contain'; pos?: string; rendering?: boolean };
+type Card = { handle: string; src: string; w: number; h: number; alt: string; pos: string };
 
-/** One photo per piece. The short-sleeve top has no photograph yet, so it uses the rendering and says so. */
+/** One picture per piece, cropped from the two studio renderings (long set and short set). All are renderings, and say so. */
+const LONG = { src: '/photos/render-set.webp', w: 2000, h: 1116 };
+const SHORT = { src: '/photos/short-set.webp', w: 1376, h: 768 };
 const CARDS: Card[] = [
-  { handle: HANDLES.longTop, src: '/shop/set-on-pitch.jpg', w: 723, h: 777, alt: 'A3GK long-sleeve padded top: honeycomb panels on the chest, ribs and arms', fit: 'cover', pos: '8% 40%' },
-  { handle: HANDLES.shortTop, src: '/photos/short-closeup.webp', w: 1600, h: 1195, alt: 'Rendering of the A3GK short-sleeve padded top: chest panel, two rib panels and a panel on the short sleeve', fit: 'cover', pos: '50% 20%', rendering: true },
-  { handle: HANDLES.leggings, src: '/photos/card-leggings.webp', w: 814, h: 786, alt: 'A3GK padded leggings, side and back view, with hip, thigh and knee panels', fit: 'contain' },
-  { handle: HANDLES.shorts, src: '/photos/card-shorts.webp', w: 402, h: 798, alt: 'A3GK padded shorts, side view, with a joined hip and thigh panel', fit: 'contain' },
+  { handle: HANDLES.longTop, ...LONG, alt: 'Rendering of the A3GK long-sleeve padded top: honeycomb panels on the chest, ribs and arms', pos: '17% 50%' },
+  { handle: HANDLES.shortTop, ...SHORT, alt: 'Rendering of the A3GK short-sleeve padded top: a chest panel, two rib panels and a panel on each short sleeve', pos: '12% 50%' },
+  { handle: HANDLES.leggings, ...LONG, alt: 'Rendering of the A3GK padded leggings: hip, thigh and knee panels and a printed waistband', pos: '100% 50%' },
+  { handle: HANDLES.shorts, ...SHORT, alt: 'Rendering of the A3GK padded shorts: a joined hip-and-thigh panel on each leg and a printed waistband', pos: '88% 50%' },
 ];
 
 const info = (h: string) => [...PIECES.tops, ...PIECES.bottoms].find((p) => p.handle === h);
@@ -26,10 +28,10 @@ function Tile({ c }: { c: Card }) {
             alt={c.alt}
             fill
             sizes="(min-width:1024px) 22vw, 45vw"
-            className={`${c.fit === 'cover' ? 'object-cover' : 'object-contain p-3'} transition duration-700 group-hover:scale-[1.03]`}
-            style={c.pos ? { objectPosition: c.pos } : undefined}
+            className="object-cover transition duration-700 group-hover:scale-[1.03]"
+            style={{ objectPosition: c.pos }}
           />
-          {c.rendering && <span className="absolute left-3 top-3 rounded-full bg-black/60 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-white/80">Rendering</span>}
+          <span className="absolute left-3 top-3 rounded-full bg-black/60 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-white/80">Rendering</span>
         </div>
         <div className="flex flex-1 flex-col gap-1 p-4">
           <p className="font-display text-lg font-extrabold uppercase leading-none md:text-xl">{piece?.label ?? c.handle}</p>
