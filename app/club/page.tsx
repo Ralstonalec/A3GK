@@ -59,6 +59,19 @@ export default function Club() {
         </ul>
       </section>
 
+      <section className="section relative !py-10" aria-label="Member sign in">
+        <div className="glass flex flex-col items-start justify-between gap-5 rounded-[2rem] p-6 md:flex-row md:items-center md:p-10">
+          <div className="max-w-xl">
+            <h2 className="font-display text-3xl font-extrabold uppercase">Already a member?</h2>
+            <p className="mt-2 text-white/75">Sign in to see your orders, tracking numbers, saved sizes and saved items.</p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <Link href="/login" className="btn-primary">Member sign in</Link>
+            <Link href="/track" className="min-h-[44px] self-center font-semibold underline underline-offset-4">Track a parcel</Link>
+          </div>
+        </div>
+      </section>
+
       <section className="section relative !py-10">
         <div className="glass flex flex-col items-start justify-between gap-5 rounded-[2rem] p-6 md:flex-row md:items-center md:p-10">
           <div className="max-w-xl">
