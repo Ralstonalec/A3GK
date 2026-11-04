@@ -113,7 +113,7 @@ export function PaddingTour() {
         <span className="absolute inset-0 overflow-hidden rounded-md"><span className="tour-scan block h-full w-full" /></span>
         <AnimatePresence mode="wait">
           {area && (
-            <motion.span key={area.id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }} className="absolute left-0 top-full mt-2 hidden whitespace-nowrap rounded-full md:top-auto md:-top-8 md:mt-0 md:block border border-accent/50 bg-black/75 px-3 py-1 text-[11px] font-bold uppercase tracking-widest text-accent">
+            <motion.span key={area.id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }} className="absolute left-0 top-full mt-2 hidden whitespace-nowrap rounded-full md:top-auto md:-top-8 md:mt-0 md:block border border-accent/50 bg-black/75 px-3 py-1 text-xs font-bold text-accent">
               Zone {two(zone + 1)} · {area.label}
             </motion.span>
           )}
@@ -140,7 +140,7 @@ export function PaddingTour() {
               <div className="flex items-baseline gap-2">
                 <span className="outline-text font-display text-6xl font-extrabold leading-none">{two(zone + 1)}</span>
                 <span className="font-display text-lg font-bold text-white/50">/ {two(N)}</span>
-                {d.on && <span className="ml-auto rounded-full border border-accent/60 bg-accent/10 px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-widest text-accent">{d.on === 'top' ? 'On the top' : 'On the leggings'}</span>}
+                {d.on && <span className="ml-auto rounded-full border border-accent/60 bg-accent/10 px-2.5 py-1 text-xs font-extrabold text-accent">{d.on === 'top' ? 'On the top' : 'On the leggings'}</span>}
               </div>
               <h3 className="mt-3 font-display text-3xl font-extrabold uppercase leading-none">{area.label}</h3>
               <p aria-live="polite" className="mt-2 text-sm text-white/80">{d.text}</p>

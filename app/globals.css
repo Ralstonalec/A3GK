@@ -16,17 +16,16 @@ body::before { content: ''; position: fixed; inset: 0; z-index: -1; background: 
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
 @layer components {
-  .btn { @apply inline-flex min-h-[48px] items-center justify-center rounded-full px-6 text-sm font-bold uppercase tracking-wider transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:cursor-not-allowed disabled:opacity-50; }
+  .btn { @apply inline-flex min-h-[48px] items-center justify-center rounded-full px-6 text-base font-bold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:cursor-not-allowed disabled:opacity-50; }
   .btn-primary { @apply btn bg-accent text-ink hover:brightness-95; }
   .btn-secondary { @apply btn border border-white/30 bg-transparent text-white hover:bg-white/10; }
   .section { @apply mx-auto w-full max-w-6xl px-4 py-20 md:py-28; }
-  .eyebrow { @apply mb-3 text-xs font-bold uppercase tracking-[0.22em] text-white/55; }
-  .h2 { @apply font-display text-4xl font-extrabold uppercase leading-[0.95] tracking-tight md:text-6xl; }
-  .glass { @apply border border-white/15 bg-white/[0.06] backdrop-blur-xl; box-shadow: 0 8px 32px rgba(0,0,0,.25), inset 0 0 0 1px rgba(255,255,255,.05); }
+  .eyebrow { @apply mb-3 text-base font-semibold text-accent; }
+  .h2 { @apply font-display text-4xl font-extrabold uppercase leading-[0.95] md:text-6xl; }
+  .glass { @apply bg-white/[0.06]; }
   .outline-text { color: transparent; -webkit-text-stroke: 2px #fff; }
-  .pad-label { @apply glass inline-flex items-center gap-2 whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-bold uppercase tracking-widest text-white; animation: labelIn .5s ease both; }
-  .pad-label::before { content: ''; width: 7px; height: 7px; border-radius: 9999px; background: rgb(var(--accent)); box-shadow: 0 0 10px rgb(var(--accent)); }
-}
+  .pad-label { @apply glass inline-flex items-center gap-2 whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-semibold text-white; animation: labelIn .5s ease both; }
+  }
 @keyframes labelIn { from { opacity: 0; transform: translateY(6px) scale(.92); } to { opacity: 1; transform: none; } }
 
 /* static photo fallback is hidden once the 3D stage is live */

@@ -53,7 +53,7 @@ export function KitBuilder({ products, h1 = false }: { products: Product[]; h1?:
 
   const group = (slot: Slot, title: string, items: readonly { handle: string; label: string; padding: string }[]) => (
     <fieldset>
-      <legend className="mb-2 text-sm font-bold uppercase tracking-wider">{title}</legend>
+      <legend className="mb-2 text-sm font-bold">{title}</legend>
       <div className="grid gap-2 sm:grid-cols-3">
         <label className={chip(choice[slot] === null, true)}>
           <input type="radio" name={slot} className="sr-only" checked={choice[slot] === null} onChange={() => setChoice((c) => ({ ...c, [slot]: null }))} />
@@ -102,7 +102,7 @@ export function KitBuilder({ products, h1 = false }: { products: Product[]; h1?:
       <Link href="/size-guide" className="inline-block text-sm font-semibold underline underline-offset-4">Size guide</Link>
 
       <div className="flex items-center gap-3">
-        <label htmlFor="kit-qty" className="text-sm font-bold uppercase tracking-wider">Quantity</label>
+        <label htmlFor="kit-qty" className="text-sm font-bold">Quantity</label>
         <div className="flex items-center border border-white/25 bg-white/[0.06]">
           <button type="button" className="h-12 w-12" aria-label="Decrease quantity" onClick={() => setQty((q) => Math.max(1, q - 1))}>−</button>
           <input id="kit-qty" inputMode="numeric" className="h-12 w-12 bg-transparent text-center text-white" value={qty} onChange={(e) => setQty(Math.max(1, Math.min(20, Number(e.target.value.replace(/\D/g, '')) || 1)))} />

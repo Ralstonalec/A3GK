@@ -10,7 +10,7 @@ export function MacroGrid() {
           <div className="flex flex-1 items-center justify-center bg-black/30 p-2">
             <Image src={m.src} alt={`Photograph: ${m.label}`} width={m.w} height={m.h} sizes="(min-width:768px) 22vw, 45vw" className="h-auto max-h-[200px] w-auto max-w-full object-contain" />
           </div>
-          <p className="p-3 text-xs font-bold uppercase tracking-wider text-white/80">{m.label}</p>
+          <p className="p-3 text-xs font-bold text-white/80">{m.label}</p>
         </li>
       ))}
     </ul>

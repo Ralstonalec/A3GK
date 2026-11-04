@@ -15,9 +15,9 @@ export const metadata: Metadata = {
 };
 
 const PERKS = [
-  { n: '01', t: 'First to know', d: 'An email the moment something new drops, so you are not finding out after it sells through.' },
-  { n: '02', t: 'Early access', d: 'Where we run early access on future products, club members are first in line.' },
-  { n: '03', t: 'Straight from A3GK', d: 'New pieces and product updates. Only when there is something worth sending.' },
+  { t: 'First to know', d: 'An email the moment something new drops, so you are not finding out after it sells through.' },
+  { t: 'Early access', d: 'Where we run early access on future products, club members are first in line.' },
+  { t: 'Straight from A3GK', d: 'New pieces and product updates. Only when there is something worth sending.' },
 ];
 
 export default function Club() {
@@ -28,12 +28,11 @@ export default function Club() {
         <div className="absolute inset-0 bg-gradient-to-b from-[#080a0e]/35 via-transparent to-[#080a0e]" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#080a0e]/75 via-[#080a0e]/15 to-transparent" />
       </div>
-      <div aria-hidden className="pointer-events-none absolute -top-40 left-1/2 h-[520px] w-[920px] -translate-x-1/2 rounded-full bg-accent/10 blur-[120px]" />
       <section className="section relative grid items-center gap-10 !pb-10 pt-36 md:grid-cols-[1.15fr_1fr] md:pt-44">
         <div>
         <p className="eyebrow">A3 Goalkeeping</p>
         <h1 className="font-display text-[clamp(3.2rem,10vw,9.5rem)] font-extrabold uppercase leading-[0.84] tracking-tight">
-          <span className="outline-text">A3</span> Goalkeepers
+          A3 Goalkeepers
           <br />
           Club
         </h1>
@@ -48,15 +47,27 @@ export default function Club() {
       <section className="section relative !py-10" aria-label="What members get">
         <ul className="grid gap-4 md:grid-cols-3">
           {PERKS.map((p, i) => (
-            <li key={p.n}>
+            <li key={p.t}>
               <Reveal delay={i * 0.08} className="glass h-full rounded-3xl p-6">
-                <p className="font-display text-5xl font-extrabold text-accent">{p.n}</p>
-                <h2 className="mt-4 font-display text-2xl font-extrabold uppercase">{p.t}</h2>
+                <h2 className="font-display text-2xl font-extrabold uppercase">{p.t}</h2>
                 <p className="mt-2 text-white/75">{p.d}</p>
               </Reveal>
             </li>
           ))}
         </ul>
+      </section>
+
+      <section className="section relative !py-10" aria-label="Member sign in">
+        <div className="glass flex flex-col items-start justify-between gap-5 rounded-[2rem] p-6 md:flex-row md:items-center md:p-10">
+          <div className="max-w-xl">
+            <h2 className="font-display text-3xl font-extrabold uppercase">Already a member?</h2>
+            <p className="mt-2 text-white/75">Sign in to see your orders, tracking numbers, saved sizes and saved items.</p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <Link href="/login" className="btn-primary">Member sign in</Link>
+            <Link href="/track" className="min-h-[44px] self-center font-semibold underline underline-offset-4">Track a parcel</Link>
+          </div>
+        </div>
       </section>
 
       <section className="section relative !py-10">

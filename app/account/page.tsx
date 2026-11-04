@@ -41,9 +41,9 @@ export default async function Account() {
       </div>
       <Card title="Membership">
         <dl className="grid gap-4 sm:grid-cols-3">
-          <div><dt className="text-xs font-bold uppercase tracking-widest text-white/55">Member since</dt><dd className="mt-1 text-lg font-semibold">{new Date(user.created_at).toLocaleDateString('en', { year: 'numeric', month: 'long' })}</dd></div>
-          <div><dt className="text-xs font-bold uppercase tracking-widest text-white/55">Orders</dt><dd className="mt-1 text-lg font-semibold">{paid.length}</dd></div>
-          <div><dt className="text-xs font-bold uppercase tracking-widest text-white/55">Total spent</dt><dd className="mt-1 text-lg font-semibold">{spend.size ? Array.from(spend, ([c, n]) => money(n, c)).join(' + ') : '—'}</dd></div>
+          <div><dt className="text-sm font-semibold text-white/60">Member since</dt><dd className="mt-1 text-lg font-semibold">{new Date(user.created_at).toLocaleDateString('en', { year: 'numeric', month: 'long' })}</dd></div>
+          <div><dt className="text-sm font-semibold text-white/60">Orders</dt><dd className="mt-1 text-lg font-semibold">{paid.length}</dd></div>
+          <div><dt className="text-sm font-semibold text-white/60">Total spent</dt><dd className="mt-1 text-lg font-semibold">{spend.size ? Array.from(spend, ([c, n]) => money(n, c)).join(' + ') : '—'}</dd></div>
         </dl>
         <p className="mt-4 text-sm text-white/70">Member rewards are coming. Your orders are being recorded so they count when rewards launch. <Link href="/membership" className="underline underline-offset-4">How membership works</Link></p>
       </Card>

@@ -44,7 +44,7 @@ export function PurchasePanel({ product, sizeGuide = true, preorderNote }: { pro
 
       {product.options.map((o) => (
         <fieldset key={o.name}>
-          <legend className="mb-2 text-sm font-bold uppercase tracking-wider">
+          <legend className="mb-2 text-sm font-bold">
             {o.name}{sel[o.name] && <span className="ml-2 font-normal normal-case text-white/55">{sel[o.name]}</span>}
           </legend>
           <div className="flex flex-wrap gap-2">
@@ -67,7 +67,7 @@ export function PurchasePanel({ product, sizeGuide = true, preorderNote }: { pro
       {sizeGuide && <Link href="/size-guide" className="inline-block text-sm font-semibold underline underline-offset-4">Size guide</Link>}
 
       <div className="flex items-center gap-3">
-        <label htmlFor={`qty-${product.handle}`} className="text-sm font-bold uppercase tracking-wider">Quantity</label>
+        <label htmlFor={`qty-${product.handle}`} className="text-sm font-bold">Quantity</label>
         <div className="flex items-center border border-white/25 bg-white/[0.06]">
           <button type="button" className="h-12 w-12" aria-label="Decrease quantity" onClick={() => setQty((q) => Math.max(1, q - 1))}>−</button>
           <input id={`qty-${product.handle}`} inputMode="numeric" className="h-12 w-12 bg-transparent text-center text-white" value={qty} onChange={(e) => setQty(Math.max(1, Math.min(20, Number(e.target.value.replace(/\D/g, '')) || 1)))} />
