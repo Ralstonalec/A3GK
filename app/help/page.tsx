@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { ShippingCalculator } from '@/components/ShippingCalculator';
 import type { Metadata } from 'next';
 import { ContactForm } from '@/components/ContactForm';
@@ -24,6 +25,7 @@ export default function Help() {
         <p>Transit: <Fact value={POLICIES.transitTime} label="Shipping transit time" /></p>
         <p>Overall estimate: <Fact value={POLICIES.deliveryEstimate} label="Delivery estimate by destination" /></p>
         <p>Items arriving separately: <Fact value={POLICIES.separateShipments} label="Whether products may ship separately" /></p>
+        <p><Link href="/track" className="font-semibold underline underline-offset-4">Track your order</Link></p>
         <ShippingCalculator />
       </Block>
       <Block id="returns" title="Returns and exchanges">

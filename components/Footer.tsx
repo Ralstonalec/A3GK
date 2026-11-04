@@ -29,6 +29,7 @@ export function Footer() {
           <ul className="space-y-2 text-sm">
             <li><Link href="/help#contact">Contact</Link></li>
             <li><Link href="/help#shipping">Shipping information</Link></li>
+            <li><Link href="/track">Track your order</Link></li>
             <li><Link href="/help#returns">Returns policy</Link></li>
             <li><Link href="/size-guide">Size guide</Link></li>
             <li><Link href="/team">Team orders</Link></li>
