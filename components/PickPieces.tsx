@@ -31,7 +31,7 @@ function Tile({ c }: { c: Card }) {
             className="object-cover transition duration-700 group-hover:scale-[1.03]"
             style={{ objectPosition: c.pos }}
           />
-          <span className="absolute left-3 top-3 rounded-full bg-black/60 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-white/80">Rendering</span>
+          <span className="absolute left-3 top-3 rounded-full bg-black/60 px-2.5 py-1 text-xs font-bold text-white/80">Rendering</span>
         </div>
         <div className="flex flex-1 flex-col gap-1 p-4">
           <p className="font-display text-lg font-extrabold uppercase leading-none md:text-xl">{piece?.label ?? c.handle}</p>
@@ -50,7 +50,7 @@ export function PickPieces() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="eyebrow">Choose your pieces</p>
-          <h2 className="h2 text-4xl md:text-5xl">One layer, your length.</h2>
+          <h2 className="h2 text-4xl md:text-5xl">One layer, your length</h2>
           <p className="mt-3 max-w-xl text-white/75">Pick a top and a bottom. Long sleeves and leggings add padding at the elbows, forearms and knees. Short sleeves and shorts keep the chest, ribs, hips and thighs covered.</p>
         </div>
         <div className="text-sm font-semibold"><p><Money cad={PRICING.piece} showCode /> per piece · top + bottom <Money cad={PRICING.bundle} showCode /></p><CurrencyNote className="mt-1 font-normal" /></div>

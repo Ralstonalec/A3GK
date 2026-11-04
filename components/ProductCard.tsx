@@ -15,7 +15,7 @@ export function ProductCard({ product }: { product: Product }) {
       <div className="relative h-24 w-24 shrink-0 bg-charcoal-900 text-white">
         {img ? <Image src={img.url} alt={img.altText ?? product.title} fill sizes="96px" className="object-cover" />
           : local ? <Image src={local.src} alt={local.alt} fill sizes="96px" className="object-cover" />
-          : <span className="absolute inset-0 flex items-center justify-center p-2 text-center text-[10px] font-semibold text-white/55">Photo to be added</span>}
+          : <span className="absolute inset-0 flex items-center justify-center p-2 text-center text-xs font-semibold text-white/55">Photo to be added</span>}
       </div>
       <div className="flex flex-col justify-center">
         <p className="font-semibold">{product.title}</p>

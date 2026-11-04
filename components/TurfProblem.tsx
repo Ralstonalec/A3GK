@@ -5,9 +5,9 @@ import { BASE_LAYER, PADDING_DESIGN, PRICING } from '@/lib/content';
 import { SCENE } from '@/lib/photos';
 
 const STEPS = [
-  { n: '01', t: 'Dive', d: 'You commit to the ball and leave your feet.' },
-  { n: '02', t: 'Land', d: 'Shoulder, ribs, elbow, hip and knee meet the surface, often one after another.' },
-  { n: '03', t: 'Repeat', d: 'Every save, every training, every game. The knocks add up.' },
+  { t: 'Dive', d: 'You commit to the ball and leave your feet.' },
+  { t: 'Land', d: 'Shoulder, ribs, elbow, hip and knee meet the surface, often one after another.' },
+  { t: 'Repeat', d: 'Every save, every training, every game. The knocks add up.' },
 ];
 
 /** The facts that used to sit in "What it is" and the fact strip, each pointing at the part of the page it belongs to. */
@@ -25,7 +25,7 @@ export function TurfProblem() {
       <SceneBackdrop scene={SCENE.pitchNight} position="50% 55%" />
       <Reveal>
         <p className="eyebrow">The turf problem</p>
-        <h2 id="turf" className="h2 max-w-3xl text-4xl md:text-6xl">Turf does not forgive a dive.</h2>
+        <h2 id="turf" className="h2 max-w-3xl text-4xl md:text-6xl">Turf does not forgive a dive</h2>
         <p className="mt-5 max-w-2xl text-lg text-white/80">
           Artificial turf can be harder and rougher than natural grass, and a goalkeeper meets it again and again. Diving is the job, and the landing is the part that hurts.
         </p>
@@ -35,9 +35,9 @@ export function TurfProblem() {
         <Reveal><DiveDemo /><p className="mt-2 text-center text-xs text-white/50">Illustrative demonstration.</p></Reveal>
         <ol className="grid gap-3">
           {STEPS.map((s, i) => (
-            <li key={s.n}>
+            <li key={s.t}>
               <Reveal delay={i * 0.08} className="glass rounded-3xl p-5">
-                <p className="text-xs font-bold uppercase tracking-widest text-accent">{s.n} · {s.t}</p>
+                <p className="text-xs font-bold text-accent">{s.t}</p>
                 <p className="mt-1 text-lg text-white/85">{s.d}</p>
               </Reveal>
             </li>
@@ -48,7 +48,7 @@ export function TurfProblem() {
       <Reveal className="mt-8 rounded-[2rem] border border-accent/40 bg-accent/[0.07] p-6 md:p-8">
         <div className="grid items-start gap-6 md:grid-cols-[1.1fr_1fr]">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.22em] text-accent">How A3GK helps</p>
+            <p className="text-xs font-bold text-accent">How A3GK helps</p>
             <h3 className="mt-2 font-display text-3xl font-extrabold uppercase leading-[0.95] md:text-4xl">Padding where you land.</h3>
             <p className="mt-3 text-white/85">
               Hexagonal EVA foam padding sits over the areas that take contact when you dive. It goes on under your kit and moves with you.
@@ -79,7 +79,7 @@ export function TurfProblem() {
         <dl className="mt-6 grid gap-px overflow-hidden rounded-2xl border border-white/15 bg-white/15 text-sm sm:grid-cols-2 lg:grid-cols-4">
           {FACTS.map((f) => (
             <a key={f.k} href={f.href} className="group bg-[#0c0f14]/90 p-4 transition hover:bg-[#12161d]">
-              <dt className="text-[11px] font-bold uppercase tracking-widest text-white/55">{f.k}</dt>
+              <dt className="text-xs font-bold text-white/55">{f.k}</dt>
               <dd className="mt-1 font-semibold text-white">{f.v}</dd>
               <span className="mt-2 inline-block text-xs font-semibold text-accent underline-offset-4 group-hover:underline">{f.cta} →</span>
             </a>

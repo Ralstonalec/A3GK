@@ -13,7 +13,7 @@ export function Footer() {
           <p className="mt-3 text-sm">A3 Goalkeeping</p>
         </div>
         <div>
-          <p className="mb-3 text-xs font-bold uppercase tracking-widest text-white">Shop</p>
+          <p className="mb-3 text-sm font-semibold text-white">Shop</p>
           <ul className="space-y-2 text-sm">
             <li><Link href={`/products/${HANDLES.base}`}>Padded Base Layer</Link></li>
             <li><Link href={`/products/${HANDLES.longTop}`}>Long-Sleeve Top</Link></li>
@@ -25,7 +25,7 @@ export function Footer() {
           </ul>
         </div>
         <div>
-          <p className="mb-3 text-xs font-bold uppercase tracking-widest text-white">Help</p>
+          <p className="mb-3 text-sm font-semibold text-white">Help</p>
           <ul className="space-y-2 text-sm">
             <li><Link href="/help#contact">Contact</Link></li>
             <li><Link href="/help#shipping">Shipping information</Link></li>
@@ -41,7 +41,7 @@ export function Footer() {
           </ul>
         </div>
         <div>
-          <p className="mb-3 text-xs font-bold uppercase tracking-widest text-white">Follow</p>
+          <p className="mb-3 text-sm font-semibold text-white">Follow</p>
           {POLICIES.social.length ? (
             <ul className="space-y-2 text-sm">{POLICIES.social.map((s) => <li key={s.href}><a href={s.href} rel="noopener noreferrer">{s.label}</a></li>)}</ul>
           ) : <Tbc label="Social media links (genuine accounts only)" />}

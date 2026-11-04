@@ -20,13 +20,13 @@ export function Hero() {
             <br />
             kit starts
             <br />
-            underneath.
+            underneath
           </h1>
           <p className="max-w-md text-lg text-white/75">
             Hexagonal padding designed to spread the impact of a dive, and still flex with you. Meet the A3GK padded base layer.
           </p>
           <div className="flex flex-wrap items-center gap-5">
-            <Link href={`/products/${HANDLES.base}`} className="group flex items-center gap-5 rounded-full bg-black/50 py-1.5 pl-6 pr-1.5 text-sm font-bold uppercase tracking-wider backdrop-blur transition hover:-translate-y-0.5 hover:bg-black/70">
+            <Link href={`/products/${HANDLES.base}`} className="group flex items-center gap-5 rounded-full bg-black/50 py-1.5 pl-6 pr-1.5 text-sm font-bold backdrop-blur transition hover:-translate-y-0.5 hover:bg-black/70">
               Shop the Base Layer
               <span className="flex h-11 w-11 items-center justify-center rounded-full bg-accent text-2xl font-black text-ink">+</span>
             </Link>

@@ -43,7 +43,7 @@ export function PromoBanner() {
       <div className="relative overflow-hidden rounded-[2rem] border border-white/10">
         <Image src={b.src} alt={b.alt} width={b.w} height={b.h} sizes="100vw" className="aspect-[4/3] w-full object-cover object-left md:aspect-auto md:h-auto" />
           <div className="flex flex-col gap-4 p-6 md:absolute md:inset-y-0 md:right-0 md:w-[42%] md:justify-center md:p-10">
-          <h2 className="font-display text-4xl font-extrabold uppercase leading-[0.9] md:text-6xl"><span className="outline-text">Padded where</span><br />it counts.</h2>
+          <h2 className="font-display text-4xl font-extrabold uppercase leading-[0.9] md:text-6xl">Padded where<br />it counts</h2>
           <p className="max-w-sm text-white/80">Front panels on the chest, ribs, arms, hips, thighs and knees. Smooth fabric everywhere else.</p>
           <Link href={`/products/${HANDLES.base}`} className="btn-primary self-start">Shop the Base Layer</Link>
         </div>
