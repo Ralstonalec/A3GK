@@ -14,6 +14,20 @@ const FACTS = [
   { k: 'Sold', v: `Each piece alone, or any combination. $${PRICING.piece} each, $${PRICING.bundle} for a top and bottom (CAD)`, cta: 'Choose pieces', href: '#pieces' },
 ];
 
+/** Numbered reference marker that jumps to the matching entry in the sources list below. */
+const Cite = ({ n }: { n: number[] }) => (
+  <sup className="ml-0.5 text-xs">{n.map((i) => <a key={i} href={`#src-${i}`} aria-label={`Source ${i}`} className="px-0.5 font-semibold text-accent underline-offset-2 hover:underline">[{i}]</a>)}</sup>
+);
+
+const SOURCES: { title: string; note: string; href: string }[] = [
+  { title: 'Good Morning America (ABC News), report on the safety of synthetic turf', note: 'Synthetic Turf Council estimate of 12,000 to 13,000 synthetic turf sports fields in the United States.', href: 'https://goodmorningamerica.com/news/story/debate-safety-synthetic-turf-forever-chemicals-raises-concerns-108274911' },
+  { title: 'School Construction News, "Five Questions to Ask Before Selecting Your Synthetic Turf"', note: 'The same Synthetic Turf Council estimate.', href: 'https://schoolconstructionnews.com/?p=48349' },
+  { title: 'National Collaborating Centre for Environmental Health, "Artificial turf playing fields: A review of the evidence on health risks and environmental concerns" (November 2025)', note: '681 public artificial turf fields in Canada, based on available data (private fields not counted). Also notes that some studies show abrasions are more common on artificial turf than on natural turf.', href: 'https://ncceh.ca/resources/evidence-reviews/artificial-turf-playing-fields-review-evidence-health-risks-and' },
+  { title: '"Abrasion injuries on artificial turf: A systematic review" (2019)', note: 'Players consistently see abrasion as a major drawback of artificial turf; study results on how often it happens vary.', href: 'https://pubmed.ncbi.nlm.nih.gov/30503328/' },
+  { title: '"Characteristics of goalkeeping injuries: A retrospective, self-reported study in adolescent soccer players"', note: 'More goalkeeping injuries on artificial turf than natural grass, most often to the fingers and thigh muscles. Self-reported, adolescent players.', href: 'https://lida.sport-iat.de/dfb/Record/4054804' },
+  { title: '"Incidence of football injuries sustained on artificial turf compared to grass and other playing surfaces: a systematic review and meta-analysis" (2023)', note: 'Across all soccer players, overall injury incidence was lower on artificial turf than on grass. It covers players generally, not goalkeepers or abrasions.', href: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10139885/' },
+];
+
 /** The reason the product exists. Claims are limited to what is true: where the padding is, what it is made of, how it fits. No injury-prevention claims. */
 export function TurfProblem() {
   return (
@@ -31,14 +45,14 @@ export function TurfProblem() {
         <div className="grid gap-8">
           <div>
             <p className="font-display text-4xl font-extrabold uppercase leading-[0.95] md:text-5xl">Thousands of fields across North America</p>
-            <p className="mt-2 text-white/80">Artificial turf fields are installed at schools, colleges, parks and stadiums in the United States and Canada. <Fact value={TURF.fieldCount} label="Number of artificial turf fields in North America (source and year)" />.</p>
+            <p className="mt-2 text-white/80">Artificial turf fields are installed at schools, colleges, parks and stadiums in the United States and Canada. <Fact value={TURF.fieldCount} label="Number of artificial turf fields in North America (source and year)" />.<Cite n={[1, 2, 3]} /></p>
           </div>
           <div>
             <p className="font-display text-2xl font-extrabold uppercase">What a dive on turf can cost you</p>
             <ul className="mt-3 grid gap-4 text-lg text-white/80">
-              <li><strong className="text-white">Abrasions.</strong> Scrapes and turf burn are what players most associate with artificial turf. A systematic review found players consistently see abrasion as a major drawback of the surface.</li>
+              <li><strong className="text-white">Abrasions.</strong> Scrapes and turf burn are what players most associate with artificial turf. A systematic review found players consistently see abrasion as a major drawback of the surface.<Cite n={[4, 3]} /></li>
               <li><strong className="text-white">Contact on every landing.</strong> Shoulder, ribs, elbow, hip and knee meet the surface, often one after another, and it adds up over every save, training and game.</li>
-              <li><strong className="text-white">Goalkeeper-specific injuries.</strong> A study of adolescent goalkeepers reported more goalkeeping injuries on artificial turf than on natural grass, most often to the fingers and thigh muscles.</li>
+              <li><strong className="text-white">Goalkeeper-specific injuries.</strong> A study of adolescent goalkeepers reported more goalkeeping injuries on artificial turf than on natural grass, most often to the fingers and thigh muscles.<Cite n={[5]} /> Across all soccer players, though, overall injury rates were lower on artificial turf than on grass, so the picture is mixed.<Cite n={[6]} /></li>
             </ul>
           </div>
         </div>
@@ -78,11 +92,16 @@ export function TurfProblem() {
           ))}
         </dl>
       </Reveal>
-      <p className="mt-10 max-w-3xl text-xs text-white/55">
-        Field counts: <a className="underline underline-offset-4" href="https://www.nrpa.org/parks-recreation-magazine/2020/may/synthetic-turf-the-worlds-fastest-growing-play-surface/" target="_blank" rel="noopener noreferrer">NRPA</a> (Synthetic Turf Council estimate, US) and <a className="underline underline-offset-4" href="https://ncceh.ca/sites/default/files/2025-11/NCCEH%20Artificial%20Turf%202025%20Final%20Draft%20EN%2019NOV25%20FINAL_0.pdf" target="_blank" rel="noopener noreferrer">NCCEH</a> (Canada, public fields, 2022). Injuries: <a className="underline underline-offset-4" href="https://pubmed.ncbi.nlm.nih.gov/30503328/" target="_blank" rel="noopener noreferrer">Abrasion injuries on artificial turf: a systematic review</a> (2019);{' '}
-        <a className="underline underline-offset-4" href="https://lida.sport-iat.de/dfb/Record/4054804" target="_blank" rel="noopener noreferrer">Characteristics of goalkeeping injuries: a retrospective, self-reported study in adolescent soccer players</a>.
-        Across all soccer players, a 2023 <a className="underline underline-offset-4" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10139885/" target="_blank" rel="noopener noreferrer">meta-analysis</a> found overall injury rates were lower on artificial turf than on grass, so the picture is mixed.
-      </p>
+      <div className="mt-10 max-w-3xl text-xs text-white/60">
+        <p className="font-semibold text-white/70">Sources</p>
+        <ol className="mt-2 grid gap-1.5">
+          {SOURCES.map((x, i) => (
+            <li key={x.href} id={`src-${i + 1}`} className="scroll-mt-28">
+              [{i + 1}] <a className="underline underline-offset-4" href={x.href} target="_blank" rel="noopener noreferrer">{x.title}</a>. {x.note}
+            </li>
+          ))}
+        </ol>
+      </div>
     </section>
   );
 }

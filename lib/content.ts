@@ -200,5 +200,5 @@ export const SHIPPING: { currency: string; regions: { id: string; label: string;
   ],
 };
 
-/** Artificial turf facts for the home page. The count uses the Synthetic Turf Council's US estimate of 12,000 to 13,000 fields (lower bound, seen on pages several years old) and the NCCEH review's count of 681 public artificial turf fields in Canada as of 2022 (public fields only). Both came from search summaries, not the source pages: re-check them against the sources before launch. */
+/** Artificial turf facts for the home page, cited in components/TurfProblem.tsx. The US figure is the lower bound of the Synthetic Turf Council's 12,000 to 13,000 estimate (reported by ABC News and School Construction News, undated). The Canada figure is the 681 public artificial turf fields in the NCCEH review (November 2025), public fields only. Both came from search summaries, not the pages themselves: re-check them against the sources before launch. */
 export const TURF: { fieldCount: string | null } = { fieldCount: 'More than 12,000 artificial turf fields in the United States, and hundreds of public fields in Canada' };
