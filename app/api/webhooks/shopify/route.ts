@@ -16,7 +16,22 @@ type Order = {
   currency?: string;
   created_at?: string;
   line_items?: { title?: string; variant_title?: string | null; quantity?: number }[];
+  fulfillments?: { tracking_number?: string | null; tracking_company?: string | null; tracking_url?: string | null; shipment_status?: string | null; status?: string | null; created_at?: string | null }[];
 };
+
+/** Tracking details from an order's fulfilments, trimmed and cleaned. Links must be https. */
+function trackingFrom(order: Order) {
+  return (order.fulfillments ?? [])
+    .filter((f) => f && f.tracking_number)
+    .slice(0, 10)
+    .map((f) => ({
+      number: String(f.tracking_number).slice(0, 60),
+      company: f.tracking_company ? String(f.tracking_company).slice(0, 60) : null,
+      url: f.tracking_url && /^https:\/\//i.test(f.tracking_url) ? String(f.tracking_url).slice(0, 500) : null,
+      status: f.shipment_status ? String(f.shipment_status).slice(0, 40) : f.status ? String(f.status).slice(0, 40) : null,
+      shipped_at: f.created_at ?? null,
+    }));
+}
 
 function validSignature(raw: string, header: string | null) {
   if (!secret || !header) return false;
@@ -47,6 +62,16 @@ export async function POST(req: Request) {
   if (topic === 'orders/cancelled') {
     const { error } = await db.from('purchases').update({ status: 'cancelled' }).eq('shopify_order_id', orderId);
     if (error) { console.error('[webhook] cancel failed', error.message); return NextResponse.json({ error: 'Failed' }, { status: 500 }); }
+    return NextResponse.json({ ok: true });
+  }
+
+  // Tracking numbers: Shopify sends the order again when it is fulfilled or its shipment changes.
+  if (topic === 'orders/updated' || topic === 'orders/fulfilled' || topic === 'orders/partially_fulfilled') {
+    const fulfillments = trackingFrom(order);
+    if (!fulfillments.length) return NextResponse.json({ ok: true, ignored: 'no tracking' });
+    const { error } = await db.from('purchases').update({ fulfillments }).eq('shopify_order_id', orderId);
+    // Logged but not retried: before the tracking column exists, retrying would only repeat the same error.
+    if (error) console.error('[webhook] tracking update failed', error.message);
     return NextResponse.json({ ok: true });
   }
 

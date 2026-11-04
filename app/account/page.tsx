@@ -6,6 +6,7 @@ import { supabaseConfigured } from '@/lib/supabase/env';
 import { removeSaved, signOut } from './actions';
 import { customerAccountConfigured } from '@/lib/customer-account';
 import { PasswordForm, ProfileForm, SizeForm } from '@/components/AccountForms';
+import { readTracking, statusLabel, trackUrl } from '@/lib/tracking';
 
 export const metadata: Metadata = { title: 'Your account' };
 export const dynamic = 'force-dynamic';
@@ -25,6 +26,9 @@ export default async function Account() {
     supabase.from('saved_items').select('id, product_handle, created_at').eq('user_id', user.id).order('created_at', { ascending: false }),
     supabase.from('purchases').select('id, order_number, total, currency, line_items, status, placed_at').order('placed_at', { ascending: false }).limit(25),
   ]);
+  // Tracking numbers live in a separate column; if it is not there yet this just shows no tracking.
+  const trackingRows = (await supabase.from('purchases').select('id, fulfillments')).data as { id: string; fulfillments: unknown }[] | null;
+  const tracking = new Map((trackingRows ?? []).map((r) => [r.id, readTracking(r.fulfillments)]));
   const paid = (purchases ?? []).filter((p) => p.status === 'paid');
   const spend = new Map<string, number>();
   for (const p of paid) spend.set(p.currency, (spend.get(p.currency) ?? 0) + Number(p.total));
@@ -69,6 +73,12 @@ export default async function Account() {
                 <div>
                   <p className="font-semibold">{p.order_number ?? 'Order'} <span className="font-normal text-white/60">· {new Date(p.placed_at).toLocaleDateString('en', { year: 'numeric', month: 'short', day: 'numeric' })}</span>{p.status === 'cancelled' && <span className="ml-2 text-sm text-white/60">(cancelled)</span>}</p>
                   <p className="text-sm text-white/65">{(p.line_items as { title: string; quantity: number }[]).map((l) => `${l.quantity} × ${l.title}`).join(', ')}</p>
+                  {(tracking.get(p.id) ?? []).map((t) => (
+                    <p key={t.number} className="mt-1 text-sm">
+                      <span className="text-white/70">{t.company ? `${t.company}: ` : 'Tracking: '}{t.number}{statusLabel(t.status) ? ` · ${statusLabel(t.status)}` : ''}</span>{' '}
+                      <a href={trackUrl(t)} target="_blank" rel="noopener noreferrer" className="font-semibold text-accent underline underline-offset-4">Track parcel</a>
+                    </p>
+                  ))}
                 </div>
                 <p className="font-semibold">{money(Number(p.total), p.currency)}</p>
               </li>
