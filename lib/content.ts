@@ -199,3 +199,6 @@ export const SHIPPING: { currency: string; regions: { id: string; label: string;
     { id: 'INTL', label: 'Rest of world', rate: null, freeOver: null, eta: null },
   ],
 };
+
+/** Artificial turf facts for the home page. fieldCount stays null (shows "To confirm") until a current, sourced figure is chosen: published estimates range from about 6,000 to over 10,000 fields depending on source and year. */
+export const TURF: { fieldCount: string | null } = { fieldCount: null };
