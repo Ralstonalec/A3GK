@@ -24,7 +24,6 @@ export function TurfProblem() {
     <section className="section relative isolate !py-14 md:!py-20" aria-labelledby="turf">
       <SceneBackdrop scene={SCENE.pitchNight} position="50% 55%" />
       <Reveal>
-        <p className="eyebrow">The turf problem</p>
         <h2 id="turf" className="h2 max-w-3xl text-4xl md:text-6xl">Turf does not forgive a dive</h2>
         <p className="mt-5 max-w-2xl text-lg text-white/80">
           Artificial turf can be harder and rougher than natural grass, and a goalkeeper meets it again and again. Diving is the job, and the landing is the part that hurts.
@@ -33,55 +32,48 @@ export function TurfProblem() {
 
       <div className="mt-8 grid items-center gap-6 md:grid-cols-[340px_1fr] md:gap-10">
         <Reveal><DiveDemo /><p className="mt-2 text-center text-xs text-white/50">Illustrative demonstration.</p></Reveal>
-        <ol className="grid gap-3">
+        <ol className="grid gap-6">
           {STEPS.map((s, i) => (
             <li key={s.t}>
-              <Reveal delay={i * 0.08} className="glass rounded-3xl p-5">
-                <p className="text-xs font-bold text-accent">{s.t}</p>
-                <p className="mt-1 text-lg text-white/85">{s.d}</p>
+              <Reveal delay={i * 0.08}>
+                <p className="font-display text-2xl font-extrabold uppercase">{s.t}</p>
+                <p className="mt-1 text-lg text-white/80">{s.d}</p>
               </Reveal>
             </li>
           ))}
         </ol>
       </div>
 
-      <Reveal className="mt-8 rounded-[2rem] border border-accent/40 bg-accent/[0.07] p-6 md:p-8">
-        <div className="grid items-start gap-6 md:grid-cols-[1.1fr_1fr]">
+      <Reveal className="mt-16">
+        <div className="grid items-start gap-8 md:grid-cols-[1.1fr_1fr]">
           <div>
-            <p className="text-xs font-bold text-accent">How A3GK helps</p>
-            <h3 className="mt-2 font-display text-3xl font-extrabold uppercase leading-[0.95] md:text-4xl">Padding where you land.</h3>
-            <p className="mt-3 text-white/85">
+            <h3 className="font-display text-3xl font-extrabold uppercase leading-[0.95] md:text-5xl">Padding where you land</h3>
+            <p className="mt-4 max-w-xl text-lg text-white/85">
               Hexagonal EVA foam padding sits over the areas that take contact when you dive. It goes on under your kit and moves with you.
             </p>
-            <div className="mt-4 grid gap-3 sm:grid-cols-2">
-              {[PADDING_DESIGN.spread, PADDING_DESIGN.flex].map((d, i) => (
-                <div key={d.title} className="rounded-2xl border border-accent/30 bg-black/35 p-4">
-                  <svg width="34" height="34" viewBox="0 0 40 40" fill="none" stroke="#c8ff3d" strokeWidth="2" aria-hidden>
-                    {i === 0
-                      ? <><path d="M20 4l7 4v8l-7 4-7-4V8z" /><path d="M20 20l7 4v8l-7 4-7-4v-8z" opacity=".5" /><path d="M6 20l-3-2M34 20l3-2" opacity=".6" /></>
-                      : <><path d="M6 28c6-14 22-14 28 0" /><path d="M12 28l3-3 3 3 3-3 3 3 3-3" opacity=".6" /></>}
-                  </svg>
-                  <h4 className="mt-2 font-display text-xl font-extrabold uppercase">{d.title}</h4>
-                  <p className="mt-1 text-sm text-white/75">{d.body}</p>
+            <div className="mt-6 grid gap-6 sm:grid-cols-2">
+              {[PADDING_DESIGN.spread, PADDING_DESIGN.flex].map((d) => (
+                <div key={d.title}>
+                  <h4 className="font-display text-xl font-extrabold uppercase">{d.title}</h4>
+                  <p className="mt-1 text-white/75">{d.body}</p>
                 </div>
               ))}
             </div>
-            <a href="#tour" className="btn-primary mt-5 inline-flex">See where it sits ↓</a>
-            <p className="mt-4 text-sm text-white/60">Padding adds cushioning. It does not make you injury-proof, and it is not a substitute for good technique or proper equipment.</p>
+            <a href="#tour" className="btn-primary mt-8 inline-flex">See where it sits ↓</a>
+            <p className="mt-4 max-w-xl text-sm text-white/60">Padding adds cushioning. It does not make you injury-proof, and it is not a substitute for good technique or proper equipment.</p>
           </div>
-          <ul className="grid grid-cols-2 gap-2 text-sm">
-            {BASE_LAYER.paddedAreas.map((p) => (
-              <li key={p.id} className="rounded-2xl border border-white/15 bg-black/30 px-3 py-2.5 font-semibold">{p.label}</li>
-            ))}
-          </ul>
+          <div>
+            <p className="font-semibold text-white/60">Padded areas</p>
+            <p className="mt-2 text-xl font-semibold leading-relaxed">{BASE_LAYER.paddedAreas.map((p) => p.label).join(', ')}</p>
+          </div>
         </div>
 
-        <dl className="mt-6 grid gap-px overflow-hidden rounded-2xl border border-white/15 bg-white/15 text-sm sm:grid-cols-2 lg:grid-cols-4">
+        <dl className="mt-12 grid gap-8 text-sm sm:grid-cols-2 lg:grid-cols-4">
           {FACTS.map((f) => (
-            <a key={f.k} href={f.href} className="group bg-[#0c0f14]/90 p-4 transition hover:bg-[#12161d]">
-              <dt className="text-xs font-bold text-white/55">{f.k}</dt>
-              <dd className="mt-1 font-semibold text-white">{f.v}</dd>
-              <span className="mt-2 inline-block text-xs font-semibold text-accent underline-offset-4 group-hover:underline">{f.cta} →</span>
+            <a key={f.k} href={f.href} className="group block">
+              <dt className="font-semibold text-white/55">{f.k}</dt>
+              <dd className="mt-1 text-base font-semibold text-white">{f.v}</dd>
+              <span className="mt-2 inline-block font-semibold text-accent underline-offset-4 group-hover:underline">{f.cta} →</span>
             </a>
           ))}
         </dl>

@@ -9,7 +9,6 @@ import { TOUR, tourBox } from '@/lib/tour';
 const N = TOUR.length;
 const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
-const two = (n: number) => String(n).padStart(2, '0');
 
 /** "A panel over each knee (leggings)." -> { text: "A panel over each knee.", on: "leggings" } */
 function split(desc: string) {
@@ -94,36 +93,10 @@ export function PaddingTour() {
   const d = area ? split(area.description) : null;
   return (
     <>
-      {/* progress: one segment per padded area */}
-      <div className="mt-5 flex max-w-sm gap-1.5" aria-hidden>
-        {BASE_LAYER.paddedAreas.map((p, i) => (
-          <span key={p.id} className="h-1 flex-1 overflow-hidden rounded-full bg-white/15">
-            <span ref={(el) => { fills.current[i] = el; }} className="block h-full origin-left rounded-full bg-accent " style={{ transform: 'scaleX(0)' }} />
-          </span>
-        ))}
-      </div>
-
       {/* viewfinder frame locked onto the zone the camera is zoomed to */}
       <div ref={frame} aria-hidden className="pointer-events-none absolute left-0 top-0 opacity-0 will-change-transform">
-        <span className="absolute -left-1 -top-1 h-6 w-6 rounded-tl-md border-l-2 border-t-2 border-accent" />
-        <span className="absolute -right-1 -top-1 h-6 w-6 rounded-tr-md border-r-2 border-t-2 border-accent" />
-        <span className="absolute -bottom-1 -left-1 h-6 w-6 rounded-bl-md border-b-2 border-l-2 border-accent" />
-        <span className="absolute -bottom-1 -right-1 h-6 w-6 rounded-br-md border-b-2 border-r-2 border-accent" />
-        <span className="absolute inset-0 rounded-md border border-white/10" />
-        <span className="absolute inset-0 overflow-hidden rounded-md"><span className="tour-scan block h-full w-full" /></span>
-        <AnimatePresence mode="wait">
-          {area && (
-            <motion.span key={area.id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }} className="absolute left-0 top-full mt-2 hidden whitespace-nowrap rounded-full md:top-auto md:-top-8 md:mt-0 md:block border border-accent/50 bg-black/75 px-3 py-1 text-xs font-bold text-accent">
-              Zone {two(zone + 1)} · {area.label}
-            </motion.span>
-          )}
-        </AnimatePresence>
+        <span className="absolute inset-0 rounded-md border-2 border-accent" />
       </div>
-
-      {/* connector from the card to the frame (desktop) */}
-      <svg aria-hidden className="pointer-events-none fixed inset-0 hidden h-full w-full md:block">
-        <line ref={line} stroke="rgb(var(--accent))" strokeWidth="1.5" strokeDasharray="4 6" className="tour-dash opacity-0" />
-      </svg>
 
       {/* info card: pops in for each zone */}
       <div ref={card} className="absolute inset-x-4 bottom-6 md:inset-x-auto md:left-[4%] md:top-[24rem] md:bottom-auto md:w-[22rem]">
@@ -137,12 +110,8 @@ export function PaddingTour() {
               transition={{ type: 'spring', stiffness: 380, damping: 28 }}
               className="glass relative overflow-hidden rounded-3xl p-5 "
             >
-              <div className="flex items-baseline gap-2">
-                <span className="outline-text font-display text-6xl font-extrabold leading-none">{two(zone + 1)}</span>
-                <span className="font-display text-lg font-bold text-white/50">/ {two(N)}</span>
-                {d.on && <span className="ml-auto rounded-full border border-accent/60 bg-accent/10 px-2.5 py-1 text-xs font-extrabold text-accent">{d.on === 'top' ? 'On the top' : 'On the leggings'}</span>}
-              </div>
-              <h3 className="mt-3 font-display text-3xl font-extrabold uppercase leading-none">{area.label}</h3>
+              {d.on && <p className="text-sm font-semibold text-accent">{d.on === 'top' ? 'On the top' : 'On the leggings'}</p>}
+              <h3 className="mt-1 font-display text-3xl font-extrabold uppercase leading-none">{area.label}</h3>
               <p aria-live="polite" className="mt-2 text-sm text-white/80">{d.text}</p>
             </motion.div>
           )}
