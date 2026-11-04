@@ -74,7 +74,7 @@ export function TurfProblem() {
           <div>
             <h3 className="font-display text-3xl font-extrabold uppercase leading-[0.95] md:text-5xl">Padding where you land</h3>
             <p className="mt-4 max-w-xl text-lg text-white/85">
-              Hexagonal EVA foam padding sits over the areas that take contact when you dive. It goes on under your kit and moves with you.
+              Hexagonal EVA foam padding sits over the areas that take contact when you dive. It goes on under your kit and moves with you. The padding is designed to help cushion the impact of a landing, and the layer between your skin and the turf is designed to help reduce scrapes.
             </p>
             <div className="mt-6 grid gap-6 sm:grid-cols-2">
               {[PADDING_DESIGN.spread, PADDING_DESIGN.flex].map((d) => (
@@ -85,7 +85,7 @@ export function TurfProblem() {
               ))}
             </div>
             <a href="#tour" className="btn-primary mt-8 inline-flex">See where it sits ↓</a>
-            <p className="mt-4 max-w-xl text-sm text-white/60">Padding adds cushioning. It does not make you injury-proof, and it is not a substitute for good technique or proper equipment.</p>
+            <p className="mt-4 max-w-xl text-sm text-white/60">Padding adds cushioning and a layer between you and the turf. It does not prevent injuries, and it is not a substitute for good technique or proper equipment.</p>
           </div>
           <div>
             <p className="font-semibold text-white/60">Padded areas</p>
