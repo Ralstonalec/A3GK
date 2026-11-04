@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import { useCart } from '@/lib/cart-context';
 import { formatMoney } from '@/lib/format';
 import { salesOpen } from '@/lib/flags';
+import { ShippingCalculator } from './ShippingCalculator';
 
 export function CartDrawer() {
   const { cart, open, setOpen, setQuantity, busy, error } = useCart();
@@ -54,7 +55,7 @@ export function CartDrawer() {
               <span>Subtotal</span>
               <span>{formatMoney(cart!.cost.subtotalAmount.amount, cart!.cost.subtotalAmount.currencyCode)}</span>
             </div>
-            <p className="mb-3 text-xs text-white/55">Shipping and taxes are calculated at checkout.</p>
+            <div className="my-3"><ShippingCalculator fromCart /></div>
             {salesOpen ? <a href={cart!.checkoutUrl} className="btn-primary w-full">Checkout</a> : <button className="btn-primary w-full" disabled>Checkout coming soon</button>}
           </div>
         )}

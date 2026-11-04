@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { ShippingCalculator } from '@/components/ShippingCalculator';
 import type { Metadata } from 'next';
 import { ContactForm } from '@/components/ContactForm';
 import { Fact } from '@/components/Tbc';
@@ -26,7 +25,7 @@ export default function Help() {
         <p>Overall estimate: <Fact value={POLICIES.deliveryEstimate} label="Delivery estimate by destination" /></p>
         <p>Items arriving separately: <Fact value={POLICIES.separateShipments} label="Whether products may ship separately" /></p>
         <p><Link href="/track" className="font-semibold underline underline-offset-4">Track your order</Link></p>
-        <ShippingCalculator />
+        <p>Shipping is calculated in your cart before checkout, based on where you are sending the order.</p>
       </Block>
       <Block id="returns" title="Returns and exchanges">
         <p>Return window: <Fact value={POLICIES.returnsWindow} label="Return eligibility window" /></p>
