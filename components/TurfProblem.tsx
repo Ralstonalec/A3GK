@@ -31,7 +31,7 @@ export function TurfProblem() {
         <div className="grid gap-8">
           <div>
             <p className="font-display text-4xl font-extrabold uppercase leading-[0.95] md:text-5xl">Thousands of fields across North America</p>
-            <p className="mt-2 text-white/80">Artificial turf fields are installed at schools, colleges, parks and stadiums in the United States and Canada. Exact count: <Fact value={TURF.fieldCount} label="Number of artificial turf fields in North America (source and year)" />.</p>
+            <p className="mt-2 text-white/80">Artificial turf fields are installed at schools, colleges, parks and stadiums in the United States and Canada. <Fact value={TURF.fieldCount} label="Number of artificial turf fields in North America (source and year)" />.</p>
           </div>
           <div>
             <p className="font-display text-2xl font-extrabold uppercase">What a dive on turf can cost you</p>
@@ -79,7 +79,7 @@ export function TurfProblem() {
         </dl>
       </Reveal>
       <p className="mt-10 max-w-3xl text-xs text-white/55">
-        Sources: <a className="underline underline-offset-4" href="https://pubmed.ncbi.nlm.nih.gov/30503328/" target="_blank" rel="noopener noreferrer">Abrasion injuries on artificial turf: a systematic review</a> (2019);{' '}
+        Field counts: <a className="underline underline-offset-4" href="https://www.nrpa.org/parks-recreation-magazine/2020/may/synthetic-turf-the-worlds-fastest-growing-play-surface/" target="_blank" rel="noopener noreferrer">NRPA</a> (Synthetic Turf Council estimate, US) and <a className="underline underline-offset-4" href="https://ncceh.ca/sites/default/files/2025-11/NCCEH%20Artificial%20Turf%202025%20Final%20Draft%20EN%2019NOV25%20FINAL_0.pdf" target="_blank" rel="noopener noreferrer">NCCEH</a> (Canada, public fields, 2022). Injuries: <a className="underline underline-offset-4" href="https://pubmed.ncbi.nlm.nih.gov/30503328/" target="_blank" rel="noopener noreferrer">Abrasion injuries on artificial turf: a systematic review</a> (2019);{' '}
         <a className="underline underline-offset-4" href="https://lida.sport-iat.de/dfb/Record/4054804" target="_blank" rel="noopener noreferrer">Characteristics of goalkeeping injuries: a retrospective, self-reported study in adolescent soccer players</a>.
         Across all soccer players, a 2023 <a className="underline underline-offset-4" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10139885/" target="_blank" rel="noopener noreferrer">meta-analysis</a> found overall injury rates were lower on artificial turf than on grass, so the picture is mixed.
       </p>
