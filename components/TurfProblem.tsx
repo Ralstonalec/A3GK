@@ -24,8 +24,12 @@ const SOURCES: { title: string; note: string; href: string }[] = [
   { title: 'School Construction News, "Five Questions to Ask Before Selecting Your Synthetic Turf"', note: 'The same Synthetic Turf Council estimate.', href: 'https://schoolconstructionnews.com/?p=48349' },
   { title: 'National Collaborating Centre for Environmental Health, "Artificial turf playing fields: A review of the evidence on health risks and environmental concerns" (November 2025)', note: '681 public artificial turf fields in Canada, based on available data (private fields not counted). Also notes that some studies show abrasions are more common on artificial turf than on natural turf.', href: 'https://ncceh.ca/resources/evidence-reviews/artificial-turf-playing-fields-review-evidence-health-risks-and' },
   { title: '"Abrasion injuries on artificial turf: A systematic review" (2019)', note: 'Players consistently see abrasion as a major drawback of artificial turf; study results on how often it happens vary.', href: 'https://pubmed.ncbi.nlm.nih.gov/30503328/' },
-  { title: '"Characteristics of goalkeeping injuries: A retrospective, self-reported study in adolescent soccer players"', note: 'More goalkeeping injuries on artificial turf than natural grass, most often to the fingers and thigh muscles. Self-reported, adolescent players.', href: 'https://lida.sport-iat.de/dfb/Record/4054804' },
-  { title: '"Incidence of football injuries sustained on artificial turf compared to grass and other playing surfaces: a systematic review and meta-analysis" (2023)', note: 'Across all soccer players, overall injury incidence was lower on artificial turf than on grass. It covers players generally, not goalkeepers or abrasions.', href: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10139885/' },
+  { title: 'New York State Department of Health, "Information About Crumb-Rubber Infilled Synthetic Turf Athletic Fields"', note: 'Injury studies have not consistently found differences in abrasion risk between natural and synthetic turf; some synthetic turf, such as older nylon-fibre turf, is more abrasive.', href: 'https://healthweb-back.health.ny.gov/environmental/outdoors/synthetic_turf/crumb-rubber_infilled/fact_sheet.htm' },
+  { title: 'Begier et al., Clinical Infectious Diseases 2004;39(10):1446, MRSA outbreak among college football players', note: 'Turf-burn abrasions were associated with skin infection; the authors concluded spread was between players, not directly from the turf.', href: 'https://academic.oup.com/cid/article/39/10/1446/321864' },
+  { title: 'Science News, "There\u2019s the Rub: Football abrasions can lead to nasty infections"', note: 'A plain-language report on turf burns and skin infection in football players.', href: 'https://sciencenews.org/?p=37382' },
+  { title: '"Shoulder injuries in professional football: a comparison between goalkeepers and outfield players"', note: 'In goalkeepers, 70% of shoulder injuries came from landing on the ground while diving with the arm fully extended, and 20% from collisions.', href: 'https://shoulderdoc.co.uk/article/1487' },
+  { title: '"Biomechanical loading of the hip during side jumps by soccer goalkeepers"', note: 'Measures the load on a goalkeeper\u2019s hip when landing from a side jump; goalkeepers who roll as they land reduce it.', href: 'https://lida.sport-iat.de/ta/Record/4017954?lng=en' },
+  { title: '"Incidence of football injuries sustained on artificial turf compared to grass and other playing surfaces: a systematic review and meta-analysis" (2023)', note: 'Across all soccer players, overall injury incidence was lower on artificial turf than on grass. It covers players generally, not goalkeepers.', href: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10139885/' },
 ];
 
 /** The reason the product exists. Claims are limited to what is true: where the padding is, what it is made of, how it fits. No injury-prevention claims. */
@@ -49,11 +53,18 @@ export function TurfProblem() {
           </div>
           <div>
             <p className="font-display text-2xl font-extrabold uppercase">What a dive on turf can cost you</p>
-            <ul className="mt-3 grid gap-4 text-lg text-white/80">
-              <li><strong className="text-white">Abrasions.</strong> Scrapes and turf burn are what players most associate with artificial turf. A systematic review found players consistently see abrasion as a major drawback of the surface.<Cite n={[4, 3]} /></li>
-              <li><strong className="text-white">Contact on every landing.</strong> Shoulder, ribs, elbow, hip and knee meet the surface, often one after another, and it adds up over every save, training and game.</li>
-              <li><strong className="text-white">Goalkeeper-specific injuries.</strong> A study of adolescent goalkeepers reported more goalkeeping injuries on artificial turf than on natural grass, most often to the fingers and thigh muscles.<Cite n={[5]} /> Across all soccer players, though, overall injury rates were lower on artificial turf than on grass, so the picture is mixed.<Cite n={[6]} /></li>
-            </ul>
+            <div className="mt-3 grid gap-6 text-lg text-white/80">
+              <div>
+                <p className="font-semibold text-white">Abrasions</p>
+                <p className="mt-1">Sliding and landing on artificial turf can scrape skin, and it is the injury players most associate with the surface. A systematic review found players consistently see abrasion as a major drawback of artificial turf.<Cite n={[4]} /> Some studies find abrasions more common on artificial turf than on natural grass,<Cite n={[3]} /> but the research is mixed, and some older turf fibres are more abrasive than others.<Cite n={[5]} /></p>
+                <p className="mt-2">A scrape can be more than a scrape. In outbreak studies of college football players, turf burns were linked to skin infections, spread mainly from player to player rather than from the turf itself.<Cite n={[6, 7]} /></p>
+              </div>
+              <div>
+                <p className="font-semibold text-white">Impact from landing</p>
+                <p className="mt-1">A dive ends with your body meeting the ground, one area after another, and it adds up over every save, training and game. In a study of professional footballers, 70% of goalkeepers&rsquo; shoulder injuries came from landing on the ground while diving with the arm fully extended.<Cite n={[8]} /> Researchers have also measured how much load a goalkeeper&rsquo;s hip takes on a side-jump landing, and landing technique changes it.<Cite n={[9]} /></p>
+              </div>
+              <p className="text-base text-white/65">Across all soccer players, overall injury rates were lower on artificial turf than on grass, so the picture is mixed.<Cite n={[10]} /></p>
+            </div>
           </div>
         </div>
       </div>
