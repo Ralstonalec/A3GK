@@ -9,7 +9,7 @@ import type { Product } from '@/lib/types';
 import { Tbc } from './Tbc';
 import { CurrencyNote, Money } from './Money';
 
-export function PurchasePanel({ product, sizeGuide = true, preorderNote }: { product: Product; sizeGuide?: boolean; preorderNote?: string | null }) {
+export function PurchasePanel({ product, sizeGuide = true, preorderNote, showTitle = true }: { product: Product; sizeGuide?: boolean; preorderNote?: string | null; showTitle?: boolean }) {
   const { add, busy, error } = useCart();
   const [sel, setSel] = useState<Record<string, string>>({});
   const [qty, setQty] = useState(1);
@@ -37,7 +37,7 @@ export function PurchasePanel({ product, sizeGuide = true, preorderNote }: { pro
 
   return (
     <div className="space-y-5" id="purchase">
-      <h1 className="font-display text-3xl font-bold uppercase">{product.title}</h1>
+      {showTitle && <h1 className="font-display text-3xl font-bold uppercase">{product.title}</h1>}
       <p className="text-2xl font-semibold" aria-live="polite">
         {price ? (price.currencyCode === 'CAD' ? <><Money cad={Number(price.amount)} showCode /><CurrencyNote className="mt-1 font-normal" /></> : <>{formatMoney(price.amount, price.currencyCode)} <span className="text-sm font-normal text-white/55">{price.currencyCode}</span></>) : <Tbc label="Retail price and currency" />}
       </p>
@@ -64,7 +64,7 @@ export function PurchasePanel({ product, sizeGuide = true, preorderNote }: { pro
         </fieldset>
       ))}
 
-      {sizeGuide && <Link href="/size-guide" className="inline-block text-sm font-semibold underline underline-offset-4">Size guide</Link>}
+      {sizeGuide && <Link href="/size-guide" className="inline-flex min-h-[44px] items-center text-sm font-semibold underline underline-offset-4">Size guide</Link>}
 
       <div className="flex items-center gap-3">
         <label htmlFor={`qty-${product.handle}`} className="text-sm font-bold">Quantity</label>

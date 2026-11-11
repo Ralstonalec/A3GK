@@ -3,8 +3,11 @@ import Link from 'next/link';
 import { CurrencySwitch } from './CurrencySwitch';
 import { HANDLES, POLICIES } from '@/lib/content';
 import { Tbc } from './Tbc';
+import { productExists } from '@/lib/shopify';
 
-export function Footer() {
+export async function Footer() {
+  // Grip socks and bandages are only linked once they are active in Shopify; a draft product has no page.
+  const [hasSocks, hasBandages] = await Promise.all([productExists(HANDLES.socks), productExists(HANDLES.bandages)]);
   return (
     <footer className="bg-charcoal-900 text-white/80">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 md:grid-cols-4">
@@ -20,8 +23,8 @@ export function Footer() {
             <li><Link href={`/products/${HANDLES.shortTop}`}>Short-Sleeve Top</Link></li>
             <li><Link href={`/products/${HANDLES.leggings}`}>Leggings</Link></li>
             <li><Link href={`/products/${HANDLES.shorts}`}>Shorts</Link></li>
-            <li><Link href={`/products/${HANDLES.socks}`}>Grip Socks</Link></li>
-            <li><Link href={`/products/${HANDLES.bandages}`}>Sports Bandages</Link></li>
+            {hasSocks && <li><Link href={`/products/${HANDLES.socks}`}>Grip Socks</Link></li>}
+            {hasBandages && <li><Link href={`/products/${HANDLES.bandages}`}>Sports Bandages</Link></li>}
           </ul>
         </div>
         <div>

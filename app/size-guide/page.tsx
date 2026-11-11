@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Fact, Tbc } from '@/components/Tbc';
 import { BASE_LAYER, SIZE_GUIDE } from '@/lib/content';
 
-export const metadata: Metadata = { title: 'Size guide' };
+export const metadata: Metadata = { title: 'Size guide', description: 'Size charts and fit for the A3GK padded base layer: tops and leggings, with how to measure.' };
 
 export default function SizeGuide() {
   return (

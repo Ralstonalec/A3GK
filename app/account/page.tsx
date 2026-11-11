@@ -8,7 +8,7 @@ import { customerAccountConfigured } from '@/lib/customer-account';
 import { PasswordForm, ProfileForm, SizeForm } from '@/components/AccountForms';
 import { readTracking, statusLabel, trackUrl } from '@/lib/tracking';
 
-export const metadata: Metadata = { title: 'Your account' };
+export const metadata: Metadata = { title: 'Your account', robots: { index: false } };
 export const dynamic = 'force-dynamic';
 
 const Card = ({ title, children }: { title: string; children: React.ReactNode }) => (

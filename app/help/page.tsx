@@ -4,7 +4,7 @@ import { ContactForm } from '@/components/ContactForm';
 import { Fact } from '@/components/Tbc';
 import { BASE_LAYER, POLICIES } from '@/lib/content';
 
-export const metadata: Metadata = { title: 'Help' };
+export const metadata: Metadata = { title: 'Help', description: 'Contact A3GK and find shipping, order tracking, returns and product care information for the padded base layer.' };
 
 const Block = ({ id, title, children }: { id: string; title: string; children: React.ReactNode }) => (
   <section id={id} className="scroll-mt-24 border-t border-white/15 pt-8">

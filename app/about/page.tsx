@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { BRAND_INTRO } from '@/lib/content';
 
-export const metadata: Metadata = { title: 'About A3GK' };
+export const metadata: Metadata = { title: 'About A3GK', description: BRAND_INTRO };
 
 export default function About() {
   return (

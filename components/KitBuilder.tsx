@@ -39,9 +39,11 @@ export function KitBuilder({ products, h1 = false }: { products: Product[]; h1?:
   const connected = picked.length > 0 && picked.every((x) => x.product.connected);
   const isBundle = chosen.length === 2;
   const bundleSaving = isBundle ? Math.max(0, PRICING.piece * 2 - PRICING.bundle) * qty : 0;
-  const subtotal = picked.every((x) => x.variant) && picked.length ? picked.reduce((n, x) => n + Number(x.variant!.price.amount), 0) * qty : null;
+  // A piece costs the same in every size, so its price shows as soon as it is picked, before a size is chosen.
+  const priceOf = (x: { product: Product; variant?: Variant }) => (x.variant ?? x.product.variants[0])?.price;
+  const subtotal = picked.length && picked.every((x) => priceOf(x)) ? picked.reduce((n, x) => n + Number(priceOf(x)!.amount), 0) * qty : null;
   const total = subtotal === null ? null : subtotal - bundleSaving;
-  const currency = picked[0]?.variant?.price.currencyCode;
+  const currency = picked[0] ? priceOf(picked[0])?.currencyCode : undefined;
   const soldOut = picked.some((x) => x.variant && !x.variant.availableForSale);
 
   async function onAdd() {
@@ -98,7 +100,7 @@ export function KitBuilder({ products, h1 = false }: { products: Product[]; h1?:
       </div>
       {group('top', 'Top', PIECES.tops)}
       {group('bottom', 'Bottom', PIECES.bottoms)}
-      <Link href="/size-guide" className="inline-block text-sm font-semibold underline underline-offset-4">Size guide</Link>
+      <Link href="/size-guide" className="inline-flex min-h-[44px] items-center text-sm font-semibold underline underline-offset-4">Size guide</Link>
 
       <div className="flex items-center gap-3">
         <label htmlFor="kit-qty" className="text-sm font-bold">Quantity</label>
@@ -113,8 +115,8 @@ export function KitBuilder({ products, h1 = false }: { products: Product[]; h1?:
         {picked.length === 0 && <p className="text-white/60">Choose at least one piece.</p>}
         {picked.map((x) => (
           <p key={x.product.handle} className="flex justify-between gap-4">
-            <span>{x.product.title}{x.variant && x.variant.title !== 'Default Title' && x.variant.title !== 'Default' ? ` (${x.variant.title})` : ''}</span>
-            <span>{x.variant ? (x.variant.price.currencyCode === 'CAD' ? <Money cad={Number(x.variant.price.amount)} /> : formatMoney(x.variant.price.amount, x.variant.price.currencyCode)) : '…'}</span>
+            <span>{x.product.title}{x.variant && x.variant.title !== 'Default Title' && x.variant.title !== 'Default' ? ` (${x.variant.title})` : x.product.options.length && !x.variant ? ' (choose a size)' : ''}</span>
+            <span>{priceOf(x) ? (priceOf(x)!.currencyCode === 'CAD' ? <Money cad={Number(priceOf(x)!.amount)} /> : formatMoney(priceOf(x)!.amount, priceOf(x)!.currencyCode)) : '…'}</span>
           </p>
         ))}
         {bundleSaving > 0 && total !== null && currency && <p className="flex justify-between gap-4 text-accent"><span>Top + bottom bundle</span><span>−{currency === 'CAD' ? <Money cad={bundleSaving} /> : formatMoney(String(bundleSaving), currency)}</span></p>}

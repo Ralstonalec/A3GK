@@ -13,7 +13,7 @@ const StoreSignIn = () => (
   </div>
 );
 
-export const metadata: Metadata = { title: 'Sign in' };
+export const metadata: Metadata = { title: 'Sign in', robots: { index: false } };
 export const dynamic = 'force-dynamic';
 
 export default async function Login({ searchParams }: { searchParams: { error?: string } }) {

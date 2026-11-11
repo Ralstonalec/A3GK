@@ -4,7 +4,7 @@ import { LegalPage, LegalSection } from '@/components/LegalPage';
 import { Fact } from '@/components/Tbc';
 import { BASE_LAYER, BUSINESS, PRICING, POLICIES, WEAR_NOTE } from '@/lib/content';
 
-export const metadata: Metadata = { title: 'Terms of sale' };
+export const metadata: Metadata = { title: 'Terms of sale', description: 'The terms that apply when you order from A3 Goalkeeping.' };
 
 export default function Terms() {
   return (

@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "check:tbc": "node scripts/check-tbc.mjs"
+    "check:tbc": "node scripts/check-tbc.mjs",
+    "check:links": "node scripts/check-links.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^9.114.0",

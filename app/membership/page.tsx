@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Tbc } from '@/components/Tbc';
 import { supabaseConfigured } from '@/lib/supabase/env';
 
-export const metadata: Metadata = { title: 'Membership' };
+export const metadata: Metadata = { title: 'Membership', description: 'A free A3GK account keeps your orders, tracking, saved sizes and saved items in one place.' };
 
 export default function Membership() {
   return (

@@ -4,7 +4,7 @@ import { LegalPage, LegalSection } from '@/components/LegalPage';
 import { Fact } from '@/components/Tbc';
 import { BUSINESS } from '@/lib/content';
 
-export const metadata: Metadata = { title: 'Privacy policy' };
+export const metadata: Metadata = { title: 'Privacy policy', description: 'How A3 Goalkeeping collects, uses and protects your personal information.' };
 
 export default function Privacy() {
   return (
