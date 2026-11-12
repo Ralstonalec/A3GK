@@ -5,6 +5,7 @@ import { BASE_LAYER, PADDING_DESIGN, PRICING } from '@/lib/content';
 import { SCENE } from '@/lib/photos';
 import { TURF } from '@/lib/content';
 import { Fact } from './Tbc';
+import { CountUp } from './CountUp';
 
 /** The facts that used to sit in "What it is" and the fact strip, each pointing at the part of the page it belongs to. */
 const FACTS = [
@@ -48,7 +49,7 @@ export function TurfProblem() {
         <Reveal><DiveDemo /><p className="mt-2 text-center text-xs text-white/50">Illustrative demonstration.</p></Reveal>
         <div className="grid gap-8">
           <div>
-            <p className="font-display text-4xl font-extrabold uppercase leading-[0.95] md:text-5xl">Thousands of fields across North America</p>
+            <p className="font-display font-extrabold uppercase leading-[0.85]"><CountUp to={12000} suffix="+" className="block text-[clamp(4.5rem,18vw,9rem)] text-accent" /><span className="mt-2 block text-3xl md:text-4xl">artificial turf fields in the United States</span></p>
             <p className="mt-2 text-white/80">Artificial turf fields are installed at schools, colleges, parks and stadiums in the United States and Canada. <Fact value={TURF.fieldCount} label="Number of artificial turf fields in North America (source and year)" />.<Cite n={[1, 2, 3]} /></p>
           </div>
           <div>
@@ -84,7 +85,7 @@ export function TurfProblem() {
                 </div>
               ))}
             </div>
-            <a href="#tour" className="btn-primary mt-8 inline-flex">See where it sits ↓</a>
+            <a href="#pieces" className="btn-primary mt-8 inline-flex">Choose your pieces ↓</a>
             <p className="mt-4 max-w-xl text-sm text-white/60">Padding adds cushioning and a layer between you and the turf. It does not prevent injuries, and it is not a substitute for good technique or proper equipment.</p>
           </div>
           <div>

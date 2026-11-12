@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { NAV } from '@/lib/content';
 import { useCart } from '@/lib/cart-context';
@@ -14,16 +13,6 @@ export function Header() {
   const { cart, setOpen } = useCart();
   const [menu, setMenu] = useState(false);
   const count = cart?.totalQuantity ?? 0;
-  const home = usePathname() === '/';
-  const [past, setPast] = useState(false);
-  useEffect(() => {
-    if (!home) return;
-    const on = () => setPast(window.scrollY > window.innerHeight * 0.7);
-    on();
-    window.addEventListener('scroll', on, { passive: true });
-    return () => window.removeEventListener('scroll', on);
-  }, [home]);
-  const showLogo = !home || past;
   // Phone: once the page has scrolled, the bar gets a solid background so content does not show through the logo and buttons.
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
@@ -44,7 +33,7 @@ export function Header() {
     <header className="fixed inset-x-0 top-0 z-50">
       <div aria-hidden className={`pointer-events-none absolute inset-x-0 top-0 md:hidden ${scrolled || menu ? 'h-20 bg-[#080a0e]' : 'h-24 bg-gradient-to-b from-[#080a0e] via-[#080a0e]/85 to-transparent'}`} />
       <div className="relative mx-auto flex h-20 max-w-7xl items-center justify-between px-4">
-        <Link href="/" className={`flex items-center gap-2.5 font-display text-3xl font-extrabold tracking-tight transition-opacity duration-300 sm:gap-3 sm:text-4xl ${showLogo ? 'opacity-100' : 'invisible opacity-0'}`} aria-label="A3GK home">
+        <Link href="/" className={`flex items-center gap-2.5 font-display text-3xl font-extrabold tracking-tight transition-opacity duration-300 sm:gap-3 sm:text-4xl `} aria-label="A3GK home">
           <Image src="/brand/a3gk-logo-white.png" alt="" width={738} height={757} priority className="h-14 w-auto drop-shadow-[0_0_14px_rgba(255,255,255,0.3)] sm:h-16" />
           <span className="sr-only">A3GK</span>
         </Link>
