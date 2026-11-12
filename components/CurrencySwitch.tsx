@@ -12,7 +12,7 @@ export function CurrencySwitch() {
       <select
         value={market.id}
         onChange={(e) => setMarket(e.target.value)}
-        className="h-full cursor-pointer appearance-none bg-transparent pr-5 text-sm font-bold text-white focus:outline-none"
+        className="h-full cursor-pointer appearance-none bg-transparent pr-5 text-base font-bold text-white focus:outline-none md:text-sm"
         aria-label="Region and currency"
       >
         {MARKETS.map((m) => <option key={m.id} value={m.id} className="bg-[#10131a] text-white">{m.label} ({m.currency})</option>)}
