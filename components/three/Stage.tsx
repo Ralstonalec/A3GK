@@ -35,6 +35,7 @@ function Scene() {
     window.dispatchEvent(new Event('stage-live'));
   };
   const zone = useRef(-1);
+  const lastName = useRef('none');
 
   // Section positions are measured only when the page changes size, never per frame (reading layout every frame
   // forces the browser to recalculate it and makes scrolling stutter).
@@ -63,9 +64,16 @@ function Scene() {
     let name = 'none';
     let prog = 0;
     const sy = window.scrollY;
-    for (const sec of sections.current) {
-      const top = sec.top - sy;
-      if (top <= vh * 0.5 && top + sec.height >= vh * 0.5) { name = sec.el.dataset.stage ?? 'none'; prog = clamp(-top / Math.max(1, sec.height - vh)); break; }
+    // The hero model belongs to the hero: it stays until the whole hero has scrolled away (not just past mid-screen),
+    // and below it is moved up by exactly the distance the page has scrolled, so it travels with the hero text.
+    const hero = sections.current.find((sec) => sec.el.dataset.stage === 'hero');
+    if (hero && sy < hero.top + hero.height - 1) name = 'hero';
+    else {
+      for (const sec of sections.current) {
+        if (sec === hero) continue;
+        const top = sec.top - sy;
+        if (top <= vh * 0.5 && top + sec.height >= vh * 0.5) { name = sec.el.dataset.stage ?? 'none'; prog = clamp(-top / Math.max(1, sec.height - vh)); break; }
+      }
     }
 
     const P = POSES[name] ?? { x: 0, y: 0, s: 0 };
@@ -74,9 +82,14 @@ function Scene() {
     const ts = mobile ? P.s * (name === 'hero' ? 1.25 : name === 'padding' ? 0.9 : 1.5) : P.s;
     const k = 1 - Math.exp(-dt * 3.5);
     const p = pose.current;
+    // Coming back up to the hero: take the hero pose at once, so the model is already full size as it scrolls into view.
+    if (name === 'hero' && lastName.current !== 'hero') { p.x = tx; p.y = ty; p.s = ts; }
+    lastName.current = name;
     p.x += (tx - p.x) * k;
     p.y += (ty - p.y) * k;
     p.s += (ts - p.s) * k;
+    // Scroll distance in world units (the canvas is as tall as the large viewport, state.size.height, not window.innerHeight).
+    const scrollLift = name === 'hero' ? (sy / Math.max(1, state.size.height)) * vp.height : 0;
 
     cur.current.x += (stage.mouse.x - cur.current.x) * 0.05;
     cur.current.y += (stage.mouse.y - cur.current.y) * 0.05;
@@ -97,7 +110,7 @@ function Scene() {
     const g = root.current;
     if (!g) return;
     g.visible = p.s > 0.01;
-    g.position.set(p.x * (vp.width / 2), p.y * (vp.height / 2) + Math.sin(t * 0.9) * 0.04, 0);
+    g.position.set(p.x * (vp.width / 2), p.y * (vp.height / 2) + scrollLift + Math.sin(t * 0.9) * 0.04, 0);
     g.scale.setScalar(Math.max(0.0001, p.s));
     g.rotation.y = cur.current.x * 0.22;
     g.rotation.x = cur.current.y * 0.12;
