@@ -3,8 +3,11 @@ import Link from 'next/link';
 import { CurrencySwitch } from './CurrencySwitch';
 import { HANDLES, POLICIES } from '@/lib/content';
 import { Tbc } from './Tbc';
+import { productExists } from '@/lib/shopify';
 
-export function Footer() {
+export async function Footer() {
+  // Grip socks and bandages are only linked once they are active in Shopify; a draft product has no page.
+  const [hasSocks, hasBandages] = await Promise.all([productExists(HANDLES.socks), productExists(HANDLES.bandages)]);
   return (
     <footer className="bg-charcoal-900 text-white/80">
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 md:grid-cols-4">
@@ -13,19 +16,19 @@ export function Footer() {
           <p className="mt-3 text-sm">A3 Goalkeeping</p>
         </div>
         <div>
-          <p className="mb-3 text-xs font-bold uppercase tracking-widest text-white">Shop</p>
+          <p className="mb-3 text-sm font-semibold text-white">Shop</p>
           <ul className="space-y-2 text-sm">
             <li><Link href={`/products/${HANDLES.base}`}>Padded Base Layer</Link></li>
             <li><Link href={`/products/${HANDLES.longTop}`}>Long-Sleeve Top</Link></li>
             <li><Link href={`/products/${HANDLES.shortTop}`}>Short-Sleeve Top</Link></li>
             <li><Link href={`/products/${HANDLES.leggings}`}>Leggings</Link></li>
             <li><Link href={`/products/${HANDLES.shorts}`}>Shorts</Link></li>
-            <li><Link href={`/products/${HANDLES.socks}`}>Grip Socks</Link></li>
-            <li><Link href={`/products/${HANDLES.bandages}`}>Sports Bandages</Link></li>
+            {hasSocks && <li><Link href={`/products/${HANDLES.socks}`}>Grip Socks</Link></li>}
+            {hasBandages && <li><Link href={`/products/${HANDLES.bandages}`}>Sports Bandages</Link></li>}
           </ul>
         </div>
         <div>
-          <p className="mb-3 text-xs font-bold uppercase tracking-widest text-white">Help</p>
+          <p className="mb-3 text-sm font-semibold text-white">Help</p>
           <ul className="space-y-2 text-sm">
             <li><Link href="/help#contact">Contact</Link></li>
             <li><Link href="/help#shipping">Shipping information</Link></li>
@@ -41,7 +44,7 @@ export function Footer() {
           </ul>
         </div>
         <div>
-          <p className="mb-3 text-xs font-bold uppercase tracking-widest text-white">Follow</p>
+          <p className="mb-3 text-sm font-semibold text-white">Follow</p>
           {POLICIES.social.length ? (
             <ul className="space-y-2 text-sm">{POLICIES.social.map((s) => <li key={s.href}><a href={s.href} rel="noopener noreferrer">{s.label}</a></li>)}</ul>
           ) : <Tbc label="Social media links (genuine accounts only)" />}

@@ -16,6 +16,8 @@ export const metadata: Metadata = {
   title: { default: 'A3GK — Padded base layer for goalkeepers', template: '%s | A3GK' },
   description: 'Meet the A3GK padded base layer. Explore the design, see the padding details, and find your size.',
   openGraph: { images: ['/og.jpg'], siteName: 'A3GK' },
+  // Each page's canonical address is its own path on the site's main address.
+  alternates: { canonical: './' },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

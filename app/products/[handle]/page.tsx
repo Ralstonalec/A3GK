@@ -4,12 +4,14 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { Accordion } from '@/components/Accordion';
 import { MacroGrid } from '@/components/MacroGrid';
-import { RenderFigure } from '@/components/RenderFigure';
+import { ZoomViewer } from '@/components/motion/ZoomViewer';
+import { Reveal } from '@/components/Reveal';
 import { PhotoSlot } from '@/components/PhotoSlot';
 import { ProductCard } from '@/components/ProductCard';
 import { PurchasePanel } from '@/components/PurchasePanel';
 import { Fact, Tbc } from '@/components/Tbc';
-import { BASE_LAYER, FAQ, HANDLES, PIECES, POLICIES, SIZE_GUIDE } from '@/lib/content';
+import { BASE_LAYER, FAQ, HANDLES, PIECES, POLICIES, PRICING, SIZE_GUIDE } from '@/lib/content';
+import { Money } from '@/components/Money';
 import { getProduct, unavailable } from '@/lib/shopify';
 import { PRODUCT_PHOTOS } from '@/lib/photos';
 import { KitBuilder } from '@/components/KitBuilder';
@@ -22,9 +24,17 @@ export const generateStaticParams = () => Object.values(HANDLES).map((handle) =>
 export const dynamicParams = false;
 
 export async function generateMetadata({ params }: { params: { handle: string } }): Promise<Metadata> {
-  if (params.handle === HANDLES.base) return { title: 'Build your kit' };
+  const canonical = `/products/${params.handle}`;
+  if (params.handle === HANDLES.base) {
+    return {
+      title: 'Padded base layer for goalkeepers: build your kit',
+      description: 'The A3GK padded base layer: a long- or short-sleeve top and leggings or shorts with hexagonal EVA foam padding on the front. Choose your pieces and sizes.',
+      alternates: { canonical },
+    };
+  }
   const p = await getProduct(params.handle);
-  return p ? { title: p.title } : {};
+  const piece = [...PIECES.tops, ...PIECES.bottoms].find((x) => x.handle === params.handle);
+  return p ? { title: p.title, description: piece ? `${p.title} from A3GK. Padding: ${piece.padding}` : `${p.title} from A3GK.`, alternates: { canonical } } : {};
 }
 
 export default async function ProductPage({ params }: { params: { handle: string } }) {
@@ -48,7 +58,7 @@ export default async function ProductPage({ params }: { params: { handle: string
   const info = isBase
     ? [
         { title: 'Product details', body: <ul className="space-y-1"><li>Garment: <Fact value={BASE_LAYER.garmentType} label="Garment type" /></li><li>Included: <Fact value={BASE_LAYER.included} label="What is included" /></li><li>Padding: <Fact value={BASE_LAYER.paddingSpec} label="Padding specification" /></li><li>Origin: <Fact value={BASE_LAYER.origin} label="Origin (only if verified)" /></li></ul> },
-        { title: 'Size and fit', body: <><p><Fact value={BASE_LAYER.trueToSize} label="True to size" /> <Fact value={BASE_LAYER.intendedFit} label="Intended fit" /></p><p className="mt-1">{BASE_LAYER.ageGroup} {BASE_LAYER.useCase}</p><Link href="/size-guide" className="mt-2 inline-block font-semibold underline underline-offset-4">Full size guide</Link></> },
+        { title: 'Size and fit', body: <><p><Fact value={BASE_LAYER.trueToSize} label="True to size" /> <Fact value={BASE_LAYER.intendedFit} label="Intended fit" /></p><p className="mt-1">{BASE_LAYER.ageGroup} {BASE_LAYER.useCase}</p><Link href="/size-guide" className="mt-1 inline-flex min-h-[44px] items-center font-semibold underline underline-offset-4">Full size guide</Link></> },
         { title: 'Materials and care', body: <ul className="space-y-1"><li>Fabric: <Fact value={BASE_LAYER.fabricComposition} label="Fabric composition" /></li><li>Fabric weight: <Fact value={BASE_LAYER.fabricWeight} label="Fabric weight" /></li><li>Care: <Fact value={BASE_LAYER.care} label="Care instructions" /></li></ul> },
         { title: 'Shipping', body: <Fact value={POLICIES.deliveryEstimate} label="Delivery estimates by destination" /> },
         { title: 'Returns', body: <Fact value={POLICIES.sizeExchanges} label="Returns and exchange terms" /> },
@@ -62,7 +72,12 @@ export default async function ProductPage({ params }: { params: { handle: string
 
   return (
     <div className="section">
-      <nav aria-label="Breadcrumb" className="mb-6 text-sm text-white/55"><Link href="/">Home</Link> / {product.title}</nav>
+      <nav aria-label="Breadcrumb" className="mb-2 text-sm text-white/55"><Link href="/" className="inline-flex min-h-[44px] items-center underline-offset-4 hover:underline">Home</Link> / {product.title}</nav>
+      {/* Name and price come first, so a phone shows what the product is before the pictures. */}
+      <div className="mb-6">
+        <h1 className="font-display text-[clamp(2.6rem,9vw,5.5rem)] font-extrabold uppercase leading-[0.88]">{product.title}</h1>
+        {isBase && <p className="mt-2 text-lg font-semibold"><Money cad={PRICING.piece} showCode /> per piece · top + bottom <Money cad={PRICING.bundle} showCode /></p>}
+      </div>
       <div className="grid gap-10 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
         <div className="min-w-0">
           {product.images.length ? (
@@ -75,12 +90,12 @@ export default async function ProductPage({ params }: { params: { handle: string
             </ul>
           ) : isBase ? (
             <div className="space-y-3">
-              <div className="glass rounded-3xl p-4"><RenderFigure priority sizes="(min-width:768px) 55vw, 100vw" /></div>
+              <ZoomViewer />
               <MacroGrid />
             </div>
           ) : pieceInfo ? (
             <div className="space-y-3">
-              {isShortPiece ? <ShortSetFigure compact /> : <div className="glass rounded-3xl p-4"><RenderFigure priority sizes="(min-width:768px) 55vw, 100vw" /></div>}
+              {isShortPiece ? <ShortSetFigure compact /> : product.handle === HANDLES.leggings ? <ZoomViewer start="legs" areas={['hips-thighs', 'knees']} /> : <ZoomViewer start="top" areas={['chest', 'ribs', 'upper-arms', 'elbows']} />}
               <p className="text-sm text-white/75"><strong className="text-white">Padding.</strong> {pieceInfo.padding}</p>
             </div>
           ) : PRODUCT_PHOTOS[product.handle] ? (
@@ -92,7 +107,7 @@ export default async function ProductPage({ params }: { params: { handle: string
         </div>
 
         <div className="min-w-0 md:sticky md:top-24 md:self-start">
-          {isBase ? <KitBuilder products={kit} h1 /> : <PurchasePanel product={product} sizeGuide />}
+          {isBase ? <KitBuilder products={kit} /> : <PurchasePanel product={product} sizeGuide showTitle={false} />}
           {pieceInfo && <p className="mt-4 text-sm text-white/75">Sold on its own. <Link href={`/products/${HANDLES.base}`} className="underline underline-offset-4">Build a kit</Link> to combine it with another piece.</p>}
           {supabaseConfigured && <div className="mt-3"><SaveButton handle={product.handle} initialSaved={savedAlready} /></div>}
           {isBase && (
@@ -107,9 +122,9 @@ export default async function ProductPage({ params }: { params: { handle: string
         </div>
       </div>
 
-      <div className="mt-14 max-w-3xl"><Accordion items={info} /></div>
+      <Reveal className="mt-14 max-w-3xl"><Accordion items={info} /></Reveal>
 
-      {isBase && (
+      {isBase && (socks || bandages) && (
         <section className="mt-16" aria-labelledby="kit">
           <h2 id="kit" className="font-display text-2xl font-bold uppercase">Complete your kit</h2>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">

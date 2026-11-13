@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Fact } from '@/components/Tbc';
 import { TrackForm } from '@/components/TrackForm';
+import { PageHero } from '@/components/motion/PageHero';
 import { POLICIES } from '@/lib/content';
 import { createClient } from '@/lib/supabase/server';
 import { supabaseConfigured } from '@/lib/supabase/env';
@@ -28,12 +29,9 @@ async function myParcels(): Promise<{ signedIn: boolean; parcels: { order: strin
 export default async function Track() {
   const { signedIn, parcels } = await myParcels();
   return (
-    <div className="section max-w-2xl space-y-8">
-      <header>
-        <p className="eyebrow">Track your order</p>
-        <h1 className="h2 text-4xl md:text-6xl">Where is my parcel?</h1>
-        <p className="mt-4 text-lg text-white/80">Enter the tracking number from your shipping email to see where your parcel is.</p>
-      </header>
+    <>
+    <PageHero size="sm" lines={['Where is', 'my parcel?']} band="Track" intro="Enter the tracking number from your shipping email to see where your parcel is." />
+    <div className="mx-auto max-w-2xl space-y-8 px-4 pb-24 pt-8">
 
       {supabaseConfigured && (
         <section className="glass rounded-[2rem] p-6 md:p-8" aria-labelledby="mine">
@@ -71,5 +69,6 @@ export default async function Track() {
         <p>Still stuck? <Link href="/help#contact" className="font-semibold underline underline-offset-4">Contact us</Link> with your order number.</p>
       </section>
     </div>
+    </>
   );
 }

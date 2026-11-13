@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import { AuthRequired, customerAccountConfigured, getCustomerWithOrders, type CustomerProfile } from '@/lib/customer-account';
 import { formatMoney } from '@/lib/format';
 
-export const metadata: Metadata = { title: 'Your orders' };
+export const metadata: Metadata = { title: 'Your orders', robots: { index: false } };
 export const dynamic = 'force-dynamic';
 
 export default async function CustomerOrders() {

@@ -74,6 +74,11 @@ export async function getProduct(handle: string, country?: string): Promise<Prod
   }
 }
 
+/** True when a product page exists for this handle (active in Shopify, or a local placeholder when Shopify is not connected). Used to avoid linking to pages that would 404. */
+export async function productExists(handle: string): Promise<boolean> {
+  return Boolean(await getProduct(handle));
+}
+
 /** The first variant's price of a product in a market, as Shopify prices it there. Null when Shopify is not connected or has no price. */
 export async function getLocalPrice(handle: string, country: string): Promise<{ amount: number; currency: string } | null> {
   if (!shopifyConfigured) return null;
