@@ -4,7 +4,8 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { Accordion } from '@/components/Accordion';
 import { MacroGrid } from '@/components/MacroGrid';
-import { RenderFigure } from '@/components/RenderFigure';
+import { ZoomViewer } from '@/components/motion/ZoomViewer';
+import { Reveal } from '@/components/Reveal';
 import { PhotoSlot } from '@/components/PhotoSlot';
 import { ProductCard } from '@/components/ProductCard';
 import { PurchasePanel } from '@/components/PurchasePanel';
@@ -74,7 +75,7 @@ export default async function ProductPage({ params }: { params: { handle: string
       <nav aria-label="Breadcrumb" className="mb-2 text-sm text-white/55"><Link href="/" className="inline-flex min-h-[44px] items-center underline-offset-4 hover:underline">Home</Link> / {product.title}</nav>
       {/* Name and price come first, so a phone shows what the product is before the pictures. */}
       <div className="mb-6">
-        <h1 className="font-display text-4xl font-extrabold uppercase leading-[0.95] md:text-5xl">{product.title}</h1>
+        <h1 className="font-display text-[clamp(2.6rem,9vw,5.5rem)] font-extrabold uppercase leading-[0.88]">{product.title}</h1>
         {isBase && <p className="mt-2 text-lg font-semibold"><Money cad={PRICING.piece} showCode /> per piece · top + bottom <Money cad={PRICING.bundle} showCode /></p>}
       </div>
       <div className="grid gap-10 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
@@ -89,12 +90,12 @@ export default async function ProductPage({ params }: { params: { handle: string
             </ul>
           ) : isBase ? (
             <div className="space-y-3">
-              <div className="glass rounded-3xl p-4"><RenderFigure priority sizes="(min-width:768px) 55vw, 100vw" /></div>
+              <ZoomViewer />
               <MacroGrid />
             </div>
           ) : pieceInfo ? (
             <div className="space-y-3">
-              {isShortPiece ? <ShortSetFigure compact /> : <div className="glass rounded-3xl p-4"><RenderFigure priority sizes="(min-width:768px) 55vw, 100vw" /></div>}
+              {isShortPiece ? <ShortSetFigure compact /> : product.handle === HANDLES.leggings ? <ZoomViewer start="legs" areas={['hips-thighs', 'knees']} /> : <ZoomViewer start="top" areas={['chest', 'ribs', 'upper-arms', 'elbows']} />}
               <p className="text-sm text-white/75"><strong className="text-white">Padding.</strong> {pieceInfo.padding}</p>
             </div>
           ) : PRODUCT_PHOTOS[product.handle] ? (
@@ -121,7 +122,7 @@ export default async function ProductPage({ params }: { params: { handle: string
         </div>
       </div>
 
-      <div className="mt-14 max-w-3xl"><Accordion items={info} /></div>
+      <Reveal className="mt-14 max-w-3xl"><Accordion items={info} /></Reveal>
 
       {isBase && (socks || bandages) && (
         <section className="mt-16" aria-labelledby="kit">

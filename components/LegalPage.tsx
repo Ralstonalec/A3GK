@@ -1,16 +1,17 @@
 import type { ReactNode } from 'react';
 import { LEGAL_UPDATED } from '@/lib/content';
+import { PageHero } from './motion/PageHero';
 
 /** Shared layout for the policy pages. */
 export function LegalPage({ title, intro, children }: { title: string; intro: ReactNode; children: ReactNode }) {
   return (
-    <div className="section max-w-3xl">
-      <p className="eyebrow">A3 Goalkeeping</p>
-      <h1 className="h2">{title}</h1>
-      <p className="mt-2 text-sm text-white/55">Last updated {LEGAL_UPDATED}</p>
-      <div className="mt-6 text-lg text-white/80">{intro}</div>
-      <div className="mt-10 space-y-8">{children}</div>
-    </div>
+    <>
+      <PageHero size="sm" lines={title.split(' ').length > 2 ? [title.split(' ').slice(0, -1).join(' '), title.split(' ').slice(-1)[0]] : [title]} intro={<><span className="block text-sm text-white/55">Last updated {LEGAL_UPDATED}</span></>} />
+      <div className="mx-auto max-w-3xl px-4 pb-24 pt-6">
+        <div className="text-lg text-white/80">{intro}</div>
+        <div className="mt-10 space-y-8">{children}</div>
+      </div>
+    </>
   );
 }
 

@@ -7,6 +7,7 @@ import { removeSaved, signOut } from './actions';
 import { customerAccountConfigured } from '@/lib/customer-account';
 import { PasswordForm, ProfileForm, SizeForm } from '@/components/AccountForms';
 import { readTracking, statusLabel, trackUrl } from '@/lib/tracking';
+import { PageHero } from '@/components/motion/PageHero';
 
 export const metadata: Metadata = { title: 'Your account', robots: { index: false } };
 export const dynamic = 'force-dynamic';
@@ -34,11 +35,11 @@ export default async function Account() {
   for (const p of paid) spend.set(p.currency, (spend.get(p.currency) ?? 0) + Number(p.total));
   const money = (n: number, c: string) => new Intl.NumberFormat('en', { style: 'currency', currency: c }).format(n);
   return (
-    <div className="section max-w-4xl space-y-6">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <h1 className="h2">Your account</h1>
-        <form action={signOut}><button className="min-h-[44px] font-semibold underline underline-offset-4">Sign out</button></form>
-      </div>
+    <>
+    <PageHero size="sm" lines={['Your', 'account']} band="Member">
+      <form action={signOut}><button className="min-h-[44px] font-semibold underline underline-offset-4">Sign out</button></form>
+    </PageHero>
+    <div className="mx-auto max-w-4xl space-y-6 px-4 pb-24 pt-8">
       <Card title="Membership">
         <dl className="grid gap-4 sm:grid-cols-3">
           <div><dt className="text-sm font-semibold text-white/60">Member since</dt><dd className="mt-1 text-lg font-semibold">{new Date(user.created_at).toLocaleDateString('en', { year: 'numeric', month: 'long' })}</dd></div>
@@ -87,5 +88,6 @@ export default async function Account() {
         ) : <p className="text-white/70">No orders yet. Orders placed with the email address on this account appear here after payment. Use the same email at checkout.</p>}
       </Card>
     </div>
+    </>
   );
 }
